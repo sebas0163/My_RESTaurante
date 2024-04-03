@@ -1,0 +1,32 @@
+##########################################
+#             code ownership
+##########################################
+
+########## EXAMPLE #####################
+# default ownership: default owners for everything in the repo (Unless a later match takes precedence)
+#*       @CoolOrgName/developers
+
+# (Order is important, the last matching pattern takes the most precedence)
+# When someone opens a pull request with .js files that only @backend team and not the global owner(s) will be requested for a review.
+#*.js    @CoolOrgName/backend
+
+# only @devops team can review and approve this change related to .yml configuration
+#app/config/*.yml @CoolOrgName/devops
+
+# only our CTO can review the change in our secret encrypted token
+#app/config/secret-token.txt @cto
+
+# alternatively we can use email as well:
+#app/config/another-secret-token.txt cto@example.com
+
+# any change inside the /apps/sensetive-module/secured-component/ directory
+# will require approval from "ninja" or "cto" users.
+#/apps/sensetive-module/secured-component/ @ninja @cto
+
+########## OUR IMPLEMENTATION ########
+
+BackendCore/ <correo de kev> <correo de nati>
+TimeRecommendation/ <correo de kev> <correo de nati>
+FoodRecommendation/ <correo de kev> <correo de nati>
+WebApp/ <correo de jess> <correo de nati>
+DB/ <correo de kev> <correo de nati>
