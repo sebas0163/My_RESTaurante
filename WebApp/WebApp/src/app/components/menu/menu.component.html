@@ -11,21 +11,42 @@
 
       <div class="content">
         <div class="left-side">
-          <p>Congratulations! Your app is running. 🎉</p>
+          <p><strong>Postres:</strong></p>
+          <div *ngFor="let postre of menuItems.postre">
+            <label>
+              <input type="radio" name="selectedPostre" [(ngModel)]="selectedPostre" [value]="postre" [disabled]="selectedPlatillo!= '' && selectedBebida!=''"> {{ postre }}
+            </label>
+          </div>
         </div>
         <div class="divider" role="separator" aria-label="Divider"></div>
         <div class="center">
-
-          <p>Congratulations! Your app is running. 🎉</p>
+          <p><strong>Platillos Principales:</strong></p>
+          <div *ngFor="let platillo of menuItems.platilloPrincipal">
+            <label>
+              <input type="radio" name="selectedPlatillo" [(ngModel)]="selectedPlatillo" [value]="platillo" [disabled]="selectedBebida!= '' && selectedPostre!= ''"> {{ platillo }}
+            </label>
+          </div>
         </div>
         <div class="divider" role="separator" aria-label="Divider"></div>
         <div class="right-side">
-          <p>Congratulations! Your app is running. 🎉</p>
+          <p><strong>Bebidas:</strong></p>
+          <div *ngFor="let bebida of menuItems.bebida">
+            <label>
+              <input type="radio" name="selectedBebida" [(ngModel)]="selectedBebida" [value]="bebida" [disabled]="selectedPostre!= '' && selectedPlatillo!= ''"> {{ bebida }}
+            </label>
+          </div>
         </div>
       </div>
+      
+      
     </main>
-    <div class="button-container">
-      <button class="pill" routerLink="/menu-recommendation-component">Obtener Reccomendacion</button>
+    <div class="content">
+      <div class="button-container">
+        <button class="pill" (click)="clearSelections()">Limpiar</button>
+      </div>
+      <div class="button-container">
+        <button class="pill" routerLink="/menu-recommendation-component">Obtener Reccomendacion</button>
+      </div>
     </div>
   </router-outlet>
 </div>

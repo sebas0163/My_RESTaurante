@@ -7,6 +7,9 @@ import { MenuRecommendationComponent } from './components/menu-recommendation/me
 import { MenuComponent } from './components/menu/menu.component';
 import { TimeRecommendationComponent } from './components/time-recommendation/time-recommendation.component';
 import { FeedbackComponent } from './components/feedback/feedback.component';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -18,9 +21,13 @@ import { FeedbackComponent } from './components/feedback/feedback.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule,
+    FormsModule
   ],
   providers: [
+  
+    provideAnimationsAsync()
   ],
   bootstrap: [AppComponent]
 })
