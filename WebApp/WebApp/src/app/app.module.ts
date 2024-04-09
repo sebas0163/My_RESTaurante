@@ -10,6 +10,10 @@ import { FeedbackComponent } from './components/feedback/feedback.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {provideNativeDateAdapter} from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -23,11 +27,16 @@ import { FormsModule } from '@angular/forms';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatFormFieldModule,
+    MatInputModule
   ],
   providers: [
   
-    provideAnimationsAsync()
+    provideAnimationsAsync(),
+    provideNativeDateAdapter()
   ],
   bootstrap: [AppComponent]
 })

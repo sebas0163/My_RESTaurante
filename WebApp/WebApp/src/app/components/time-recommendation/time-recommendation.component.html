@@ -8,14 +8,18 @@
     <main class="main">
 
       <div class="content">
-        <div>
-          <p>Gracias por seleccionar tus opciones favoritas. Para combinar [SELECCION], te recomendamos de opción1 [OPCION_1] y de opción2 [OPCION_2].</p>
-        </div>
-
+        <mat-form-field class="custom-datepicker">
+          <mat-label>Escoge una fecha</mat-label>
+          <input matInput [matDatepicker]="picker" [(ngModel)]="selectedDate">
+          <mat-hint>MM/DD/YYYY</mat-hint>
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        
       </div>
     </main>
     <div class="button-container">
-      <button class="pill" routerLink="/time-recommendation-component">Ver Disponibilidad</button>
+      <button class="pill" routerLink="/time-recommendation-component" (click)="getRecommendation()">Ver Disponibilidad</button>
     </div>
   </router-outlet>
 </div>

@@ -20,19 +20,7 @@ export class MenuComponent implements OnInit {
     this.menuItems = defaultResponses;
   }
 
-  toggleSelection(category: string, item: string) {
-    switch (category) {
-      case 'postre':
-        this.selectedPostre = this.selectedPostre === item ? '' : item;
-        break;
-      case 'platillo':
-        this.selectedPlatillo = this.selectedPlatillo === item ? '' : item;
-        break;
-      case 'bebida':
-        this.selectedBebida = this.selectedBebida === item ? '' : item;
-        break;
-    }
-  }
+  
   clearSelections() {
     this.selectedPostre = '';
     this.selectedPlatillo = '';
