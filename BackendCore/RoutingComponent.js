@@ -4,6 +4,6 @@ const { SentimentController } = require('./SentimentController');
 
 sentiment = new SentimentController();
 
-router.get('/Sentiment/:feedback', sentiment.askForSentiment);
+router.get('/Sentiment/:feedback?', sentiment.askForSentiment);
 
 module.exports = router;

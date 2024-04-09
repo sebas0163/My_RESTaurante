@@ -35,11 +35,21 @@ class SentimentController {
     }
     askForSentiment(req, res) {
         
-        const { feedback } = req.params;
         
+        const { feedback } = req.query;
+        const { feedback: feedbackParam } = req.params;
+      
+        // If feedback is provided in both path and query, prioritize the query string
+        const feedbackValue = feedback || feedbackParam;
+      
+        // Check if feedback parameter is provided
+        if (!feedbackValue) {
+          return res.status(400).send('Feedback parameter is required.');
+        }
+      
         (async () => {
             try {
-                const sentiment = await this.parseHttpRequest(feedback);
+                const sentiment = await this.parseHttpRequest(feedbackValue);
                 const sentiment_value = this.parseSentiment(sentiment);
                 const data = {
                     "score": sentiment_value.score,
