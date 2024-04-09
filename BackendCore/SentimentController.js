@@ -24,9 +24,14 @@ class SentimentController {
         }
     }
     parseSentiment(sentiment){
+        var texto;
+        const score = Math.floor((sentiment["score"] + 1) * 2.5) + 1;
         if (sentiment["score"] >= 0){
-            return 1
-        }else {return 0}
+            texto = "We're pleased you had a satisfactory experience.";
+        }else {
+            texto = "We apologize for your experience and will strive to improve.";
+        }
+        return {score: score, texto:texto}
     }
     askForSentiment(req, res) {
         
@@ -37,7 +42,8 @@ class SentimentController {
                 const sentiment = await this.parseHttpRequest(feedback);
                 const sentiment_value = this.parseSentiment(sentiment);
                 const data = {
-                    "sentiment_value": sentiment_value
+                    "score": sentiment_value.score,
+                    "texto": sentiment_value.texto
                 };
                 res.json(data);
                 console.log('Sentiment:', sentiment);
