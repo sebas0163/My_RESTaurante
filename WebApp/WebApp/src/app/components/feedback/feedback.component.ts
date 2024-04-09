@@ -7,4 +7,11 @@ import { Component } from '@angular/core';
 })
 export class FeedbackComponent {
 
+  textareaValue: string = ''; // Initialize textarea value
+
+  constructor() { }
+
+  getFeedbackResponse(){
+    console.log(this.textareaValue);
+  }
 }

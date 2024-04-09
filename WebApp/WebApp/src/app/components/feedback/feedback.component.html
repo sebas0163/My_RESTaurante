@@ -17,11 +17,11 @@
 
   <div class="outer-container">
     <mat-form-field appearance="fill" class="wide-textarea">
-      <textarea matInput placeholder="Escribe aquí..." rows="3"></textarea>
+      <textarea matInput placeholder="Escribe aquí..." rows="3" [(ngModel)]="textareaValue"></textarea>
     </mat-form-field>
     
     <div class="button-container">
-      <button class="pill">Enviar feedback</button>
+      <button class="pill" (click)="getFeedbackResponse()">Enviar feedback</button>
     </div>
   </div>
   </router-outlet>
