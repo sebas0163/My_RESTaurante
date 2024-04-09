@@ -1,5 +1,8 @@
 {
   "dependencies": {
     "@angular/cli": "^17.3.3"
+  },
+  "scripts": {
+    "test": "echo \"This will be replaced\" && exit 0"
   }
 }
