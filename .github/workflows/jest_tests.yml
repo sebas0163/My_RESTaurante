@@ -1,0 +1,41 @@
+name: Running all tests
+
+on:
+  pull_request:
+    branches: ['main',  'Develop', 'hotfixes', 'release']
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Testing WebApp
+        run: |
+          cd WebApp/WebApp
+          npm install
+          npm test
+          cd ..
+
+      - name: Testing BackendCore
+        run: |
+          cd BackendCore
+          npm install
+          npm test
+          cd ..
+
+      - name: Testing FoodRecommendation
+        run: |
+          cd FoodRecomendation
+          npm install
+          npm test
+          cd ..
+
+      - name: Testing TimeRecomendation
+        run: |
+          cd TimeRecomendation
+          npm install
+          npm test
+          cd ..
