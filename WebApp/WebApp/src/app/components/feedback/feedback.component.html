@@ -1,0 +1,29 @@
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+
+<div class="outer-container">
+  <router-outlet>
+    <div class="title-container">
+      <p class="page-subtitle"> Feedback </p>
+    </div>
+    <main class="main">
+
+      <div class="content">
+        <div class="left-side">
+          <p>Agradecemos tu preferencia, y queremos saber tu opinión. Ingresa un comentario en la siguiente sección para que sepamos cómo te sientes y mejoremos nuestro sistema.</p>
+        </div>
+
+      </div>
+    </main>
+
+  <div class="outer-container">
+    <mat-form-field appearance="fill" class="wide-textarea">
+      <textarea matInput placeholder="Escribe aquí..." rows="3" [(ngModel)]="textareaValue"></textarea>
+    </mat-form-field>
+    
+    <div class="button-container">
+      <button class="pill" (click)="getFeedbackResponse()">Enviar feedback</button>
+    </div>
+  </div>
+  </router-outlet>
+</div>
+

@@ -1,0 +1,53 @@
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+
+<div class="outer-container">
+  <router-outlet>
+    <div class="title-container">
+    </div>
+    <div class="title-container">
+      <p class="page-subtitle"> Menu </p>
+    </div>
+    <main class="main">
+
+      <div class="content">
+        <div class="left-side">
+          <p><strong>Postres:</strong></p>
+          <div *ngFor="let name of dessertMenu">
+            <label>
+              <input type="radio" name="selectedPostre" [(ngModel)]="selectedPostre" [value]="name" [disabled]="selectedPlatillo!= '' && selectedBebida!=''"> {{ name }}
+            </label>
+          </div>
+        </div>
+        <div class="divider" role="separator" aria-label="Divider"></div>
+        <div class="center">
+          <p><strong>Platillos Principales:</strong></p>
+          <div *ngFor="let platillo of mainDishMenu">
+            <label>
+              <input type="radio" name="selectedPlatillo" [(ngModel)]="selectedPlatillo" [value]="platillo" [disabled]="selectedBebida!= '' && selectedPostre!= ''"> {{ platillo }}
+            </label>
+          </div>
+        </div>
+        <div class="divider" role="separator" aria-label="Divider"></div>
+        <div class="right-side">
+          <p><strong>Bebidas:</strong></p>
+          <div *ngFor="let beverage of beverageMenu">
+            <label>
+              <input type="radio" name="selectedBebida" [(ngModel)]="selectedBebida" [value]="beverage" [disabled]="selectedPostre!= '' && selectedPlatillo!= ''"> {{ beverage }}
+            </label>
+          </div>
+        </div>
+      </div>
+      
+      
+    </main>
+    <div class="content">
+      <div class="button-container">
+        <button class="pill" (click)="clearSelections()">Limpiar</button>
+      </div>
+      <div class="button-container">
+        <button class="pill" routerLink="/menu-recommendation-component">Obtener Reccomendacion</button>
+      </div>
+    </div>
+  </router-outlet>
+</div>
+

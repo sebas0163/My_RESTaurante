@@ -1,0 +1,38 @@
+{
+  "postre": [
+    {"name": "Tiramisu"},
+    {"name": "Cheesecake"},
+    {"name": "Queque de Chocolate"},
+    {"name": "Flan"},
+    {"name": "Pastel de Tres Leches"},
+    {"name": "Helado de Vainilla"},
+    {"name": "Mousse de Chocolate"},
+    {"name": "Frutas Frescas"},
+    {"name": "Crepas de Nutella"},
+    {"name": "Gelatina de Frutas"}
+  ],
+  "platilloPrincipal": [
+    {"name": "Salmon Ahumado"},
+    {"name": "Pasta Alfredo"},
+    {"name": "Hamburguesa Vegetariana"},
+    {"name": "Enchiladas Suizas"},
+    {"name": "Filete Mignon"},
+    {"name": "Paella"},
+    {"name": "Sushi Variado"},
+    {"name": "Pollo al Curry"},
+    {"name": "Risotto de Champiñones"},
+    {"name": "Tacos de Camarón"}
+  ],
+  "bebida": [
+    {"name": "Te de Mango"},
+    {"name": "Cafe"},
+    {"name": "Agua"},
+    {"name": "Limonada"},
+    {"name": "Jugo de Naranja"},
+    {"name": "Refresco de Cola"},
+    {"name": "Mojito"},
+    {"name": "Vino Tinto"},
+    {"name": "Cerveza Artesanal"},
+    {"name": "Margarita"}
+  ]
+}
