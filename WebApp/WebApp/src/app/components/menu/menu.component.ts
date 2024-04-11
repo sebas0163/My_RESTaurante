@@ -14,11 +14,10 @@ export class MenuComponent implements OnInit {
   selectedPostre: string = ''; // Provide an initial value
   selectedPlatillo: string = '';
   selectedBebida: string = '';
-  mainDishRec: any;
-  beverageRec: any;
-  dessertRec: any;
+  dishRec1: any;
+  dishRec2: any;
   showRecommendationContent: boolean = false;
-
+  is_two_values: boolean = false;
   menuUrl: any;
   menuRecUrl: any;
 
@@ -57,69 +56,65 @@ export class MenuComponent implements OnInit {
     }
   }
 
+  getOptions(){
+    let body = {};
+    if (this.selectedPostre.trim() !== '' && this.selectedPlatillo.trim() !== ''){
+      this.dishRec1 = this.selectedPostre;
+      this.dishRec2 = this.selectedPlatillo;
+    } 
+    if (this.selectedPostre.trim() !== '' && this.selectedBebida.trim() !== ''){
+      this.dishRec1 = this.selectedPostre;
+      this.dishRec2 = this.selectedBebida;
+    } 
+    if (this.selectedBebida.trim() !== '' && this.selectedPlatillo.trim() !== ''){
+      this.dishRec1 = this.selectedBebida;
+      this.dishRec2 = this.selectedPlatillo;
+    } 
+      body = {
+        dish1: this.dishRec1,
+        dish2: this.dishRec2
+      };
 
-  /*
-  getPlatillos() {
-    this.http.get<any>(this.url + '/platilloPrincipal').subscribe(
-      (response) => {
-        this.mainDishMenu = response.map(
-          (platilloPrincipal: { name: any }) => platilloPrincipal.name
-        );
-      },
-      (error) => {
-        console.error('Error:', error);
-      }
-    );
+    return body
   }
 
-  getBeverages() {
-    this.http.get<any>(this.url + '/bebida').subscribe(
-      (response) => {
-        this.beverageMenu = response.map(
-          (beverage: { name: any }) => beverage.name
-        );
-      },
-      (error) => {
-        console.error('Error:', error);
-      }
-    );
-  }
 
-  getPostres() {
-    this.http.get<any>(this.url + '/postre').subscribe(
-      (response) => {
-        this.dessertMenu = response.map(
-          (dessert: { name: any }) => dessert.name
-        );
-      },
-      (error) => {
-        console.error('Error:', error);
-      }
-    );
-  }
-  */
 
-  getMenuRecommendation(){
-    this.showRecommendationContent = true;
-    const apiUrl = this.menuRecUrl + `?platilloPrincipal=${this.selectedPlatillo}&bebida=${this.selectedBebida}&postre =${this.selectedPostre}`;
-    try {
-        this.http.get<any>(apiUrl).subscribe(
-          (response) => {
-            console.log(response);
-            this.mainDishRec = response.platilloRecommendation;
-            this.beverageRec = response.bebidaRecommendation;
-            this.dessertRec = response.postreRecommendation;
-          },
-          (error) => {
-            console.error('Error:', error);
-          }
-        )
-    } catch (error) {
-      // Log the error (you can remove this line if not needed)
-      console.error('Fetch error:', error);
-      // Propagate the error by rethrowing it
-      throw error;
+  postMenuRecommendation(){
+    const body = this.getOptions();
+    let isBodyEmpty =  Object.keys(body).length === 0;
+
+    if(!isBodyEmpty){
+      this.is_two_values = true;
+      try {
+        this.http.post<any>(this.menuRecUrl, body).subscribe(
+            (response) => {
+              let selectedResponses: any[] = [];
+              response.forEach((item: { type: string; name: any; }) => {
+                selectedResponses.push(item.name);
+                this.showRecommendationContent = true;
+  
+              });
+              this.dishRec1 = selectedResponses[0];
+              this.dishRec2 = selectedResponses[1];
+              
+            },
+            (error) => {
+              console.error('Error:', error);
+            }
+          )
+      } catch (error) {
+        // Log the error (you can remove this line if not needed)
+        console.error('Fetch error:', error);
+        // Propagate the error by rethrowing it
+        throw error;
+      }
     }
+    else{
+      this.is_two_values = false;
+      console.log("No hay valores");
+    }
+
   }
 
 
