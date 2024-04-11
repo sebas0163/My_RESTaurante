@@ -12,7 +12,7 @@ export class MyServiceService {
   constructor() {
     this.feedbackUrl = 'https://us-central1-silken-tenure-419721.cloudfunctions.net/Backend/api/Sentiment/';
     this.timeUrl = 'http://localhost:1234/api/recomendation/time';
-    this.menuUrl = 'https://us-central1-silken-tenure-419721.cloudfunctions.net/Backend/api/';
+    this.menuUrl = 'http://localhost:1234/api/food/menu';
     this.menuRecUrl = 'https://us-central1-silken-tenure-419721.cloudfunctions.net/Backend/api/';
   }
 

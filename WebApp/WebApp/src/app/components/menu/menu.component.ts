@@ -8,9 +8,9 @@ import { MyServiceService } from '../../my-service.service';
   styleUrls: ['../../app.component.scss'],
 })
 export class MenuComponent implements OnInit {
-  mainDishMenu: any;
-  beverageMenu: any;
-  dessertMenu: any;
+  mainDishMenu: any = [];
+  beverageMenu: any = [];
+  dessertMenu: any = [];
   selectedPostre: string = ''; // Provide an initial value
   selectedPlatillo: string = '';
   selectedBebida: string = '';
@@ -19,26 +19,30 @@ export class MenuComponent implements OnInit {
   dessertRec: any;
   showRecommendationContent: boolean = false;
 
-  url: any;
-  baseUrl: any;
+  menuUrl: any;
+  menuRecUrl: any;
 
   
   constructor(private myService: MyServiceService, private http: HttpClient) {
-    this.baseUrl = this.myService.getData();
-    
-    this.url = this.baseUrl + '/api/Sentiment/';
-    console.log('Current URL:', this.url);
+    this.menuUrl = this.myService.getMenuUrl();
+    this.menuRecUrl = this.myService.getMenuRecUrl();
   }
   
   getMenu(){
     try {
-      const apiUrl = this.url;
-        this.http.get<any>(apiUrl).subscribe(
+        this.http.get<any>(this.menuUrl).subscribe(
           (response) => {
-            console.log(response);
-            this.mainDishMenu = response.texto;
-            this.beverageMenu = response.texto;
-            this.dessertMenu = response.texto;
+            
+            response.forEach((item: { type: string; name: any; }) => {
+              if (item.type.trim().toLowerCase() === 'main plate') {
+                this.mainDishMenu.push(item.name);
+              } else if (item.type.trim().toLowerCase() === 'drink') {
+                this.beverageMenu.push(item.name);
+              } else if (item.type.trim().toLowerCase() === 'dessert') {
+                this.dessertMenu.push(item.name);
+              }
+
+            });
 
           },
           (error) => {
@@ -54,6 +58,7 @@ export class MenuComponent implements OnInit {
   }
 
 
+  /*
   getPlatillos() {
     this.http.get<any>(this.url + '/platilloPrincipal').subscribe(
       (response) => {
@@ -92,10 +97,11 @@ export class MenuComponent implements OnInit {
       }
     );
   }
+  */
 
   getMenuRecommendation(){
     this.showRecommendationContent = true;
-    const apiUrl = this.url + `?platilloPrincipal=${this.selectedPlatillo}&bebida=${this.selectedBebida}&postre =${this.selectedPostre}`;
+    const apiUrl = this.menuRecUrl + `?platilloPrincipal=${this.selectedPlatillo}&bebida=${this.selectedBebida}&postre =${this.selectedPostre}`;
     try {
         this.http.get<any>(apiUrl).subscribe(
           (response) => {
@@ -118,9 +124,7 @@ export class MenuComponent implements OnInit {
 
 
   async ngOnInit() {
-    this.getPlatillos();
-    this.getBeverages();
-    this.getPostres();
+    this.getMenu();
   }
 
   clearSelections() {
