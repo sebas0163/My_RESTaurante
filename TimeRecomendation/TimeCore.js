@@ -1,5 +1,7 @@
 // Imports the Google Cloud client library
 const {PubSubIface} = require('../common/PubSub');
+const {DatabaseController} = require('../common/DatabaseController');
+const moment = require('moment');
 
 class TimeIface extends PubSubIface {
   constructor(
@@ -26,26 +28,22 @@ class TimeIface extends PubSubIface {
 class TimeCore{
   constructor() {
     this.timeIface = new TimeIface(this.simple_callback);
+    this.databaseController = new DatabaseController();
   }
 
-  destructor() {
-    this.timeIface.destructor();
-  }
-
-  simple_callback  = (message) => {
+  simple_callback  = async (message) => {
     console.log('Received message:', message.data.toString());
-    // Now we need to return a message
+    message.ack();
 
-    const timeRes = 1
-    const jsonString = JSON.stringify(timeRes);
+    const day = moment(message.data.toString(), "DD/MM/YYYY");
+    const days =  await this.databaseController.get_available_schedule(day);
 
-    this.timeIface.upstream_topic.publishMessage({data:Buffer.from(jsonString)})
+    const jsonString = JSON.stringify(days);
 
-    this.destructor();
+    console.log("Schedule response for upstream");
+    await this.timeIface.upstream_topic.publishMessage({data:Buffer.from(jsonString)})
   }
 }
 
 timeCore = new TimeCore()
-
-
 

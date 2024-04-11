@@ -15,32 +15,23 @@ class TimeIface extends PubSubIface{
 
   async setupTopics(topics) {
     await super.setupTopics(topics);
+    await this.create_upstream_sub();
   }
 
   async create_upstream_sub() {
     this.upstream_sub = await this.getSubscriptionByName(this.upstream_topic, this.upstream_sub_name);
-    this.subs.push(this.upstream_sub);
     console.log("Created the upstream sub");
-  }
-
-  async delete_upstream_sub() {
-    const sub_name = this.upstream_sub.name;
-    await this.upstream_sub.delete();
-    this.subs = this.subs.filter(sub => sub.name != sub_name);
-    console.log("Deleted upstream sub");
   }
 
   waitForResponseOnUpstream() {
     return new Promise(async (resolve, reject) => {
-      await this.create_upstream_sub();
-
       const responseListener = async (response) => {
-        await this.delete_upstream_sub();
+        response.ack();
         resolve(response);
       }
 
       const errorListener = async (response) => {
-        await this.delete_upstream_sub();
+        response.ack();
         reject(response);
       }
 
@@ -53,7 +44,7 @@ class TimeIface extends PubSubIface{
     this.downstream_topic.publishMessage({data:Buffer.from(day)});
     const upstream_res = await this.waitForResponseOnUpstream();
     console.log("Got upstream res");
-    return upstream_res.data.toString();
+    return JSON.parse(upstream_res.data.toString());
   }
 }
 
@@ -75,4 +66,6 @@ class TimeController {
 }
 
 module.exports = { TimeController }
+
+
 

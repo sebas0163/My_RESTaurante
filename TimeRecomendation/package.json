@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@google-cloud/pubsub": "^4.3.3"
+    "@google-cloud/pubsub": "^4.3.3",
+    "moment": "^2.30.1"
   }
 }
