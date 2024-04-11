@@ -27,7 +27,8 @@ app.use(express.json()); // Middleware to parse JSON requests
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 
-app.use('/api', require('./BackendCore/RoutingComponent'));
+//app.use('/api', require('./BackendCore/RoutingComponent'));
+app.use('/api', require('./FoodRecomendation/FoodCore'));
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
