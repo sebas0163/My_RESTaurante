@@ -17,13 +17,10 @@ export class FeedbackComponent {
   response: string = '';
   is_feedback: boolean = false;
   baseUrl: any;
-  url: any;
-
 
   
   constructor(private myService: MyServiceService, private http: HttpClient) {
-    this.baseUrl = this.myService.getData();
-    
+    this.baseUrl = this.myService.getFeedbackUrl();
   }
 
 
@@ -34,7 +31,7 @@ export class FeedbackComponent {
 
   getFeedbackResponse(){
     try {
-      const apiUrl = this.baseUrl + `Sentiment/?feedback=${this.textareaValue}`;
+      const apiUrl = this.baseUrl + `?feedback=${this.textareaValue}`;
       console.log("URLAA" + apiUrl);
       if (this.textareaValue != '') {
 
