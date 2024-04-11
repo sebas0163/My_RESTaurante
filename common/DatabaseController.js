@@ -1,4 +1,4 @@
-const { collection, getDocs, query, where } = require('firebase/firestore');
+const { collection, doc, getDoc, getDocs, query, where } = require('firebase/firestore');
 const firebase = require('firebase/app');
 const moment = require('moment');
 const firebaseApp =require("firebase/app");
@@ -19,13 +19,60 @@ class DatabaseController {
         this.db = firestore.getFirestore("myrestaurant");
     }
 
-    async getAllMenu() { 
-        const dishCol = collection(this.db, 'Dish');
-        const dishSnapshot = await getDocs(dishCol);
-        const list = dishSnapshot.docs.map(doc => doc.data());
-        console.log(list);
-        return list;
-    }
+
+    // async getAllMenu() { 
+    //     const dishCol = collection(this.db, 'Dish');
+    //     const dishSnapshot = await getDocs(dishCol);
+    //     const list = dishSnapshot.docs.map(doc => doc.data());
+    //     console.log(list);
+    //     return list;
+    // }
+
+    async getDishById(dishId) {
+      const dishDocRef = doc(this.db, 'Dish', dishId);
+      const dishDoc = await getDoc(dishDocRef);
+      if (dishDoc.exists()) {
+          let dishData = dishDoc.data();
+          return {
+              ...dishData,
+              // Include the document ID if necessary
+              id: dishDoc.id,
+          };
+      } else {
+          return null;
+      }
+  }
+
+  async getAllMenuWithoutRef() {
+    const dishCol = collection(this.db, 'Dish');
+    const dishSnapshot = await getDocs(dishCol);
+    const list = dishSnapshot.docs.map(doc => {
+    //parseHttpResponse
+        const data = doc.data();
+        return {
+            name: data.name,
+            type: data.type,
+        };
+    });
+    return list;
+}  
+
+    async getAllMenu() {
+      const dishCol = collection(this.db, 'Dish');
+      const dishSnapshot = await getDocs(dishCol);
+      const list = dishSnapshot.docs.map(doc => {
+      //parseHttpResponse
+          const data = doc.data();
+          return {
+              name: data.name,
+              type: data.type,
+              // If you need IDs from req1 or req2 but not the whole DocumentReference:
+              req1Id: data.req1 ? data.req1.id : null, // assuming 'id' is what you need
+              req2Id: data.req2 ? data.req2.id : null
+          };
+      });
+      return list;
+  }  
 
     async get_available_schedule(dayMoment) {
       const timeCollection = collection(this.db, 'Time');

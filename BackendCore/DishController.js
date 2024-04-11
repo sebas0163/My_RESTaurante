@@ -9,6 +9,13 @@ class DishRes {
   }
 }
 
+class DishReq {
+    constructor( dish1, dish2) {
+      this.dish1 = dish1;
+      this.dish2 = dish2;
+    }
+  }
+
 class DishIface extends PubSubIface{
   constructor(topic_name='dish', projectId='silken-tenure-419721'){
     super(topic_name, projectId);
@@ -16,6 +23,7 @@ class DishIface extends PubSubIface{
 
   async setupTopics(topics) {
     await super.setupTopics(topics);
+    await this.create_upstream_sub();
   }
 
   async create_upstream_sub() {
@@ -24,24 +32,15 @@ class DishIface extends PubSubIface{
     console.log("Created the upstream sub");
   }
 
-  async delete_upstream_sub() {
-    const sub_name = this.upstream_sub.name;
-    await this.upstream_sub.delete();
-    this.subs = this.subs.filter(sub => sub.name != sub_name);
-    console.log("Deleted upstream sub");
-  }
-
   waitForResponseOnUpstream() {
     return new Promise(async (resolve, reject) => {
-      await this.create_upstream_sub();
-
       const responseListener = async (response) => {
-        await this.delete_upstream_sub();
+        response.ack();
         resolve(response);
       }
 
       const errorListener = async (response) => {
-        await this.delete_upstream_sub();
+        response.ack();
         reject(response);
       }
 
@@ -50,18 +49,20 @@ class DishIface extends PubSubIface{
     })
   }
 
-  async askSchedule(day) {
-    this.downstream_topic.publishMessage({data:Buffer.from(day)});
-    const upstream_res = await this.waitForResponseOnUpstream();
-    console.log("Got upstream res");
-    return upstream_res.data.toString();
-  }
 
   async getAllMenu(message) {
     this.downstream_topic.publishMessage({data:Buffer.from(message)});
     const upstream_res = await this.waitForResponseOnUpstream();
     console.log("Got upstream res");
-    return upstream_res.data.toString();
+    return JSON.parse(upstream_res.data.toString());
+  }
+
+  async askForDish(DishReq) {
+    const messageBuffer = Buffer.from(JSON.stringify(DishReq));
+    this.downstream_topic.publishMessage({data:messageBuffer});
+    const upstream_res = await this.waitForResponseOnUpstream();
+    console.log("Got upstream res");
+    return JSON.parse(upstream_res.data.toString());
   }
 
 }
@@ -70,24 +71,32 @@ class DishController {
   constructor() {
     this.getAllMenu = this.getAllMenu.bind(this);
     this.dishIface = new DishIface();
+    this.askForDish = this.askForDish.bind(this);
   }
 
   getAllMenu(req, res) {
-    message = ''
-    
+
+    const message = req.body.message || req.query.message || 'default message';
+
     this.dishIface.getAllMenu(message).then((time_res) => {
-              res.json(time_res);
+            res.json(time_res);
     });
+
   }
 
-//   askSchedule(req, res) {
-//     const dateString = req.body.day;
+  askForDish(req, res) {
+    const dish1 = req.body.dish1;
+    const dish2 = req.body.dish2;
 
-//     this.dishIface.askSchedule(dateString).then((time_res) => {
-//       res.json(time_res);
-//     });
+    const dishReq = new DishReq(dish1,dish2);
 
-//   }
+    console.log(dishReq);
+
+    this.dishIface.askForDish(dishReq).then((time_res) => {
+        res.json(time_res);
+    });
+
+  } 
 
 }
 

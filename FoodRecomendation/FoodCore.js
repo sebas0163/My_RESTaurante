@@ -2,8 +2,9 @@ const express = require('express');
 const firebaseApp =require("firebase/app");
 const router = express.Router();
 const firestore = require ("firebase/firestore");
-const { DatabaseController } = require('./DatabaseController');
+const {DatabaseController} = require('../common/DatabaseController');
 const {PubSubIface} = require('../common/PubSub');
+const { FoodMatcher } = require('./FoodMatcher');
 
 const firebaseApp_= firebaseApp.initializeApp({
     apiKey: "AIzaSyAGqShV0l2hfX2eO8hYzgXnXDmpO5F0xsI",
@@ -56,30 +57,47 @@ class DishIface extends PubSubIface {
 
 
 class FoodCore{
-  constructor(databaseController) {
+  constructor() {
     this.dishIface = new DishIface(this.simple_callback);
-    this.databaseController = databaseController;
+    this.databaseController = new DatabaseController();
+    this.foodMatcher = new FoodMatcher();
   }
 
-  destructor() {
-    this.dishIface.destructor();
-  }
+  simple_callback  = async (message) => {
+    console.log('Received message: ', message.data.toString());
+    message.ack();
 
-  simple_callback  = (message) => {
-    console.log('Received message:', message.data.toString());
-    // Now we need to return a message
+   
+    const messageContent = message.data.toString();
 
-    const timeRes = 1
-    const jsonString = JSON.stringify(timeRes);
+    if (messageContent === 'default message') {
+        // If the message is 'default message', do something
+        console.log('The message is the default message.');
 
-    this.dishIface.upstream_topic.publishMessage({data:Buffer.from(jsonString)})
+        // Now we need to return a message
+        const menu =  await this.databaseController.getAllMenuWithoutRef();
+        const jsonString = JSON.stringify(menu);
+        await this.dishIface.upstream_topic.publishMessage({data:Buffer.from(jsonString)})
 
-    this.destructor();
+    } else {
+        // If the message is not 'default message', do something else
+        const parsedData = JSON.parse(messageContent);
+
+        const dish1Value = parsedData.dish1;
+        const dish2Value = parsedData.dish2;
+
+        const result = await this.foodMatcher.findMatchForDish(dish1Value, dish2Value);
+        console.log('result: ', result);
+        const jsonString = JSON.stringify(result);
+        await this.dishIface.upstream_topic.publishMessage({data:Buffer.from(jsonString)})
+    }
+    
   }
 }
 
 // Instantiate the DatabaseController
-const databaseController = new DatabaseController(db)
+//const databaseController = new DatabaseController(db)
 
 // Instantiate FoodCore and export its router
-foodCore = new FoodCore(databaseController);
+foodCore = new FoodCore();
+module.exports = { DishIface }
