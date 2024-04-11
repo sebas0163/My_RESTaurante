@@ -9,6 +9,7 @@ class SentimentError extends Error{
         this.httpsCode = 400;
     }
 }
+
 class SentimentController {
     constructor(){
         this.client = new language.LanguageServiceClient({keyFilename: 'BackendCore/credentials.json'});
