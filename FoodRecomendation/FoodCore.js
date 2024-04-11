@@ -37,7 +37,6 @@ class DishIface extends PubSubIface {
   subscribe_to_downstream(callback) {
     this.downstream_sub.on('message', message => callback(message));
   }
-
 }
 
 
