@@ -46,4 +46,3 @@ class TimeCore{
 }
 
 timeCore = new TimeCore()
-
