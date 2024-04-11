@@ -15,15 +15,39 @@
       </div>
     </main>
 
+    <div class="feedback-container">
   <div class="outer-container">
     <mat-form-field appearance="fill" class="wide-textarea">
-      <textarea matInput placeholder="Escribe aquí..." rows="3" [(ngModel)]="textareaValue"></textarea>
+      <textarea matInput placeholder="Escribe aquí..." rows="3" [(ngModel)]="textareaValue" required></textarea>
+      <mat-error *ngIf="!textareaValue">Este campo es obligatorio</mat-error>
     </mat-form-field>
-    
+
+  </div>
+
+  <div class="feedbackResponse-container">
+    <div class="title-container">
+      <p class="page-title"> Tu Feedback:</p>
+    </div>
+    <div class="star-rating">
+      <mat-icon *ngFor="let star of [1, 2, 3, 4, 5]; let i = index">
+        {{ i < rating ? 'star' : 'star_border' }}
+      </mat-icon>
+    </div>
     <div class="button-container">
       <button class="pill" (click)="getFeedbackResponse()">Enviar feedback</button>
     </div>
+    <div class="content">
+      <div class="title-container">
+      <div class="left-side">
+        <p> {{feedbackResponse}}</p>
+      </div>
+      </div>
+
+    </div>
+    </div>
+    
   </div>
+
   </router-outlet>
 </div>
 
