@@ -29,19 +29,29 @@ class DatabaseController {
     // }
 
     async getDishById(dishId) {
-      const dishDocRef = doc(this.db, 'Dish', dishId);
-      const dishDoc = await getDoc(dishDocRef);
-      if (dishDoc.exists()) {
-          let dishData = dishDoc.data();
-          return {
-              ...dishData,
-              // Include the document ID if necessary
-              id: dishDoc.id,
-          };
-      } else {
-          return null;
+      try {
+          const dishDocRef = doc(this.db, 'Dish', dishId);
+          const dishDoc = await getDoc(dishDocRef);
+          if (dishDoc.exists()) {
+              let dishData = dishDoc.data();
+              return {
+                  ...dishData,
+                  // Include the document ID if necessary
+                  id: dishDoc.id,
+              };
+          } else {
+              // Handle the case where the document does not exist
+              console.log(`Dish with ID ${dishId} not found.`);
+              return null; // Or you might want to throw an error or return a specific value
+          }
+      } catch (error) {
+          // Handle any errors that occurred during the getDoc call or elsewhere
+          console.error(`Error fetching dish with ID ${dishId}:`, error);
+          throw error; // Rethrow the error if you want calling code to handle it
+          // Or return null or another specific value to indicate failure
       }
   }
+  
 
   async getAllMenuWithoutRef() {
     const dishCol = collection(this.db, 'Dish');
