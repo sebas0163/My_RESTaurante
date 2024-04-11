@@ -14,8 +14,6 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {provideNativeDateAdapter} from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
-import { MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule } from '@angular/material/dialog';
-
 
 @NgModule({
   declarations: [
@@ -34,12 +32,12 @@ import { MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule } from '@angular/material/d
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
-    MatDialogModule,
   ],
+
   providers: [
+  
     provideAnimationsAsync(),
-    provideNativeDateAdapter(),
-    {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}}
+    provideNativeDateAdapter()
   ],
   bootstrap: [AppComponent]
 })
