@@ -1,10 +1,12 @@
 
 const language = require('@google-cloud/language');
 
-class Sentiment {
-    constructor(floatMagnitude, floatScore) {
-      this.floatMagnitude = floatMagnitude;
-      this.floatScore = floatScore;
+class SentimentError extends Error{
+    constructor(message) {
+        super(message);
+        this.name = this.constructor.name;
+        this.stack = (new Error()).stack;
+        this.httpsCode = 400;
     }
 }
 class SentimentController {
@@ -25,11 +27,14 @@ class SentimentController {
     }
     parseSentiment(sentiment){
         var texto;
-        const score = Math.floor((sentiment["score"] + 1) * 2.5) + 1;
+        var score = Math.floor((sentiment["score"] + 1) * 2.5) + 1;
+        if(sentiment["magnitude"]<0.5){
+            throw new SentimentError("El mensaje de retroalimentación no fue comprendido adecuadamente. ");
+        }
         if (sentiment["score"] >= 0){
-            texto = "We're pleased you had a satisfactory experience.";
+            texto = "Nos complace que hayas tenido una experiencia satisfactoria.";
         }else {
-            texto = "We apologize for your experience and will strive to improve.";
+            texto = "Pedimos disculpas por tu experiencia y nos esforzaremos por mejorar.";
         }
         return {score: score, texto:texto}
     }
@@ -58,7 +63,18 @@ class SentimentController {
                 res.json(data);
                 console.log('Sentiment:', sentiment);
             } catch (error) {
-                console.error('Error:', error);
+                    if (error instanceof SentimentError){
+                         console.log(
+                        "Sentiment couldnt be interpreted ");
+                        res.status(error.httpsCode);
+                        res.json({"message":error.message});
+                    
+                        res.end();
+                    } else {
+                        res.status(500);
+                        res.end();
+                        throw error;
+                    }
             }
         })();
 
