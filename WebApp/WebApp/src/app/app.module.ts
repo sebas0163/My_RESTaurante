@@ -14,6 +14,10 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {provideNativeDateAdapter} from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 
 @NgModule({
   declarations: [
