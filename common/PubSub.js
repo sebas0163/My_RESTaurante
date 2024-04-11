@@ -24,13 +24,6 @@ class PubSubIface {
     });
   }
 
-  async destructor() {
-    console.log("Called destructor!")
-    this.subs.forEach(async (sub) => {
-      await sub.delete();
-    });
-  }
-
   async setupTopics(topics) {
     this.downstream_topic = await this.getTopicByName(this.downstream_topic_name);
     this.upstream_topic = await this.getTopicByName(this.upstream_topic_name);
@@ -54,9 +47,11 @@ class PubSubIface {
       await topic.createSubscription(subName)
       console.log("Created sub with name " + subName);
       sub = await this.getSubscriptionByName(topic, subName);
+      this.subs.push(sub);
     }
     return sub;
   }
 }
 
 module.exports = {PubSubIface};
+
