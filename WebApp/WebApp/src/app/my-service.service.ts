@@ -7,7 +7,7 @@ export class MyServiceService {
   private url: string;
 
   constructor() {
-    this.url = 'http://localhost:1234';
+    this.url = 'https://us-central1-silken-tenure-419721.cloudfunctions.net/Backend/api/';
   }
 
   getData(): string {

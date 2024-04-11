@@ -24,11 +24,7 @@ export class FeedbackComponent {
   constructor(private myService: MyServiceService, private http: HttpClient) {
     this.baseUrl = this.myService.getData();
     
-    this.url = this.baseUrl + '/api/Sentiment/';
-    console.log('Current URL:', this.url);
   }
-
-
 
 
 
@@ -38,7 +34,8 @@ export class FeedbackComponent {
 
   getFeedbackResponse(){
     try {
-      const apiUrl = this.url + `?feedback=${this.textareaValue}`;
+      const apiUrl = this.baseUrl + `Sentiment/?feedback=${this.textareaValue}`;
+      console.log("URLAA" + apiUrl);
       if (this.textareaValue != '') {
 
         this.http.get<any>(apiUrl).subscribe(
