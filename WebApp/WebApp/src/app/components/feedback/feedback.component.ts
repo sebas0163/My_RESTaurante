@@ -1,5 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Router, ActivatedRoute, RouterStateSnapshot } from '@angular/router';
+import { MyServiceService } from '../../my-service.service';
 
 
 @Component({
@@ -14,11 +16,20 @@ export class FeedbackComponent {
   feedbackResponse: string = '';
   response: string = '';
   is_feedback: boolean = false;
+  baseUrl: any;
+  url: any;
 
 
-  constructor(private http: HttpClient) { }
+  
+  constructor(private myService: MyServiceService, private http: HttpClient) {
+    this.baseUrl = this.myService.getData();
+    
+    this.url = this.baseUrl + '/api/Sentiment/';
+    console.log('Current URL:', this.url);
+  }
 
-  url = 'http://localhost:1234/api/Sentiment/';
+
+
 
 
   rate(index: number) {

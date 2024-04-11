@@ -18,8 +18,8 @@
     <div class="feedback-container">
   <div class="outer-container">
     <mat-form-field appearance="fill" class="wide-textarea">
-      <textarea matInput placeholder="Escribe aquí..." rows="3" [(ngModel)]="textareaValue" required></textarea>
       <mat-error *ngIf="!textareaValue">Este campo es obligatorio</mat-error>
+      <textarea matInput placeholder="Escribe aquí..." rows="3" [(ngModel)]="textareaValue" required></textarea>
     </mat-form-field>
 
   </div>

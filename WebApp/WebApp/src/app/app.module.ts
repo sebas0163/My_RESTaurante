@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { MenuRecommendationComponent } from './components/menu-recommendation/menu-recommendation.component';
 import { MenuComponent } from './components/menu/menu.component';
 import { TimeRecommendationComponent } from './components/time-recommendation/time-recommendation.component';
 import { FeedbackComponent } from './components/feedback/feedback.component';
@@ -21,7 +20,6 @@ import { MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule } from '@angular/material/d
 @NgModule({
   declarations: [
     AppComponent,
-    MenuRecommendationComponent,
     MenuComponent,
     TimeRecommendationComponent,
     FeedbackComponent,
