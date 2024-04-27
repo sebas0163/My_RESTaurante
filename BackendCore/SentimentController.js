@@ -40,8 +40,6 @@ class SentimentController {
         return {score: score, texto:texto}
     }
     askForSentiment(req, res) {
-        
-        
         const { feedback } = req.query;
         const { feedback: feedbackParam } = req.params;
       
@@ -56,6 +54,7 @@ class SentimentController {
         (async () => {
             try {
                 const sentiment = await this.parseHttpRequest(feedbackValue);
+                debugger;
                 const sentiment_value = this.parseSentiment(sentiment);
                 const data = {
                     "score": sentiment_value.score,
@@ -82,4 +81,4 @@ class SentimentController {
         
     }
 }
-module.exports = { SentimentController };
+module.exports = { SentimentController, SentimentError};
