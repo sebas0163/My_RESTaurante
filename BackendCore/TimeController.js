@@ -8,7 +8,7 @@ class TimeRes {
   }
 }
 
-class TimeIface extends PubSubIface{
+class TimeIface extends PubSubIface {
   constructor(topic_name='time', projectId='silken-tenure-419721'){
     super(topic_name, projectId);
   }
@@ -65,7 +65,6 @@ class TimeController {
 
 }
 
-module.exports = { TimeController }
-
+module.exports = { TimeController, TimeIface }
 
 
