@@ -1,5 +1,5 @@
 const moment = require('moment');
-const {PubSubIface} = require('../common/PubSub');
+const {PubSubIface} = require('../DB/PubSub');
 
 class TimeRes {
   constructor(errorCode, schedule) {
@@ -40,6 +40,16 @@ class TimeIface extends PubSubIface{
     })
   }
 
+  /**
+   * The function `askSchedule` asynchronously sends a message with the given day, waits for a response
+   * on the upstream, and returns the parsed JSON response.
+   * 
+   * @param day The `day` parameter in the `askSchedule` function represents the day for which you want
+   * to retrieve a schedule. It is used to publish a message to a downstream topic and then wait for a
+   * response on the upstream before parsing and returning the received data.
+   * 
+   * @return The `askSchedule` function is returning the avalaible times
+   */
   async askSchedule(day) {
     this.downstream_topic.publishMessage({data:Buffer.from(day)});
     const upstream_res = await this.waitForResponseOnUpstream();
@@ -48,6 +58,8 @@ class TimeIface extends PubSubIface{
   }
 }
 
+/* The `class TimeController` is a JavaScript class that serves as a controller for handling requests
+related to time schedules. */
 class TimeController {
   constructor() {
     this.askSchedule = this.askSchedule.bind(this);

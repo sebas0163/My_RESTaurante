@@ -2,8 +2,8 @@ const express = require('express');
 const firebaseApp =require("firebase/app");
 const router = express.Router();
 const firestore = require ("firebase/firestore");
-const {DatabaseController} = require('../common/DatabaseController');
-const {PubSubIface} = require('../common/PubSub');
+const {DatabaseController} = require('../DB/DatabaseController');
+const {PubSubIface} = require('../DB/PubSub');
 const { FoodMatcher } = require('./FoodMatcher');
 
 const firebaseApp_= firebaseApp.initializeApp({
@@ -39,22 +39,6 @@ class DishIface extends PubSubIface {
   }
 
 }
-
-
-//
-
-// router.get('/getMenu', async (req, res) => {
-//   try {
-//       const list = await databaseController.getAllMenu();
-//       res.send(list);
-//   } catch (error) {
-//       console.log(error)
-//       res.status(500).send(error.message);
-//   }
-// });
-
-//module.exports = router;
-
 
 class FoodCore{
   constructor() {
@@ -96,7 +80,6 @@ class FoodCore{
 }
 
 // Instantiate the DatabaseController
-//const databaseController = new DatabaseController(db)
 
 // Instantiate FoodCore and export its router
 foodCore = new FoodCore();
