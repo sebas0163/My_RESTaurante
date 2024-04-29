@@ -100,4 +100,4 @@ class DishController {
 
 }
 
-module.exports = { DishController }
+module.exports = { DishController, DishIface, DishReq}
