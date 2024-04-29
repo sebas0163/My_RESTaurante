@@ -35,6 +35,7 @@ class TimeCore{
     console.log('Received message:', message.data.toString());
     message.ack();
 
+    debugger;
     const day = moment(message.data.toString(), "DD/MM/YYYY");
     const days =  await this.databaseController.get_available_schedule(day);
 
@@ -46,3 +47,5 @@ class TimeCore{
 }
 
 timeCore = new TimeCore()
+
+module.exports = {TimeCore, TimeIface}
