@@ -18,6 +18,8 @@ export class TimeRecommendationComponent {
   times: any = [];
   baseUrl: any;
 
+  isTimeSelected: boolean = false;
+
   
   constructor(private myService: MyServiceService, private http: HttpClient) {
     this.baseUrl = this.myService.getTimeUrl();
@@ -69,5 +71,11 @@ export class TimeRecommendationComponent {
     }
   }
 
+
+  updateSelection(time: string) {
+    this.isTimeSelected = true;
+    // You can also do other things here based on the selected time
+    console.log("s");
+  }
 
 }

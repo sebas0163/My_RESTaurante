@@ -26,9 +26,14 @@
     <h3 class="page-title">Las opciones de hora para la fecha seleccionada son:</h3>
       <ul>
         <div *ngFor="let time of times">
-          <p>{{ time }}</p>
+            <label>
+              <input type="radio" name="timeOption" [value]="time" (change)="updateSelection(time)">{{ time }}
+            </label>
         </div>
       </ul>
+      <div class="button-container"  *ngIf="this.isTimeSelected">
+        <button class="pill" routerLink="/time-recommendation-component">Reservar</button>
+      </div>
   </div>
 
   </router-outlet>
