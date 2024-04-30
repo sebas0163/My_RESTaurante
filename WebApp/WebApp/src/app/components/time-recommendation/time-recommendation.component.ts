@@ -59,6 +59,7 @@ export class TimeRecommendationComponent {
       this.http.post<any>(this.baseUrl, body).subscribe(
         (response) => {
           this.times = response;
+          console.log(response);
           this.times = this.times.map((item: moment.MomentInput) => moment(item).format('MMMM D, YYYY, h:mm A'));
         },
         (error) => {

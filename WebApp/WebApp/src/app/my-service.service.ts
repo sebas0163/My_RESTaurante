@@ -17,14 +17,14 @@ export class MyServiceService {
   }
 
   getTimeUrl(): string {
-    return this.baseUrl + 'api/recomendation/time';
+    return  'http://localhost:1234/api/recomendation/time';
   }
 
   getMenuUrl(): string {
-    return this.baseUrl + 'api/food/menu';
+    return 'http://localhost:1234/api/food/menu';
   }
   getMenuRecUrl(): string {
-    return this.baseUrl + 'api/food/recomendation';
+    return 'http://localhost:1234/api/food/recomendation';
   }
   
 
