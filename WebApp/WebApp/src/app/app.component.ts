@@ -9,6 +9,8 @@ import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/rou
 })
 export class AppComponent {
   title = 'My RESTaurant';
+  userLoggedIn: any;
+  adminLoggedIn: any;
 }
 
 
