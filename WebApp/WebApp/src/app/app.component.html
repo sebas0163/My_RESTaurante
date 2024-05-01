@@ -4,12 +4,26 @@
   <router-outlet>
     <div class="title-container">
       <p class="page-title"> {{ title }}</p>
+      
     </div>
-    <div class="button-group">
-      <button class="pill" routerLink="/menu-component">Menu</button>
-      <button class="pill" routerLink="/time-recommendation-component">Disponibilidad</button>
-      <button class="pill" routerLink="/feedback-component">Quiero dar Feedback</button>
+
+    <div class="nav-bar">
+      <div class="button-group">
+        <button class="pill" routerLink="/menu-component">Menu</button>
+        <button class="pill" routerLink="/time-recommendation-component">Disponibilidad de Horarios</button>
+        <ng-container *ngIf="userLoggedIn">
+          <button class="pill" routerLink="/user-reservations-component">Mis Reservas</button> <!-- User logged -->
+        </ng-container>
+        <ng-container *ngIf="adminLoggedIn">
+        <button class="pill" routerLink="/admin-reservations-component">Ver Reservas</button> <!-- Admin view -->
+      </ng-container>
+        <!-- <button class="pill" routerLink="/feedback-component">Quiero dar Feedback</button> -->
+      </div>
+      <button class="login-icon" mat-icon-button routerLink="/user-login-component">
+        <mat-icon>person</mat-icon>
+      </button>
     </div>
+
   </router-outlet>
 </div>
 

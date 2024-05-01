@@ -14,6 +14,11 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {provideNativeDateAdapter} from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
+import { UserRegistrationComponent } from './components/user-registration/user-registration.component';
+import { UserLoginComponent } from './components/user-login/user-login.component';
+import { MatButtonModule } from '@angular/material/button';
+import { AdminReservationsComponent } from './components/admin-reservations/admin-reservations.component';
+import { UserReservationsComponent } from './components/user-reservations/user-reservations.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +26,10 @@ import { MatIconModule } from '@angular/material/icon';
     MenuComponent,
     TimeRecommendationComponent,
     FeedbackComponent,
+    UserRegistrationComponent,
+    UserLoginComponent,
+    AdminReservationsComponent,
+    UserReservationsComponent,
   ],
   imports: [
     BrowserModule,
@@ -32,6 +41,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
+    MatButtonModule
   ],
 
   providers: [

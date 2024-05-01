@@ -9,6 +9,7 @@
     </div>
     <main class="main">
 
+    <div class="outer-container">
       <div class="content">
         <div class="left-side">
           <p><strong>Postres:</strong></p>
@@ -36,8 +37,12 @@
             </label>
           </div>
         </div>
+        
       </div>
-      
+      <div *ngIf="!this.is_two_values">
+        <p class="error">Por favor seleccione 2 opciones</p>
+      </div>
+    </div>
       
     </main>
     <div class="content">
@@ -45,8 +50,9 @@
         <button class="pill" (click)="clearSelections()">Limpiar</button>
       </div>
       <div class="button-container">
-        <button class="pill" (click)="getMenuRecommendation()">Obtener Reccomendacion</button>
+        <button class="pill" (click)="postMenuRecommendation()">Obtener Reccomendacion</button>
       </div>
+      
     </div>
     
 
@@ -58,9 +64,8 @@
       <div class="content" *ngIf="this.showRecommendationContent">
         <div class="left-side">
           <p>Gracias por seleccionar tus opciones favoritas. Te recomendamos combinar tu selección con:</p>
-          <p>{{mainDishRec}}</p>
-          <p>{{dessertRec}}</p>
-          <p>{{beverageRec}}</p>
+          <p>{{dishRec1}}</p>
+          <p>{{dishRec2}}</p>
         </div>
 
       </div>

@@ -18,6 +18,8 @@ export class TimeRecommendationComponent {
   times: any = [];
   baseUrl: any;
 
+  isTimeSelected: boolean = false;
+
   
   constructor(private myService: MyServiceService, private http: HttpClient) {
     this.baseUrl = this.myService.getTimeUrl();
@@ -59,6 +61,7 @@ export class TimeRecommendationComponent {
       this.http.post<any>(this.baseUrl, body).subscribe(
         (response) => {
           this.times = response;
+          console.log(response);
           this.times = this.times.map((item: moment.MomentInput) => moment(item).format('MMMM D, YYYY, h:mm A'));
         },
         (error) => {
@@ -68,5 +71,11 @@ export class TimeRecommendationComponent {
     }
   }
 
+
+  updateSelection(time: string) {
+    this.isTimeSelected = true;
+    // You can also do other things here based on the selected time
+    console.log("s");
+  }
 
 }
