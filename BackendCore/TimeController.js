@@ -1,5 +1,5 @@
-const moment = require('moment');
-const {PubSubIface} = require('../common/PubSub');
+const moment = require("moment");
+const { PubSubIface } = require("../common/PubSub");
 
 class TimeRes {
   constructor(errorCode, schedule) {
@@ -8,8 +8,8 @@ class TimeRes {
   }
 }
 
-class TimeIface extends PubSubIface{
-  constructor(topic_name='time', projectId='silken-tenure-419721'){
+class TimeIface extends PubSubIface {
+  constructor(topic_name = "time", projectId = "silken-tenure-419721") {
     super(topic_name, projectId);
   }
 
@@ -19,7 +19,10 @@ class TimeIface extends PubSubIface{
   }
 
   async create_upstream_sub() {
-    this.upstream_sub = await this.getSubscriptionByName(this.upstream_topic, this.upstream_sub_name);
+    this.upstream_sub = await this.getSubscriptionByName(
+      this.upstream_topic,
+      this.upstream_sub_name
+    );
     console.log("Created the upstream sub");
   }
 
@@ -28,20 +31,20 @@ class TimeIface extends PubSubIface{
       const responseListener = async (response) => {
         response.ack();
         resolve(response);
-      }
+      };
 
       const errorListener = async (response) => {
         response.ack();
         reject(response);
-      }
+      };
 
-      this.upstream_sub.on('message', responseListener);
-      this.upstream_sub.on('error', errorListener);
-    })
+      this.upstream_sub.on("message", responseListener);
+      this.upstream_sub.on("error", errorListener);
+    });
   }
 
   async askSchedule(day) {
-    this.downstream_topic.publishMessage({data:Buffer.from(day)});
+    this.downstream_topic.publishMessage({ data: Buffer.from(day) });
     const upstream_res = await this.waitForResponseOnUpstream();
     console.log("Got upstream res");
     return JSON.parse(upstream_res.data.toString());
@@ -60,12 +63,7 @@ class TimeController {
     this.timeIface.askSchedule(dateString).then((time_res) => {
       res.json(time_res);
     });
-
   }
-
 }
 
-module.exports = { TimeController }
-
-
-
+module.exports = { TimeController };
