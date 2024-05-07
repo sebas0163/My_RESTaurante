@@ -1,4 +1,4 @@
-const { collection, doc, getDoc, getDocs, query, where } = require('firebase/firestore');
+const { collection, doc, getDoc, getDocs,updateDoc,addDoc, query, where } = require('firebase/firestore');
 const firebase = require('firebase/app');
 const moment = require('moment');
 const firebaseApp =require("firebase/app");
@@ -111,6 +111,90 @@ class DatabaseController {
       
       return times;
     }
+
+    async getUser(email, password) {
+        const userCollection = collection(this.db, 'User');
+        const q = query(userCollection, where('email', '==', email));
+        const snapshot = await getDocs(q);
+
+        if (snapshot.empty) {
+            console.log('No matching users.');
+            return null;
+        }
+        const users = snapshot.docs.map(doc => {
+            const data = doc.data();
+            // Assuming 'timestamp' is stored as a Firestore Timestamp object
+            return {'email':data.email,
+                    'password': data.password,
+                    'access_level': data.access_level
+                    };
+        });
+        
+        return users[0];
+    }
+    async addUser(data) {
+        try {
+            const userCollection = collection(this.db, 'User');
+            const docRef = await addDoc(userCollection, data);
+            console.log('Document written with ID: ', docRef.id);
+            return docRef.id;
+          } catch (error) {
+            console.error('Error adding document: ', error);
+            throw error;
+          }
+    }
+    async updateUserPassword(email, recovery_pin, new_password) {
+        try {
+            const userCollection = collection(this.db, 'User');
+            const q = query(userCollection, where('email', '==', email));
+            const snapshot = await getDocs(q);
+            
+            if (snapshot.empty) {
+                console.log('No matching users.');
+                return null;
+            }
+            
+            const userDocRef = snapshot.docs[0].ref;
+            const db_recovery_pin= snapshot.docs[0].data().recovery_pin;
+
+            if(db_recovery_pin==recovery_pin){
+                await updateDoc(userDocRef, {
+                    'password': new_password
+                });
+                console.log(`recovery_pin ${recovery_pin}`)
+                console.log(`Field "password" updated successfully for user with ID: ${new_password}`);
+                return 1;
+            }else{
+                console.log(`ERROR: wrong recovery_pin`)
+                return 0;
+            }
+        } catch (error) {
+            console.error('Error updating field: ', error);
+            throw error;
+        }
+    } 
+    async updateUserPermit(email, access_level) {
+        try {
+            const userCollection = collection(this.db, 'User');
+            const q = query(userCollection, where('email', '==', email));
+            const snapshot = await getDocs(q);
+            
+            if (snapshot.empty) {
+                console.log('No matching users.');
+                return null;
+            }
+            const userDocRef = snapshot.docs[0].ref;
+            await updateDoc(userDocRef, {
+                'access_level': access_level
+            });
+            console.log(`changed access_level to: ${access_level}`);
+            return 1;
+
+        } catch (error) {
+            console.error('Error updating field: ', error);
+            throw error;
+        }
+    } 
 }
 
 module.exports = { DatabaseController };
