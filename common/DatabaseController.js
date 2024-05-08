@@ -111,6 +111,92 @@ class DatabaseController {
       
       return times;
     }
+    //HERE STARTS RESERVARTION CONTROL
+    /**
+     * Get a reservation by id
+     * @param {*} id reservation's id
+     * @returns json {id, name, people, time}
+     */
+    async getReservationByID(id){
+        const ref = doc(db, "Reservation",id);
+        const ref_doc = await getDoc(ref);
+        
+        // Obtener la referencia del usuario
+        const userRef = ref_doc.data().user;
+        
+        // Obtener los datos del usuario
+        const userDocSnap = await getDoc(userRef);
+        const userData = userDocSnap.data();
+        const timeDocSnap = await getDoc(ref_doc.data().time);
+        const timeData = timeDocSnap.data();
+        const date = new Date(timeData.time.seconds * 1000 + timeData.time.nanoseconds / 1e6);
+        const formattedDateTime = date.toLocaleString();
+        const reservation ={
+            id: ref_doc.id,
+            people: ref_doc.data().people,
+            name: userData.name,
+            time: formattedDateTime
+        }
+        return reservation;
+    
+    }
+    /**
+     * Create a new reservations
+     * @param {*} userid user's id
+     * @param {*} timeid time's id
+     * @param {*} people number of people 
+     */
+    async createNewRervation(userid, timeid, people){
+        try {
+            // Crear una nueva reserva en la colección "Reservation"
+            const docRef = await addDoc(collection(db, 'Reservation'), {
+                people: people,
+                time: doc(db,'Time', timeid),
+                user: doc(db,'User', userid)
+            });
+            console.log("Documento de reserva creado con ID:", docRef.id);
+        } catch (error) {
+            console.error("Error al crear la reserva:", error);
+        }
+    }
+    /**
+     * Delete a Reservation
+     * @param {*} reservationId reservation's id
+     */
+    async  deleteReservation(reservationId){
+        try {
+            const reservationRef = doc(db, 'Reservation', reservationId);
+            await deleteDoc(reservationRef);
+            console.log("Reserva eliminada correctamente.");
+        } catch (error) {
+            console.error("Error al eliminar la reserva:", error);
+        }
+    }
+    /**
+     * Get all the reservations on the system
+     * @returns list of json [{name,people,time}]
+     */
+    async  getAllReservations(){
+        const reservations =[];
+        const querySnapshot = await getDocs(collection(db, 'Reservation'));
+        querySnapshot.forEach(async (doc) => {
+            const userDocSnap = await getDoc(doc.data().time);
+            const userData = userDocSnap.data();
+            const timeDocSnap = await getDoc(doc.data().time);
+            const timeData = timeDocSnap.data();
+            const date = new Date(timeData.time.seconds * 1000 + timeData.time.nanoseconds / 1e6);
+            const formattedDateTime = date.toLocaleString();
+            const reservationData = doc.data();
+            const reservation = {
+                id: doc.id,
+                people: reservationData.people,
+                name: userData.name,
+                time: formattedDateTime
+            }
+            reservations.push(reservation);
+        });
+        return reservations
+    }
 }
 
 module.exports = { DatabaseController };
