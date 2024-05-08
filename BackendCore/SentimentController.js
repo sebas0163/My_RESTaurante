@@ -54,7 +54,6 @@ class SentimentController {
         (async () => {
             try {
                 const sentiment = await this.parseHttpRequest(feedbackValue);
-                debugger;
                 const sentiment_value = this.parseSentiment(sentiment);
                 const data = {
                     "score": sentiment_value.score,
