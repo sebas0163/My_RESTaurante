@@ -1,0 +1,38 @@
+[
+  {
+    "full_name": "John Doe",
+    "date": "2024-05-05",
+    "time": "09:00 AM",
+    "people": "2"
+  },
+  {
+    "full_name": "Jane Smith",
+    "date": "2024-05-06",
+    "time": "10:30 AM",
+    "people": "5"
+  },
+  {
+    "full_name": "Alice Johnson",
+    "date": "2024-05-07",
+    "time": "02:00 PM",
+    "people": "4"
+  },
+  {
+    "full_name": "John Doe2",
+    "date": "2024-05-05",
+    "time": "11:00 AM",
+    "people": "6"
+  },
+  {
+    "full_name": "Jane Smith2",
+    "date": "2024-05-06",
+    "time": "12:30 AM",
+    "people": "4"
+  },
+  {
+    "full_name": "Alice Johnson2",
+    "date": "2024-05-07",
+    "time": "04:00 PM",
+    "people": "1"
+  }
+]
