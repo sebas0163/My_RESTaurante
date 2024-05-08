@@ -20,14 +20,17 @@ class DatabaseController {
     }
 
 
-    // async getAllMenu() { 
-    //     const dishCol = collection(this.db, 'Dish');
-    //     const dishSnapshot = await getDocs(dishCol);
-    //     const list = dishSnapshot.docs.map(doc => doc.data());
-    //     console.log(list);
-    //     return list;
-    // }
 
+    /**
+     * The function `getDishById` retrieves a dish document from a Firestore database by its ID,
+     * handling cases where the document does not exist or errors occur during the retrieval process.
+     * 
+     * @param dishId The `dishId` parameter in the `getDishById` function is the unique identifier of
+     * the dish document that you want to retrieve from the database. 
+     * 
+     * @return The `getDishById` function returns an object containing the data of the dish with the
+     * specified ID. 
+     */
     async getDishById(dishId) {
       try {
           const dishDocRef = doc(this.db, 'Dish', dishId);
@@ -53,6 +56,13 @@ class DatabaseController {
   }
   
 
+  /**
+   * The function `getAllMenuWithoutRef` retrieves all menu items without references from a Firestore
+   * database collection named 'Dish'.
+   * 
+   * @return The `getAllMenuWithoutRef` function is returning a list of objects with `name` and `type`
+   * properties for each dish in the "Dish" collection in the database.
+   */
   async getAllMenuWithoutRef() {
     const dishCol = collection(this.db, 'Dish');
     const dishSnapshot = await getDocs(dishCol);
@@ -67,6 +77,16 @@ class DatabaseController {
     return list;
 }  
 
+    /**
+     * This function retrieves all menu items from a Firestore collection and returns an array of
+     * objects containing the name, type, and IDs of related documents.
+     * 
+     * @return The `getAllMenu` function is returning a list of objects, where each object represents a
+     * dish from the 'Dish' collection in the database. Each object contains the following properties:
+     * - `name`: The name of the dish
+     * - `type`: The type of the dish
+     * - `req1Id`: The ID of the document referenced by the `req1` field in the dish document
+     */
     async getAllMenu() {
       const dishCol = collection(this.db, 'Dish');
       const dishSnapshot = await getDocs(dishCol);
@@ -84,6 +104,17 @@ class DatabaseController {
       return list;
   }  
 
+    /**
+     * The function `get_available_schedule` retrieves available schedule times for a specified day
+     * from a Firestore database and returns them as Moment.js objects.
+     * 
+     * @param dayMoment The `dayMoment` parameter represents a specific moment in time within a day for
+     * which you want to retrieve available schedules. This function retrieves schedules from a
+     * Firestore database collection based on the specified day.
+     * 
+     * @return The `get_available_schedule` function returns an array of Moment.js objects representing
+     * the available schedule for the specified `dayMoment`.
+     */
     async get_available_schedule(dayMoment) {
       const timeCollection = collection(this.db, 'Time');
       

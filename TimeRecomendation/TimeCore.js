@@ -1,6 +1,6 @@
 // Imports the Google Cloud client library
-const {PubSubIface} = require('../common/PubSub');
-const {DatabaseController} = require('../common/DatabaseController');
+const {PubSubIface} = require('../DB/PubSub');
+const {DatabaseController} = require('../DB/DatabaseController');
 const moment = require('moment');
 
 class TimeIface extends PubSubIface {

@@ -1,5 +1,5 @@
 // Assuming DatabaseController is correctly implemented as shown before
-const { DatabaseController } = require('../common/DatabaseController');
+const { DatabaseController } = require('../DB/DatabaseController');
 
 class FoodMatcher {
     constructor() {

@@ -1,5 +1,5 @@
 const moment = require('moment');
-const {PubSubIface} = require('../common/PubSub');
+const {PubSubIface} = require('../DB/PubSub');
 
 class DishRes {
   constructor(errorCode, dish1, dish2) {
@@ -50,6 +50,18 @@ class DishIface extends PubSubIface{
   }
 
 
+  /**
+   * The function `getAllMenu` sends a message downstream, waits for a response upstream, and returns
+   * the parsed JSON response.
+   * 
+   * @param message The `message` parameter in the `getAllMenu` function seems to be the data that is
+   * being sent downstream using `this.downstream_topic.publishMessage({data:Buffer.from(message)})`.
+   * It is likely a message or data related to menu items or some kind of request being sent to a
+   * downstream service
+   * 
+   * @return The `getAllMenu` function is returning the parsed JSON data from the response received
+   * from the upstream service.
+   */
   async getAllMenu(message) {
     this.downstream_topic.publishMessage({data:Buffer.from(message)});
     const upstream_res = await this.waitForResponseOnUpstream();
@@ -57,6 +69,14 @@ class DishIface extends PubSubIface{
     return JSON.parse(upstream_res.data.toString());
   }
 
+  /**
+   * The function `askForDish` sends a request for a dish, waits for a response, and returns the
+   * result.
+   * 
+   * @param DishReq DishReq type object
+   * 
+   * @return The `askForDish` function is returning the response 
+   */
   async askForDish(DishReq) {
     const messageBuffer = Buffer.from(JSON.stringify(DishReq));
     this.downstream_topic.publishMessage({data:messageBuffer});
@@ -67,6 +87,7 @@ class DishIface extends PubSubIface{
 
 }
 
+/* The `class DishController` defines a controller class that handles requests related to dishes. */
 class DishController {
   constructor() {
     this.getAllMenu = this.getAllMenu.bind(this);
@@ -74,6 +95,13 @@ class DishController {
     this.askForDish = this.askForDish.bind(this);
   }
 
+  /**
+   * The function `getAllMenu` retrieves all menu items based on a provided message and sends the
+   * response as JSON.
+   * 
+   * @param req Request database all menu items
+   * @param res List of Menu items
+   */
   getAllMenu(req, res) {
 
     const message = req.body.message || req.query.message || 'default message';
@@ -84,6 +112,13 @@ class DishController {
 
   }
 
+  /**
+   * The function `askForDish` takes two dish inputs from a request, creates a `DishReq` object, and
+   * then uses `dishIface` to ask for the dish, returning the response in JSON format.
+   * 
+   * @param req The `req` with chosen dishes
+   * @param res The `res` with the recommended dishes
+   */
   askForDish(req, res) {
     const dish1 = req.body.dish1;
     const dish2 = req.body.dish2;
