@@ -1,4 +1,4 @@
-const { collection, doc, getDoc, getDocs,updateDoc,addDoc, query, where } = require('firebase/firestore');
+const { collection, doc,deleteDoc, getDoc, getDocs,updateDoc,addDoc, query, where } = require('firebase/firestore');
 const firebase = require('firebase/app');
 const moment = require('moment');
 const firebaseApp =require("firebase/app");
@@ -126,7 +126,8 @@ class DatabaseController {
             // Assuming 'timestamp' is stored as a Firestore Timestamp object
             return {'email':data.email,
                     'password': data.password,
-                    'access_level': data.access_level
+                    'access_level': data.access_level,
+                    'name': data.name
                     };
         });
         
@@ -136,10 +137,10 @@ class DatabaseController {
         try {
             const userCollection = collection(this.db, 'User');
             const docRef = await addDoc(userCollection, data);
-            console.log('Document written with ID: ', docRef.id);
+            console.log('DB controller dice: Document written with ID: ', docRef.id);
             return docRef.id;
           } catch (error) {
-            console.error('Error adding document: ', error);
+            console.error('DB controller dice: Error adding document: ', error);
             throw error;
           }
     }
@@ -150,7 +151,7 @@ class DatabaseController {
             const snapshot = await getDocs(q);
             
             if (snapshot.empty) {
-                console.log('No matching users.');
+                console.log('DB controller dice: No matching users.');
                 return null;
             }
             
@@ -161,15 +162,15 @@ class DatabaseController {
                 await updateDoc(userDocRef, {
                     'password': new_password
                 });
-                console.log(`recovery_pin ${recovery_pin}`)
-                console.log(`Field "password" updated successfully for user with ID: ${new_password}`);
+                console.log(`DB controller dice: recovery_pin ${recovery_pin}`)
+                console.log(`DB controller dice: Field "password" updated successfully for user with ID: ${new_password}`);
                 return 1;
             }else{
-                console.log(`ERROR: wrong recovery_pin`)
+                console.log(`DB controller dice: ERROR: wrong recovery_pin`)
                 return 0;
             }
         } catch (error) {
-            console.error('Error updating field: ', error);
+            console.error('DB controller dice: Error updating field: ', error);
             throw error;
         }
     } 
@@ -180,18 +181,48 @@ class DatabaseController {
             const snapshot = await getDocs(q);
             
             if (snapshot.empty) {
-                console.log('No matching users.');
+                console.log('DB controller dice: No matching users.');
                 return null;
             }
             const userDocRef = snapshot.docs[0].ref;
             await updateDoc(userDocRef, {
                 'access_level': access_level
             });
-            console.log(`changed access_level to: ${access_level}`);
+            console.log(`DB controller dice: changed access_level to: ${access_level}`);
             return 1;
 
         } catch (error) {
-            console.error('Error updating field: ', error);
+            console.error('DB controller dice: Error updating field: ', error);
+            throw error;
+        }
+    }
+    async deleteUser(email, password){
+        try {
+            const userCollection = collection(this.db, 'User');
+            const q = query(userCollection, where('email', '==', email));
+            const usr_snapshot = await getDocs(q);
+            
+            
+            if (usr_snapshot.empty) {
+                console.log('DB controller dice: No matching users.');
+                return null;
+            }
+            const userDocRef = usr_snapshot.docs[0].ref;
+            await deleteDoc(userDocRef);
+            console.log(`DB controller dice: user deleted`);
+
+            const reservationCollection = collection(this.db, 'Reservation');
+            const reservation_q = query(reservationCollection, where('user', '==', userDocRef));
+            const reservation_snapshot = await getDocs(reservation_q);
+            reservation_snapshot.forEach(async (doc) => {
+                await deleteDoc(doc.ref);
+                console.log("DB controller dice: Document deleted successfully from Firestore:", doc.id);
+              });
+              console.log(`DB controller dice: all reservations of user deleted`);
+            return 1;
+
+        } catch (error) {
+            console.error('DB controller dice: Error deleting user: ', error);
             throw error;
         }
     } 
