@@ -1,4 +1,4 @@
-const {DatabaseController} = require('../common/DatabaseController');
+
 const {PubSubIface} = require('../common/PubSub');
 
 
