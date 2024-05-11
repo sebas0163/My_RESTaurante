@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 @Component({
@@ -8,6 +8,7 @@ import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/rou
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
+
   title = 'My RESTaurant';
   userLoggedIn: any;
   adminLoggedIn: any;
