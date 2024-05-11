@@ -48,3 +48,4 @@ entry_function = async (pubsub_message) => {
 };
 
 module.exports = { entry_function };
+
