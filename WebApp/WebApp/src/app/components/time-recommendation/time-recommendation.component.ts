@@ -2,12 +2,22 @@ import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { MyServiceService } from '../../my-service.service';
 import moment from 'moment';
+import { AuthenticationService } from '../../_services/authentication.service';
+import { User } from '../../_models/user';
+import { Role } from '../../_models/role';
+
+export interface TableData {
+  date: string;
+  time: string;
+  quota: string;
+  selectedPeople: string;
+}
 
 
 @Component({
   selector: 'app-time-recommendation',
   templateUrl: './time-recommendation.component.html',
-  styleUrls: ['../../app.component.scss'],
+  styleUrls: ['./time-recommendation.scss'],
   
 })
 export class TimeRecommendationComponent {
@@ -17,23 +27,49 @@ export class TimeRecommendationComponent {
   selectedDate: Date | null = null; // Initialize the property directly
   times: any = [];
   baseUrl: any;
+  date: string | undefined;
+  time: string | undefined;
 
   isTimeSelected: boolean = false;
 
+  displayedColumns: string[] = ['date', 'time', 'quota', 'people', 'actions'];
+  dataSource: TableData[] = [];
   
-  constructor(private myService: MyServiceService, private http: HttpClient) {
+  user: User;
+  isUser = false;
+
+  
+  constructor(private myService: MyServiceService,
+    private http: HttpClient,
+    private authenticationService: AuthenticationService) {
     this.baseUrl = this.myService.getTimeUrl();
+    this.user = <User>this.authenticationService.userValue;
+
   }
+
+  ngOnInit() {
+    this.http.get<TableData[]>('../assets/mockTimeAvailability.json')
+      .subscribe((data) => {
+        this.dataSource = data;
+        console.log(this.dataSource);
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    );
+
+    this.isUser = (this.user?.access_level === Role.User);
+  }
+  
 
   getDateRecommendation(){
     if(this.selectedDate){
       this.showRecommendationContent = true;
-      console.log(this.selectedDate.toLocaleDateString())
     }
     try {
-        this.http.get<any>('apiUrl').subscribe(
+        this.http.get<any>(this.baseUrl).subscribe(
           (response) => {
-            console.log(response);
+            console.log("Times", response);
             this.times = response.times;
           },
           (error) => {
@@ -74,8 +110,12 @@ export class TimeRecommendationComponent {
 
   updateSelection(time: string) {
     this.isTimeSelected = true;
-    // You can also do other things here based on the selected time
-    console.log("s");
   }
+
+
+  reserve(row: TableData): void {
+    console.log(row);
+  }
+
 
 }

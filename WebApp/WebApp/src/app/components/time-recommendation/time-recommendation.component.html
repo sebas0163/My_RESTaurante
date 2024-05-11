@@ -1,9 +1,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
 
+<!--
 <div class="outer-container">
   <router-outlet>
     <div class="title-container">
-      <p class="page-subtitle"> Recomendacion de hora </p>
+      <p class="page-subtitle"> Disponibilidad de Horarios </p>
     </div>
     <main class="main">
 
@@ -38,4 +39,50 @@
 
   </router-outlet>
 </div>
+-->
 
+<div class="table">
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+  <ng-container matColumnDef="date">
+    <th mat-header-cell *matHeaderCellDef> Fecha </th>
+    <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="time">
+    <th mat-header-cell *matHeaderCellDef> Hora </th>
+    <td mat-cell *matCellDef="let element"> {{element.time}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="quota">
+    <th mat-header-cell *matHeaderCellDef> Cupos </th>
+    <td mat-cell *matCellDef="let element"> {{element.quota}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="people">
+    <th mat-header-cell *matHeaderCellDef> Personas </th>
+    <td mat-cell *matCellDef="let element">
+      <select [(ngModel)]="element.selectedPeople" name="people">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+      </select>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef> Reservar </th>
+    <td mat-cell *matCellDef="let element">
+      <button [disabled]="!isUser" (click)="reserve(element)">
+        Reservar
+      </button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+    
+</div>
