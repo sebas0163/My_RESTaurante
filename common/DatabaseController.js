@@ -155,8 +155,15 @@ class DatabaseController {
                 user: doc(db,'User', userid)
             });
             console.log("Documento de reserva creado con ID:", docRef.id);
+            const resp ={
+                'message': "Created" +docRef.id
+            }
+            return resp
         } catch (error) {
-            console.error("Error al crear la reserva:", error);
+            const resp ={
+                'message': "Error de reserva"
+            }
+            return resp
         }
     }
     /**
@@ -167,9 +174,15 @@ class DatabaseController {
         try {
             const reservationRef = doc(db, 'Reservation', reservationId);
             await deleteDoc(reservationRef);
-            console.log("Reserva eliminada correctamente.");
+            const resp ={
+                'message': "deleted"
+            }
+            return resp
         } catch (error) {
-            console.error("Error al eliminar la reserva:", error);
+            const resp ={
+                'message': "error"
+            }
+            return resp
         }
     }
     /**
