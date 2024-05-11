@@ -1,22 +1,36 @@
 <div class="register">
-    <form class="custom-form" method="post">
-      <h1>Register</h1>
-      <input
-        type="email"
-        [(ngModel)]="email"
-        name="email"
-        placeholder="Email"
-        required="required"
-      />
-      <input
-        type="password"
-        [(ngModel)]="password"
-        name="password"
-        placeholder="Contraseña"
-        required="required"
-      />
+  <form class="custom-form" (ngSubmit)="register()" #registerForm="ngForm" novalidate>
+    <h1>Register</h1>
+    <input
+      type="email"
+      [(ngModel)]="email"
+      name="email"
+      #emailInput="ngModel"
+      placeholder="Email"
+      required
+      email
+    />
+    <div *ngIf="emailInput.invalid && (emailInput.dirty || emailInput.touched || registerForm.ngSubmit)" class="error-message">
+      <div *ngIf="emailInput.errors?.['required']">Es necesario ingresar un correo.</div>
+      <div *ngIf="emailInput.errors?.['email']">Por favor ingrese un correo válido.</div>
+    </div>
+    <input
+      type="password"
+      [(ngModel)]="password"
+      name="password"
+      #passwordInput="ngModel"
+      placeholder="Contraseña"
+      required
+      minlength="6"
+    />
+    <div *ngIf="passwordInput.invalid && (passwordInput.dirty || passwordInput.touched || registerForm.ngSubmit)" class="error-message">
+      <div *ngIf="passwordInput.errors?.['required'] || passwordInput.errors?.['minlength']">Ingrese una contraseña de al menos 6 caracteres.</div>
+    </div>
 
-      <button type="submit" (click)="register()">Registrarme</button>
-      <a class="register-link" routerLink="/user-login-component">Volver a Login</a>
-    </form>
-  </div>
+    <button type="submit" [disabled]="registerForm.invalid">Registrarme</button>
+    <a class="register-link" routerLink="/user-login-component">Volver a Login</a>
+  </form>
+</div>
+
+
+

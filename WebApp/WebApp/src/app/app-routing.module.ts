@@ -7,6 +7,8 @@ import { UserLoginComponent } from './components/user-login/user-login.component
 import { UserRegistrationComponent } from './components/user-registration/user-registration.component';
 import { AdminReservationsComponent } from './components/admin-reservations/admin-reservations.component';
 import { UserReservationsComponent } from './components/user-reservations/user-reservations.component';
+import { AuthGuard } from './_helpers/auth.guard';
+import { Role } from './_models/role';
 
 const routes: Routes = [
   { path: 'time-recommendation-component', component: TimeRecommendationComponent },
@@ -14,8 +16,12 @@ const routes: Routes = [
   { path: 'menu-component', component: MenuComponent },
   { path: 'user-login-component', component: UserLoginComponent },
   { path: 'user-registration-component', component: UserRegistrationComponent },
-  { path: 'admin-reservations-component', component: AdminReservationsComponent },
-  { path: 'user-reservations-component', component: UserReservationsComponent },];
+  { path: 'admin-reservations-component', component: AdminReservationsComponent, canActivate: [AuthGuard],
+  data: { roles: [Role.Admin] } },
+  { path: 'user-reservations-component', component: UserReservationsComponent },
+  // otherwise redirect to home
+  { path: '**', redirectTo: 'menu-component' }
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

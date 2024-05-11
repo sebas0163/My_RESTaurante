@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MyServiceService } from '../../my-service.service';
+import { UserService } from '../../_services/user.service';
+import { AuthenticationService } from '../../_services/authentication.service';
+import { User } from '../../_models/user';
+import { Role } from '../../_models/role';
 
 @Component({
   selector: 'app-menu',
@@ -20,12 +24,19 @@ export class MenuComponent implements OnInit {
   is_two_values: boolean = false;
   menuUrl: any;
   menuRecUrl: any;
+  user: User;
 
   
-  constructor(private myService: MyServiceService, private http: HttpClient) {
+  constructor(
+    private myService: MyServiceService,
+    private http: HttpClient,
+    private authenticationService: AuthenticationService) {
+
     this.menuUrl = this.myService.getMenuUrl();
     this.menuRecUrl = this.myService.getMenuRecUrl();
+    this.user = <User>this.authenticationService.userValue;
   }
+  
   
   getMenu(){
     try {
@@ -79,7 +90,6 @@ export class MenuComponent implements OnInit {
   }
 
 
-
   postMenuRecommendation(){
     const body = this.getOptions();
     let isBodyEmpty =  Object.keys(body).length === 0;
@@ -117,9 +127,9 @@ export class MenuComponent implements OnInit {
 
   }
 
-
   async ngOnInit() {
     this.getMenu();
+
   }
 
   clearSelections() {
@@ -129,5 +139,7 @@ export class MenuComponent implements OnInit {
     this.showRecommendationContent = false;
   }
 
-  
+  get isUser() {
+    return this.user?.access_level === Role.User;
+  }
 }

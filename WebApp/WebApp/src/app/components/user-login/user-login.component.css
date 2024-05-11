@@ -20,7 +20,7 @@
     background-color: #ecf0f3;
     box-shadow: 13px 13px 20px #cbced1, -13px -13px 20px #ffffff;
     color: black;
-    margin-top: 10rem;
+    margin-top: 2.5rem;
   }
   .custom-form input {
     display: block;
@@ -50,6 +50,9 @@
     cursor: pointer;
     margin-top: 1rem;
   }
+  .custom-form button:hover {
+    background-color: #8bbda6; /* New background color when hovering */
+  }
 
   .login {
     display: flex;
@@ -63,4 +66,9 @@
     margin: 0 auto;
     margin-top: 1rem;
     text-align: center; /* This ensures text alignment within the anchor */
+  }
+
+  .error-message {
+    font-size: 0.8em; /* Tamaño de fuente más pequeño */
+    color: red; /* Color rojo */
   }

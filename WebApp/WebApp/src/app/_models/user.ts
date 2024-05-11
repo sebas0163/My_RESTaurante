@@ -1,7 +1,10 @@
 import { Role } from "./role";
 
 export interface User {
+    id: string;
+    name: string;
     email: string;
-    role: Role;
-    token?: string;
+    password: string;
+    access_level: Role;
+    recovery_pin: string;
 }
