@@ -1,47 +1,18 @@
 
-const {PubSubIface} = require('../common/PubSub');
+const {PubSubIface, PubSubReceiverSender} = require('../common/PubSub');
 
 
-class UserIface extends PubSubIface{
-    constructor(topic_name='user', projectId='silken-tenure-419721'){
-      super(topic_name, projectId);
+class UserIface extends PubSubReceiverSender{
+    constructor(){
+      super("user-downstream", "user-upstream", "userController-sub");
     }
-  
-    async setupTopics(topics) {
-      await super.setupTopics(topics);
-      await this.create_upstream_sub();
-    }
-  
-    async create_upstream_sub() {
-      this.upstream_sub = await this.getSubscriptionByName(this.upstream_topic, this.upstream_sub_name);
-      this.subs.push(this.upstream_sub);
-      console.log("Created the upstream sub");
-    }
-  
-    waitForResponseOnUpstream() {
-      return new Promise(async (resolve, reject) => {
-        const responseListener = async (response) => {
-          response.ack();
-          resolve(response);
-        }
-  
-        const errorListener = async (response) => {
-          response.ack();
-          reject(response);
-        }
-  
-        this.upstream_sub.on('message', responseListener);
-        this.upstream_sub.on('error', errorListener);
-      })
-    }
-  
   
     async getUser(message) {
         
-      this.downstream_topic.publishMessage({data:Buffer.from(JSON.stringify(message))});
-      const upstream_res = await this.waitForResponseOnUpstream();
+      this.sender.send_message(JSON.stringify(message));
+      const upstream_res = await this.receiver.pull_single_message();
       console.log("Got upstream res");
-      return JSON.parse(upstream_res.data.toString());
+      return JSON.parse(upstream_res);
     }
   
   

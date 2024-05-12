@@ -1,16 +1,17 @@
 const { DatabaseController } = require('../common/DatabaseController');
-const {PubSubIface} = require('../common/PubSub');
+const {PubSubSender} = require('../common/PubSub');
 
 class UserAuthenticator {
     constructor() {
         this.databaseController = new DatabaseController();
-		this.pubSubHandler = new PubSubSender("food-upstream");
+		this.pubSubHandler = new PubSubSender("user-upstream");
     }
     
     askForUserResponse = async (json_usr) => {
         
         const message_code =json_usr.message_code;
-        var jsonString = "response not found";
+        var jsonString = JSON.stringify({'status': 202,
+                        'data': ":o"});
         if(message_code == 0){
             const new_user_response = await this.addNewUser(json_usr.name,json_usr.email,json_usr.password, json_usr.recovery_pin, json_usr.access_level);
             jsonString = JSON.stringify(new_user_response);
@@ -146,5 +147,17 @@ class UserAuthenticator {
     }
 
 }
+const entry_function = async (cloud_message) => {
+    const userAuthenticator = new UserAuthenticator();
+    try{
+        const pubsub_message = cloud_message.data.message;
+        pubsub_message.ack();
+	    const msg_payload_str = Buffer.from(pubsub_message.data, "base64").toString();
+	    await userAuthenticator.askForUserResponse(JSON.parse(msg_payload_str));
 
-module.exports = { UserAuthenticator }
+    }catch{
+        userAuthenticator.pubSubHandler.send_message('{"status": 401,"data":"Error"}');
+    }
+	
+};
+module.exports = { UserAuthenticator, entry_function }
