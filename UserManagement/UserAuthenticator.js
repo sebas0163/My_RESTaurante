@@ -1,37 +1,14 @@
 const { DatabaseController } = require('../common/DatabaseController');
 const {PubSubIface} = require('../common/PubSub');
 
-class UserIface extends PubSubIface {
-    constructor(
-      downstream_callback, topic_name='user', projectId = 'silken-tenure-419721'
-    ) {
-      super(topic_name, projectId);
-      this.downstream_callback = downstream_callback;
-    }
-  
-    async setupTopics(topics) {
-      await super.setupTopics(topics);
-      this.downstream_sub = await this.getSubscriptionByName(this.downstream_topic, this.downstream_sub_name);
-      this.subs.push(this.downstream_sub);
-  
-      this.subscribe_to_downstream(this.downstream_callback);
-    }
-  
-    subscribe_to_downstream(callback) {
-      this.downstream_sub.on('message', message => callback(message));
-    }
-  
-  }
 class UserAuthenticator {
     constructor() {
         this.databaseController = new DatabaseController();
-        this.userIface = new UserIface(this.askForUserResponse);
+		this.pubSubHandler = new PubSubSender("food-upstream");
     }
     
-    askForUserResponse = async (message) => {
-        console.log("PubSub triggered - receiving: ", message.data.toString());
-        message.ack();
-        const json_usr = JSON.parse(message.data.toString());
+    askForUserResponse = async (json_usr) => {
+        
         const message_code =json_usr.message_code;
         var jsonString = "response not found";
         if(message_code == 0){
@@ -56,7 +33,7 @@ class UserAuthenticator {
         }
         
         console.log("PubSub triggered - sending: ", jsonString);
-        await this.userIface.upstream_topic.publishMessage({data:Buffer.from(jsonString)})
+		this.pubSubHandler.send_message(jsonString);
 
 
     }
@@ -170,5 +147,4 @@ class UserAuthenticator {
 
 }
 
-userAuth = new UserAuthenticator();
 module.exports = { UserAuthenticator }
