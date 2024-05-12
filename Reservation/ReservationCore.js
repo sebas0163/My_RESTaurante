@@ -55,17 +55,64 @@ class Reservation {
     }
 
     async getAllRerservation(){
-        return await this.databaseController.getAllReservations();
+        const resp = await this.databaseController.getAllReservations();
+        return {
+            'status': 202,
+            'data': resp
+        }
     }
 
     async getReservationById(id){
-        return await this.databaseController.getReservationByID(id);
+        const resp =await this.databaseController.getReservationByID(id);
+        if (resp ===1){
+            return {
+                'status': 401,
+                'data': 'Reservacion no encontrada'
+            }
+        }else{
+            return{
+                'status': 202,
+                'data': resp
+            }
+        }
     }
     async deleteReservation(id){
-        return await this.databaseController.deleteReservation(id);
+        const resp = await this.databaseController.deleteReservation(id);
+        if (resp != 1){
+            return{
+                'status': 202,
+                'data': resp
+            }
+        }else{
+            return {
+                'status': 401,
+                'data': 'Reservacion no encontrada'
+            }
+        }
     }
     async createReservation(userid, timeid, people){
-        return await this.databaseController.createNewRervation(userid, timeid, people);
+        const resp =await this.databaseController.createNewRervation(userid, timeid, people);
+        if (!resp){
+            return {
+                'status': 401,
+                'data': 'Error al crear la reservacion'
+            }
+        }else if(resp ==1){
+            return {
+                'status': 401,
+                'data': 'La fecha seleccionada no esta disponible'
+            }
+        }else if(resp == 2){
+            return {
+                'status': 401,
+                'data': 'Usuario no encontrado'
+            }
+        }else{
+            return{
+                'status': 202,
+                'data': resp
+            }
+        }
     }
     
 

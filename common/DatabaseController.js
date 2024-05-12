@@ -118,27 +118,30 @@ class DatabaseController {
      * @returns json {id, name, people, time}
      */
     async getReservationByID(id){
-        const ref = doc(this.db, "Reservation",id);
-        const ref_doc = await getDoc(ref);
-        
-        // Obtener la referencia del usuario
-        const userRef = ref_doc.data().user;
-        
-        // Obtener los datos del usuario
-        const userDocSnap = await getDoc(userRef);
-        const userData = userDocSnap.data();
-        const timeDocSnap = await getDoc(ref_doc.data().time);
-        const timeData = timeDocSnap.data();
-        const date = new Date(timeData.time.seconds * 1000 + timeData.time.nanoseconds / 1e6);
-        const formattedDateTime = date.toLocaleString();
-        const reservation ={
-            id: ref_doc.id,
-            people: ref_doc.data().people,
-            name: userData.name,
-            time: formattedDateTime
+        try{
+            const ref = doc(this.db, "Reservation",id);
+            const ref_doc = await getDoc(ref);
+            // Obtener la referencia del usuario
+            const userRef = ref_doc.data().user;
+            
+            // Obtener los datos del usuario
+            const userDocSnap = await getDoc(userRef);
+            const userData = userDocSnap.data();
+            const timeDocSnap = await getDoc(ref_doc.data().time);
+            const timeData = timeDocSnap.data();
+            const date = new Date(timeData.time.seconds * 1000 + timeData.time.nanoseconds / 1e6);
+            const formattedDateTime = date.toLocaleString();
+            const reservation ={
+                id: ref_doc.id,
+                people: ref_doc.data().people,
+                name: userData.name,
+                time: formattedDateTime
+            }
+            return reservation;
+
+        }catch(error){
+            return 1
         }
-        return reservation;
-    
     }
     /**
      * Create a new reservations
@@ -149,22 +152,29 @@ class DatabaseController {
     async createNewRervation(userid, timeid, people){
         try {
             // Crear una nueva reserva en la colección "Reservation"
-            const docRef = await addDoc(collection(this.db, 'Reservation'), {
-                people: people,
-                time: doc(this.db,'Time', timeid),
-                user: doc(this.db,'User', userid)
-            });
-            console.log("Documento de reserva creado con ID:", docRef.id);
-            const resp ={
+            const time_ =doc(this.db,'Time', timeid);
+            const user_ = doc(this.db,'User', userid);
+            const time_doc = await getDoc(time_);
+            const user_doc = await getDoc(user_);
+            console.log(time_doc.exists());
+            if (!time_doc.exists()){
+                return 1
+            }else if(!user_doc.exists()){
+                return 2
+            }else{
+                const docRef = await addDoc(collection(this.db, 'Reservation'), {
+                    people: people,
+                    time: time_,
+                    user: user_
+                });
+                console.log("Documento de reserva creado con ID:", docRef.id);
+                const resp ={
                 'message': "Created" +docRef.id
             }
             return resp
-        } catch (error) {
-            const resp ={
-                'message': "Error de reserva"
             }
-            console.log(error);
-            return resp
+        } catch (error) {
+            return null
         }
     }
     /**
@@ -180,10 +190,7 @@ class DatabaseController {
             }
             return resp
         } catch (error) {
-            const resp ={
-                'message': "error"
-            }
-            return resp
+            return 1
         }
     }
     /**
