@@ -49,6 +49,7 @@ export class AuthenticationService {
             localStorage.setItem('user', JSON.stringify(user));
             this.userSubject.next(user);
             console.log("User: ", user);
+            this.router.navigate(['/menu-component']);
             return user;
         }));
       }

@@ -1,5 +1,4 @@
 const { collection, doc,deleteDoc, getDoc, getDocs,updateDoc,addDoc, query, where } = require('firebase/firestore');
-const { collection, doc, getDoc, getDocs, query, where,addDoc,deleteDoc } = require('firebase/firestore');
 const firebase = require('firebase/app');
 const moment = require('moment');
 const firebaseApp =require("firebase/app");
