@@ -41,7 +41,6 @@ export class AuthenticationService {
           .set('email', email)
           .set('password', password);
     
-          console.log("1");
         // Send GET request with parameters
         return this.http.get<User>(`${environment.apiUrl}/api/user/login`, { params: httpParams })
         .pipe(map(user => {

@@ -4,9 +4,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { EditFormComponent } from '../edit-form/edit-form.component';
 
 export interface TableData {
-  full_name: string;
-  date: string;
+  id: string;
   time: string;
+  name: string;
+  email: string;
   people: string;
 }
 
@@ -16,15 +17,31 @@ export interface TableData {
     styleUrl: './admin-reservations.component.scss'
   })
   export class AdminReservationsComponent {
-    displayedColumns: string[] = ['full_name', 'date', 'time', 'people', 'actions'];
+    displayedColumns: string[] = ['name', 'time', 'people', 'actions'];
     dataSource: TableData[] = [];
 
     constructor(private http: HttpClient, private dialog: MatDialog) {}
 
     ngOnInit() {
-      this.http.get<TableData[]>('../assets/mockReservations.json')
-        .subscribe(data => this.dataSource = data);
-    }
+      try{
+        this.http.get<TableData[]>('https://us-central1-silken-tenure-419721.cloudfunctions.net/DatabaseControllerTest/api/reservation/getAll')
+        .subscribe((data) => {
+          
+          console.log('In try');
+          this.dataSource = data;
+          console.log(data);
+        },
+        (error) => {
+          console.error('Error:', error);
+        }
+      )
+  } catch (error) {
+    // Log the error (you can remove this line if not needed)
+    console.error('Fetch error:', error);
+    // Propagate the error by rethrowing it
+    throw error;
+  }
+}
 
     openEditDialog(row: TableData): void {
       const dialogRef = this.dialog.open(EditFormComponent, {
@@ -35,7 +52,7 @@ export interface TableData {
       dialogRef.afterClosed().subscribe(result => {
         if (result) {
           // Update the row data if the edit form was submitted
-          const index = this.dataSource.findIndex(item => item.full_name === row.full_name);
+          const index = this.dataSource.findIndex(item => item.email === row.email);
           if (index !== -1) {
             this.dataSource[index] = result;
           }
