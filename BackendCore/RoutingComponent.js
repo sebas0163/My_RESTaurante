@@ -1,9 +1,10 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 const { SentimentController } = require('./SentimentController');
 const { DishController } = require('./DishController');
 const { TimeController } = require('./TimeController');
 const { UserController } = require('./UserController');
+
 
 sentiment = new SentimentController();
 dish_controller = new DishController();
@@ -24,4 +25,3 @@ router.put('/user/change_access', user_cont.changeAccess);
 router.delete('/user/delete', user_cont.deleteUser);
 
 module.exports = router;
-
