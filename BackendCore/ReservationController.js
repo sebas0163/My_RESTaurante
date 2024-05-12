@@ -56,12 +56,12 @@ class ReservationController{
       }
     createReservation(req, res){
       const people = req.body.people;
-      const time = req.body.time;
-      const user = req.body.user;
+      const time = req.body.timeid;
+      const user = req.body.userid;
       const reserv_obj = {'message_code':2,
         'people' : people,
-        'time' : time,
-        'user': user
+        'timeid' : time,
+        'userid': user
       }
       this.reservation_interface.getReservationResponse(reserv_obj).then((reserv_res) => {
           res.json(reserv_res);
@@ -75,6 +75,7 @@ class ReservationController{
     }
     deleteReservation(req, res){
       const res_id = req.body.id
+      console.log(req.body.id)
       const reserv_obj = {"message_code": 1,
         "id": res_id
       }

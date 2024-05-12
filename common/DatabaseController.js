@@ -1,4 +1,4 @@
-const { collection, doc, getDoc, getDocs, query, where } = require('firebase/firestore');
+const { collection, doc, getDoc, getDocs, query, where,addDoc,deleteDoc } = require('firebase/firestore');
 const firebase = require('firebase/app');
 const moment = require('moment');
 const firebaseApp =require("firebase/app");
@@ -118,7 +118,7 @@ class DatabaseController {
      * @returns json {id, name, people, time}
      */
     async getReservationByID(id){
-        const ref = doc(db, "Reservation",id);
+        const ref = doc(this.db, "Reservation",id);
         const ref_doc = await getDoc(ref);
         
         // Obtener la referencia del usuario
@@ -149,10 +149,10 @@ class DatabaseController {
     async createNewRervation(userid, timeid, people){
         try {
             // Crear una nueva reserva en la colección "Reservation"
-            const docRef = await addDoc(collection(db, 'Reservation'), {
+            const docRef = await addDoc(collection(this.db, 'Reservation'), {
                 people: people,
-                time: doc(db,'Time', timeid),
-                user: doc(db,'User', userid)
+                time: doc(this.db,'Time', timeid),
+                user: doc(this.db,'User', userid)
             });
             console.log("Documento de reserva creado con ID:", docRef.id);
             const resp ={
@@ -163,6 +163,7 @@ class DatabaseController {
             const resp ={
                 'message': "Error de reserva"
             }
+            console.log(error);
             return resp
         }
     }
@@ -172,7 +173,7 @@ class DatabaseController {
      */
     async  deleteReservation(reservationId){
         try {
-            const reservationRef = doc(db, 'Reservation', reservationId);
+            const reservationRef = doc(this.db, 'Reservation', reservationId);
             await deleteDoc(reservationRef);
             const resp ={
                 'message': "deleted"
@@ -189,27 +190,46 @@ class DatabaseController {
      * Get all the reservations on the system
      * @returns list of json [{name,people,time}]
      */
-    async  getAllReservations(){
-        const reservations =[];
-        const querySnapshot = await getDocs(collection(db, 'Reservation'));
-        querySnapshot.forEach(async (doc) => {
-            const userDocSnap = await getDoc(doc.data().time);
-            const userData = userDocSnap.data();
-            const timeDocSnap = await getDoc(doc.data().time);
-            const timeData = timeDocSnap.data();
-            const date = new Date(timeData.time.seconds * 1000 + timeData.time.nanoseconds / 1e6);
-            const formattedDateTime = date.toLocaleString();
-            const reservationData = doc.data();
-            const reservation = {
+    async getAllReservations_aux() {
+        const reserv_ref = collection(this.db, 'Reservation');
+        const reservationSnapshot = await getDocs(reserv_ref);
+        const list = reservationSnapshot.docs.map(doc => {
+        //parseHttpResponse
+            const reservationData =  doc.data();
+            return  {
                 id: doc.id,
                 people: reservationData.people,
-                name: userData.name,
-                time: formattedDateTime
-            }
-            reservations.push(reservation);
-        });
-        return reservations
+                time: reservationData.time,
+                user: reservationData.user
+            };
+      });
+      return list;
     }
+    async getAllReservations(){
+        const reserv = await this.getAllReservations_aux();
+        const reservations =[];
+        const num = reserv.length;
+        for(let i=0; i<num;i++){
+            const userRef= reserv[i].user;
+            const userSnap = await getDoc(userRef);
+            const userData = userSnap.data();
+            const timeRef = reserv[i].time;
+            const timeSnap = await getDoc(timeRef);
+            const timeData = timeSnap.data();
+            const date = new Date(timeData.time.seconds *1000 +timeData.time.nanoseconds / 1e6);
+            const time_ = date.toLocaleString();
+            const json ={
+                id: reserv[i].id,
+                time: time_,
+                name: userData.name,
+                people: reserv[i].people
+            }
+            reservations.push(json);
+        }
+        return reservations
+        
+    }
+    
 }
 
 module.exports = { DatabaseController };

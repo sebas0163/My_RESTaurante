@@ -25,7 +25,7 @@ class ReservationIface extends PubSubIface {
 class Reservation {
     constructor() {
         this.databaseController = new DatabaseController();
-        this.ReservationIface = new ReservationIface(this.askForUserResponse);
+        this.ReservationIface = new ReservationIface(this.askForReservationResponse);
     }
     
     askForReservationResponse = async (message) => {

@@ -16,7 +16,7 @@ router.post('/recomendation/time', time_reco.askSchedule);
 router.post('/food/recomendation', dish_controller.askForDish);
 router.get('/reservation/getAll', reservationController.getAllReservations);
 router.get('/reservation/getById', reservationController.getReservationById);
-router.delete('reservation/delete', reservationController.deleteReservation);
+router.delete('/reservation/delete', reservationController.deleteReservation);
 router.post('/reservation/new', reservationController.createReservation);
 
 module.exports = router;
