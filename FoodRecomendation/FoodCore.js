@@ -41,11 +41,11 @@ class FoodCore {
 	}
 }
 
-entry_function = async (pubsub_message) => {
-	pubsub_message.ack();
+entry_function = async (cloud_message) => {
+	const pubsub_message = cloud_message.data.message;
 	const foodCore = new FoodCore();
-	await foodCore.process_message(pubsub_message.data.toString());
+	const msg_payload_str = Buffer.from(pubsub_message.data, "base64").toString();
+	await foodCore.process_message(msg_payload_str);
 };
 
 module.exports = { entry_function };
-
