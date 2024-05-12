@@ -43,6 +43,8 @@ class FoodCore {
 
 entry_function = async (cloud_message) => {
 	const pubsub_message = cloud_message.data.message;
+	// If local, uncomment
+	// pubsub_message.ack()
 	const foodCore = new FoodCore();
 	const msg_payload_str = Buffer.from(pubsub_message.data, "base64").toString();
 	await foodCore.process_message(msg_payload_str);
