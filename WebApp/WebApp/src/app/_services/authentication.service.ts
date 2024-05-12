@@ -24,12 +24,20 @@ export class AuthenticationService {
         return this.userSubject.value;
     }
 
-    signIn(name: string, email: string, password: string, access_level:string, recovery_pin: string) {
-        return this.http.post<any>(`${environment.apiUrl}/api/user/create`, { name, email, password, access_level, recovery_pin })
+    signIn(name: string, email: string, password: string, access_level: string, recovery_pin: string) {
+        console.log("Auth enters ");
+        
+        const requestBody = {
+            name: name,
+            email: email,
+            password: password,
+            access_level: access_level,
+            recovery_pin: recovery_pin
+        };
+    
+        return this.http.post<any>(`${environment.apiUrl}/api/user/create`, requestBody)
             .pipe(map(user => {
-                // store user details and jwt token in local storage to keep user logged in between page refreshes
-                localStorage.setItem('user', JSON.stringify(user));
-                this.userSubject.next(user);
+                // store user details in local storage to keep user logged in between page refreshes
                 console.log("Auth: ", user);
                 return user;
             }));
