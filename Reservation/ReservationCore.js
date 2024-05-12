@@ -47,8 +47,12 @@ class Reservation {
             jsonString = JSON.stringify(create_response);
         }
         if(message_code == 3){
-            const reservation_ = await this.getReservationById(json_reserv.id)
+            const reservation_ = await this.getReservationById(json_reserv.id);
             jsonString = JSON.stringify(reservation_);
+        }
+        if(message_code == 4){
+            const reserv_ = await this.getReservationByEmail(json_reserv.email);
+            jsonString = JSON.stringify(reserv_);
         }
         console.log("PubSub triggered - sending: ", jsonString);
         await this.ReservationIface.upstream_topic.publishMessage({data:Buffer.from(jsonString)});
@@ -109,6 +113,20 @@ class Reservation {
             }
         }else{
             return{
+                'status': 202,
+                'data': resp
+            }
+        }
+    }
+    async getReservationByEmail(email){
+        const resp = await this.databaseController.getReservationByEmail(email);
+        if(resp ==1){
+            return{
+                'status':404,
+                'data': 'Email no asociado a ningun usuario'
+            }
+        }else{
+            return {
                 'status': 202,
                 'data': resp
             }

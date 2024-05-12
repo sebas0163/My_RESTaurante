@@ -236,6 +236,54 @@ class DatabaseController {
         return reservations
         
     }
+    async getReservationByEmail_aux(email){
+        const user_collection = collection(this.db, 'User');
+        const q = query(user_collection, where('email', '==', email));
+        const userQuerySnapshot = await getDocs(q);
+        if (userQuerySnapshot.empty) {
+            console.log('No existe ningun usuario con el email asociado');
+            return 1
+        }
+        const userId = userQuerySnapshot.docs[0].id;
+        const user_ = doc(this.db,'User', userId);
+        const userData = await getDoc(user_);
+        const reservation_coll = collection(this.db, 'Reservation');
+        const q_ = query(reservation_coll, where('user', '==', user_));
+        const reservationQuerySnapshot = await getDocs(q_);
+        const reservations = [];
+        reservationQuerySnapshot.forEach((doc) => {
+            const reservationData = doc.data();
+            reservations.push({
+                id: doc.id,
+                people: reservationData.people,
+                time: reservationData.time,
+                email:email,
+                name: userData.name
+            });
+        });
+        return reservations;
+    }
+    async getReservationByEmail(email){
+        const reserv = await this.getReservationByEmail_aux(email);
+        const reservations =[];
+        const num = reserv.length;
+        for(let i=0; i<num;i++){
+            const timeRef = reserv[i].time;
+            const timeSnap = await getDoc(timeRef);
+            const timeData = timeSnap.data();
+            const date = new Date(timeData.time.seconds *1000 +timeData.time.nanoseconds / 1e6);
+            const time_ = date.toLocaleString();
+            const json ={
+                id: reserv[i].id,
+                time: time_,
+                name: reserv[i].name,
+                people: reserv[i].people,
+                email: reserv[i].email
+            }
+            reservations.push(json);
+        }
+        return reservations
+    }
     
 }
 
