@@ -135,7 +135,8 @@ class DatabaseController {
                 id: ref_doc.id,
                 people: ref_doc.data().people,
                 name: userData.name,
-                time: formattedDateTime
+                time: formattedDateTime,
+                email: userData.email
             }
             return reservation;
 
@@ -229,7 +230,8 @@ class DatabaseController {
                 id: reserv[i].id,
                 time: time_,
                 name: userData.name,
-                people: reserv[i].people
+                people: reserv[i].people,
+                email: userData.email
             }
             reservations.push(json);
         }
@@ -238,7 +240,7 @@ class DatabaseController {
     }
     async getReservationByEmail_aux(email){
         const user_collection = collection(this.db, 'User');
-        const q = query(user_collection, where('email', '==', email));
+        const q = query(user_collection, where('email', '==', btoa(email)));
         const userQuerySnapshot = await getDocs(q);
         if (userQuerySnapshot.empty) {
             console.log('No existe ningun usuario con el email asociado');
