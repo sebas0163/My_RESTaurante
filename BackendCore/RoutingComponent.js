@@ -18,7 +18,7 @@ router.post('/recomendation/time', time_reco.askSchedule);
 router.post('/food/recomendation', dish_controller.askForDish);
 
 router.post('/user/create', user_cont.addNewUser);
-router.get('/user/login', user_cont.verifyUserLogin);
+router.get('/user/login/:user?/:password?', user_cont.verifyUserLogin);
 router.put('/user/change_password', user_cont.changePassword);
 router.put('/user/change_access', user_cont.changeAccess);
 router.delete('/user/delete', user_cont.deleteUser);

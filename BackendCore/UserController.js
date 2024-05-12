@@ -74,8 +74,9 @@ class UserController{
       });
     }
     verifyUserLogin(req, res){
-      const email = req.body.email;
-      const user_password = req.body.password;
+      
+      const email = req.query.email;
+      const user_password = req.query.password;
       const user_obj = {'message_code':1,
         'email' : email,
         'password' : user_password
