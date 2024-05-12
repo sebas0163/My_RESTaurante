@@ -21,10 +21,10 @@
       #passwordInput="ngModel"
       placeholder="Contraseña"
       required
-      minlength="6"
+      minlength="4"
     />
     <div *ngIf="passwordInput.invalid && (passwordInput.dirty || passwordInput.touched || registerForm.ngSubmit)" class="error-message">
-      <div *ngIf="passwordInput.errors?.['required'] || passwordInput.errors?.['minlength']">Ingrese una contraseña de al menos 6 caracteres.</div>
+      <div *ngIf="passwordInput.errors?.['required'] || passwordInput.errors?.['minlength']">Ingrese una contraseña de al menos 4 caracteres.</div>
     </div>
 
     <button type="submit" [disabled]="registerForm.invalid">Registrarme</button>

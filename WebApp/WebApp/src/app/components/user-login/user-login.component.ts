@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { User } from '../../_models/user';
-import { UserService } from '../../_services/user.service';
 import { first } from 'rxjs';
+import { AuthenticationService } from '../../_services/authentication.service';
 
 @Component({
   selector: 'app-user-login',
   templateUrl: './user-login.component.html',
-  styleUrl: './user-login.component.css'
+  styleUrls: ['./user-login.component.css'] // Corrected spelling of styleUrls
 })
 export class UserLoginComponent {
   email: string | undefined;
@@ -16,12 +16,11 @@ export class UserLoginComponent {
   user: User | undefined;
   userFromApi?: User;
 
-  constructor(private userService: UserService) {}
+  constructor(private authService: AuthenticationService) {}
+  
 
   login() {
-    console.log(this.email);
-    console.log(this.password);
-    this.userService.getUser(this.email!, this.password!).pipe(first()).subscribe(user => {
+    this.authService.login(this.email!, this.password!).pipe(first()).subscribe(user => {
       this.loading = false;
       this.userFromApi = user;
   });
@@ -34,5 +33,3 @@ export class UserLoginComponent {
   }
 
 }
-
-

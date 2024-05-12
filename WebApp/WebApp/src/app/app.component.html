@@ -19,7 +19,7 @@
       </ng-container>
         <!-- <button class="pill" routerLink="/feedback-component">Quiero dar Feedback</button> -->
       </div>
-      <button class="login-icon" mat-icon-button routerLink="/user-login-component">
+      <button class="login-icon" mat-icon-button routerLink="/user-login-component" *ngIf="!isUser && !isAdmin">
         <mat-icon>person</mat-icon>
       </button>
       <button class="login-icon" mat-icon-button routerLink="/user-login-component" (click)="logout()">

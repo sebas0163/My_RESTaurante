@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MyServiceService } from '../../my-service.service';
-import { UserService } from '../../_services/user.service';
 import { AuthenticationService } from '../../_services/authentication.service';
 import { User } from '../../_models/user';
 import { Role } from '../../_models/role';
