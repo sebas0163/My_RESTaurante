@@ -1,17 +1,9 @@
-const {
-	collection,
-	doc,
-	getDoc,
-	getDocs,
-	query,
-	where,
-	addDoc,
-	deleteDoc,
-} = require("firebase/firestore");
-const firebase = require("firebase/app");
-const moment = require("moment");
-const firebaseApp = require("firebase/app");
-const firestore = require("firebase/firestore");
+const { collection, doc, getDoc, getDocs, query, where,addDoc,deleteDoc } = require('firebase/firestore');
+const firebase = require('firebase/app');
+const moment = require('moment');
+const firebaseApp =require("firebase/app");
+const firestore = require ("firebase/firestore");
+
 
 class DatabaseController {
 	constructor() {
