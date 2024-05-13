@@ -17,12 +17,12 @@
         <ng-container>
         <button class="pill" routerLink="/admin-reservations-component" *ngIf="isAdmin">Ver Reservas</button> <!-- Admin view -->
       </ng-container>
-        <!-- <button class="pill" routerLink="/feedback-component">Quiero dar Feedback</button> -->
+      <button class="pill" routerLink="/feedback-component" *ngIf="isUser">Quiero dar Feedback</button>
       </div>
       <button class="login-icon" mat-icon-button routerLink="/user-login-component" *ngIf="!isUser && !isAdmin">
         <mat-icon>person</mat-icon>
       </button>
-      <button class="login-icon" mat-icon-button routerLink="/user-login-component" (click)="logout()">
+      <button class="login-icon" mat-icon-button routerLink="/user-login-component" (click)="logout()" *ngIf="isUser">
         <mat-icon>logout</mat-icon>
       </button>
     </div>

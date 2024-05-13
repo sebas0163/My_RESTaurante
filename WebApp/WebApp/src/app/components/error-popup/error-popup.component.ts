@@ -9,13 +9,17 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 })
 export class ErrorPopupComponent {
 
-  errorMessage: string;
+  message: string;
+  title: string;
 
   constructor(
     public dialogRef: MatDialogRef<ErrorPopupComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { message: string }
+    @Inject(MAT_DIALOG_DATA) public data: { 
+      title: string,
+      message: string }
   ) {
-    this.errorMessage = data.message;
+    this.title = data.title;
+    this.message = data.message;
   }
 
   close(): void {

@@ -39,7 +39,7 @@
         </div>
         
       </div>
-      <div *ngIf="!this.is_two_values && isUser">
+      <div *ngIf="!this.is_two_values">
         <p class="error">Por favor seleccione 2 opciones</p>
       </div>
     </div>
@@ -47,7 +47,7 @@
     </main>
     
     
-    <div *ngIf="isUser">
+    <div>
     <div class="content">
       <div class="button-container">
         <button class="pill" (click)="clearSelections()">Limpiar</button>

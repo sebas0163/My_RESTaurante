@@ -4,6 +4,7 @@ import { first } from 'rxjs';
 import { AuthenticationService } from '../../_services/authentication.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ErrorPopupComponent } from '../error-popup/error-popup.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-login',
@@ -18,7 +19,7 @@ export class UserLoginComponent {
   user: User | undefined;
   userFromApi?: User;
 
-  constructor(private authService: AuthenticationService, private dialog: MatDialog) {}
+  constructor(private authService: AuthenticationService, private dialog: MatDialog, private router: Router) {}
   
 
   async ngOnInit() {
@@ -34,6 +35,7 @@ export class UserLoginComponent {
             next: (user) => {
               this.loading = false;
               this.userFromApi = user;
+              this.router.navigate(['/menu-component']);
             },
             error: (error) => {
                 // Handle error
