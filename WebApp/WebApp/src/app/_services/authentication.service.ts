@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 import { User } from '../_models/user';
 import { environment } from '../environments/environment';
@@ -36,31 +36,69 @@ export class AuthenticationService {
         };
     
         return this.http.post<any>(`${environment.apiUrl}/api/user/create`, requestBody)
-            .pipe(map(user => {
-                // store user details in local storage to keep user logged in between page refreshes
-                console.log("Auth: ", user);
-                return user;
-            }));
+            .pipe(
+                catchError(error => {
+                    console.error('Error occurred: ', error);
+                    // You can handle the error here, for example:
+                    return throwError('There was a problem signing in.');
+                }),
+                map(user => {
+                    // store user details in local storage to keep user logged in between page refreshes
+                    console.log("Auth: ", user);
+                    return user;
+                })
+            );
     }
 
     login(email: string, password: string): Observable<User> {
         // Construct parameters
         let httpParams = new HttpParams()
-          .set('email', email)
-          .set('password', password);
+            .set('email', email)
+            .set('password', password);
     
         // Send GET request with parameters
         return this.http.get<User>(`${environment.apiUrl}/api/user/login`, { params: httpParams })
-        .pipe(map(user => {
-            // store user details and jwt token in local storage to keep user logged in between page refreshes
-            localStorage.setItem('user', JSON.stringify(user));
-            this.userSubject.next(user);
-            console.log("User: ", user);
-            this.router.navigate(['/menu-component']);
-            return user;
-        }));
-      }
+            .pipe(
+                catchError(error => {
+                    console.error('Error occurred: ', error);
+                    // You can handle the error here, for example:
+                    return throwError('There was a problem logging in.');
+                }),
+                map(user => {
+                    // store user details and jwt token in local storage to keep user logged in between page refreshes
+                    localStorage.setItem('user', JSON.stringify(user));
+                    this.userSubject.next(user);
+                    console.log("User: ", user);
+                    this.router.navigate(['/menu-component']);
+                    return user;
+                })
+            );
+    }
 
+
+    resetPassword(email: string, password: string, recovery_pin: string) {
+    console.log("Auth enters ");
+    
+    const requestBody = {
+        email: email,
+        password: password,
+        recovery_pin: recovery_pin
+    };
+
+    return this.http.put<any>(`${environment.apiUrl}/api/user/change_password`, requestBody)
+        .pipe(
+            catchError(error => {
+                console.error('Error occurred: ', error);
+                // You can handle the error here, for example:
+                return throwError('There was a problem resetting the password.');
+            }),
+            map(user => {
+                // store user details in local storage to keep user logged in between page refreshes
+                console.log("Auth: ", user);
+                return user;
+            })
+        );
+    }
     
     logout() {
         // remove user from local storage to log user out

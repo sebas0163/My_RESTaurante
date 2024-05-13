@@ -1,39 +1,30 @@
 import { Component } from '@angular/core';
-import { User } from '../../_models/user';
-import { first } from 'rxjs';
 import { AuthenticationService } from '../../_services/authentication.service';
+import { first } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { ErrorPopupComponent } from '../error-popup/error-popup.component';
 
 @Component({
-  selector: 'app-user-login',
-  templateUrl: './user-login.component.html',
-  styleUrls: ['./user-login.component.css'] // Corrected spelling of styleUrls
+  selector: 'app-reset-password',
+  templateUrl: './reset-password.component.html',
+  styleUrl: './reset-password.component.css'
 })
-export class UserLoginComponent {
+export class ResetPasswordComponent {
   email: string | undefined;
   password: string | undefined;
-  
-  loading = false;
-  user: User | undefined;
-  userFromApi?: User;
+  recovery_pin: string | undefined;
+
 
   constructor(private authService: AuthenticationService, private dialog: MatDialog) {}
-  
-
-  async ngOnInit() {
-    this.loading = true;
-
-  }
 
 
-  login() {
-    this.authService.login(this.email!, this.password!)
+  resetPassword() {
+    this.authService.resetPassword(this.email!, this.password!, this.recovery_pin!)
         .pipe(first())
         .subscribe({
             next: (user) => {
-              this.loading = false;
-              this.userFromApi = user;
+                // Handle successful response (user data)
+                console.log("User: ", user);
             },
             error: (error) => {
                 // Handle error

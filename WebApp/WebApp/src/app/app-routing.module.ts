@@ -9,6 +9,7 @@ import { AdminReservationsComponent } from './components/admin-reservations/admi
 import { UserReservationsComponent } from './components/user-reservations/user-reservations.component';
 import { AuthGuard } from './_helpers/auth.guard';
 import { Role } from './_models/role';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 
 const routes: Routes = [
   { path: 'time-recommendation-component', component: TimeRecommendationComponent },
@@ -19,6 +20,7 @@ const routes: Routes = [
   { path: 'admin-reservations-component', component: AdminReservationsComponent, canActivate: [AuthGuard],
   data: { roles: [Role.Admin] } },
   { path: 'user-reservations-component', component: UserReservationsComponent },
+  { path: 'reset-password-component', component: ResetPasswordComponent },
   // otherwise redirect to home
   { path: '**', redirectTo: 'menu-component' }
 ];

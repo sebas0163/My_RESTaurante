@@ -29,6 +29,7 @@ export class TimeRecommendationComponent {
   baseUrl: any;
   date: string | undefined;
   time: string | undefined;
+  quotaLimit = false;
 
   isTimeSelected: boolean = false;
 
@@ -51,7 +52,15 @@ export class TimeRecommendationComponent {
     this.http.get<TableData[]>('../assets/mockTimeAvailability.json')
       .subscribe((data) => {
         this.dataSource = data;
-        console.log(this.dataSource);
+        for (let i = 0; i < this.dataSource.length; i++) {
+          if (parseInt(this.dataSource[i].quota) === 0) {
+            this.dataSource.splice(i, 1); // Remove the item at index i from dataSource
+            i--; // Decrement i to adjust for the removed item
+          } else {
+            this.dataSource[i].selectedPeople = "1";
+          }
+        }
+
       },
       (error) => {
         console.error('Error:', error);
@@ -114,7 +123,9 @@ export class TimeRecommendationComponent {
 
 
   reserve(row: TableData): void {
-    console.log(row);
+    if (parseInt(row.quota, 10) == 0) {
+      this.quotaLimit = true;
+    }
   }
 
 

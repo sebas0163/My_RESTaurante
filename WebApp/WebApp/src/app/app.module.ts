@@ -22,6 +22,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { EditFormComponent } from './components/edit-form/edit-form.component';
 import { RouterModule } from '@angular/router';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { ErrorPopupComponent } from './components/error-popup/error-popup.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +35,9 @@ import { RouterModule } from '@angular/router';
     UserLoginComponent,
     AdminReservationsComponent,
     UserReservationsComponent,
-    EditFormComponent
+    EditFormComponent,
+    ResetPasswordComponent,
+    ErrorPopupComponent
   ],
   imports: [
     BrowserModule,

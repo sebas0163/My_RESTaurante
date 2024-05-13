@@ -17,10 +17,6 @@ export class UserRegistrationComponent {
   constructor(private authService: AuthenticationService) {}
 
   register() {
-    console.log(this.name);
-    console.log(this.email);
-    console.log(this.password);
-    console.log(this.recovery_pin);
     this.authService.signIn(this.name!, this.email!, this.password!, "user", this.recovery_pin!).pipe(first()).subscribe(user => {
       this.loading = false;
       console.log("User: ",user);
