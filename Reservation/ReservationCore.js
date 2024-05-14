@@ -77,7 +77,7 @@ class ReservationCore {
   }
   async createReservation(userid, timeid, people) {
     try {
-      await this.databaseController.occupy_slot(timeId);
+      await this.databaseController.occupy_slot(timeid);
     } catch (error) {
       console.log(error);
       let error_result;

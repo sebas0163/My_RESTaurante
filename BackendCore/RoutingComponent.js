@@ -12,7 +12,7 @@ reservationController = new ReservationController();
 
 router.get("/Sentiment/:feedback?", sentiment.askForSentiment);
 router.get("/food/menu", dish_controller.getAllMenu);
-// router.post('/recomendation/time', time_reco.askSchedule);
+router.post('/recomendation/time', time_reco.askSchedule);
 router.post("/food/recomendation", dish_controller.askForDish);
 router.get("/reservation/getAll", reservationController.getAllReservations);
 router.get("/reservation/getById:id?", reservationController.getReservationById);

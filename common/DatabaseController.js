@@ -7,6 +7,7 @@ const {
 	where,
 	addDoc,
 	deleteDoc,
+	updateDoc
 } = require("firebase/firestore");
 const firebase = require("firebase/app");
 const moment = require("moment");
@@ -82,18 +83,11 @@ class DatabaseController {
 		return list;
 	}
 
-	async get_available_schedule(dayMoment) {
+	async get_available_schedule() {
 		const timeCollection = collection(this.db, "Time");
 
-		// Create start and end timestamps for the day
-		const startOfDay = dayMoment.clone().startOf("day");
-		const endOfDay = dayMoment.clone().endOf("day");
-
-		// Query Firestore for entries within the specified day
 		const q = query(
 			timeCollection,
-			where("time", ">=", startOfDay.toDate()),
-			where("time", "<=", endOfDay.toDate()),
 			where("slots", ">", 0)
 		);
 		const snapshot = await getDocs(q);
@@ -114,7 +108,7 @@ class DatabaseController {
 	}
 
 	async occupy_slot(timeId) {
-		const entryRef = doc(db, "Time", timeId);
+		const entryRef = doc(this.db, "Time", timeId);
 		const docSnap = await getDoc(entryRef);
 		if(docSnap.exists()) {
 			const currentSlots = docSnap.data().slots;
@@ -122,7 +116,7 @@ class DatabaseController {
 			if (currentSlots <= 0)
 				throw new RangeError(`Document with id: ${timeId}, has no slots available`);
 
-			await updateDoc(entryRef, {slots: currentSlots--})
+			await updateDoc(entryRef, {slots: currentSlots-1})
 			console.log("Decremented slots!");
 		} else {
 			console.log(`Document with id: ${timeId} not found`);
