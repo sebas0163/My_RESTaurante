@@ -74,5 +74,5 @@ class DishController {
 	}
 }
 
-module.exports = { DishController, DishIface, DishReq}
+module.exports = { DishController };
 
