@@ -15,7 +15,8 @@ router.get("/food/menu", dish_controller.getAllMenu);
 // router.post('/recomendation/time', time_reco.askSchedule);
 router.post("/food/recomendation", dish_controller.askForDish);
 router.get("/reservation/getAll", reservationController.getAllReservations);
-router.get("/reservation/getById", reservationController.getReservationById);
+router.get("/reservation/getById:id?", reservationController.getReservationById);
+router.get("/reservation/getByEmail:email?", reservationController.getReservationByEmail);
 router.delete("/reservation/delete", reservationController.deleteReservation);
 router.post("/reservation/new", reservationController.createReservation);
 
