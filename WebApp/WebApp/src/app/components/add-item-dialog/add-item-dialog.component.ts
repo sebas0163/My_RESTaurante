@@ -44,19 +44,26 @@ export class AddItemDialogComponent {
 }
 
 
+transformDateToHyphenFormat(date: string): string {
+  return date.replace(/\//g, '-');
+}
+
   onSubmit(): void {
     // Submit the edited data and close the dialog
     this.dialogRef.close(this.editedData);
     const user = this.authService.userValue;
 
     this.editedData.time = this.transformTimeToSecondsFormat(this.editedData.time);
+    this.editedData.date = this.transformDateToHyphenFormat(this.editedData.date);
 
+    console.log("DATA ADD: ", this.editedData);
 
     this.reservationService.createReservationAdmin(user!.email, this.editedData.time, this.editedData.date,
       this.editedData.people, this.editedData.quota
     )
     .pipe(first())
       .subscribe((data) => {
+        console.log(data);
       },
       (error) => {
         console.error('Error:', error);

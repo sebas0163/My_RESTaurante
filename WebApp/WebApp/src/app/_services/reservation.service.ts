@@ -37,7 +37,7 @@ export class ReservationService {
     }
 
     getReservationByEmail(email: string) {
-        return this.http.post<any>(`${environment.apiUrl}/api/reservation/getByEmail`, { email })
+        return this.http.get<any>(`${environment.apiUrl}/api/reservation/getByEmail?email=${email}`)
             .pipe(map(data => {
                 // store user details in local storage to keep user logged in between page refreshes
                 console.log("getReservationByEmail: ", data);
@@ -46,8 +46,6 @@ export class ReservationService {
     }
 
     createReservation(userid: string, timeid: string, people: string) {
-        console.log("createReservation enters ");
-        
         const requestBody = {
             userid: userid,
             timeid: timeid,
@@ -70,8 +68,6 @@ export class ReservationService {
     }
 
     createReservationAdmin(email: string, time: string, date: string, people: string, quota: string) {
-        console.log("createReservation enters ");
-        
         const requestBody = {
             email: email,
             time: time,
@@ -95,11 +91,33 @@ export class ReservationService {
             );
     }
 
+    editReservationAdmin(email: string, time: string, date: string, people: string, quota: string) {
+        const requestBody = {
+            email: email,
+            time: time,
+            date: date,
+            people: people,
+            quota: quota
+        };
+    
+        return this.http.post<any>(`${environment.apiUrl}/api/reservation/newAdmin`, requestBody)
+            .pipe(
+                catchError(error => {
+                    console.error('Error occurred: ', error);
+                    // You can handle the error here, for example:
+                    return throwError('There was a problem creating the reservation.');
+                }),
+                map(user => {
+                    // store user details in local storage to keep user logged in between page refreshes
+                    return user;
+                })
+            );
+    }
+
 
     deleteReservation(reservationID: string) {
-        return this.http.delete<any>(`${environment.apiUrl}/api/reservation/delete/${reservationID}`)
+        return this.http.delete<any>(`${environment.apiUrl}/api/reservation/delete?id=${reservationID}`)
             .pipe(map(data => {
-                console.log("Delete: ", data);
                 return data;
             }));
     }

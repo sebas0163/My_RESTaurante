@@ -1,4 +1,4 @@
-<div class="edit-data-container">
+<div class="edit-data-container" *ngIf="!isDeleted">
   <h2>Edit Data</h2>
 
   <form #editForm="ngForm" (ngSubmit)="onSubmit()" class="edit-form">

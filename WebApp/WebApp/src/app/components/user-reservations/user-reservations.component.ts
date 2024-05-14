@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { ReservationService } from '../../_services/reservation.service';
-import { first } from 'rxjs';
+import { first, pipe } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { AuthenticationService } from '../../_services/authentication.service';
 
 
 export interface TableData {
@@ -21,17 +23,16 @@ export class UserReservationsComponent {
   displayedColumns: string[] = ['time', 'people', 'actions'];
   dataSource: TableData[] = [];
 
-  constructor(private reservationService: ReservationService) {}
-
+  constructor(private reservationService: ReservationService, private dialog: MatDialog, private authService: AuthenticationService,) {}
 
   ngOnInit() {
-    this.reservationService.getAll()
+    const user = this.authService.userValue;
+    this.reservationService.getReservationByEmail(user!.email)
     .pipe(first())
     .subscribe({
         next: (data) => {
           console.log(data);
           this.dataSource = data;
-
         },
         error: (error) => {
             // Handle error
