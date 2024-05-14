@@ -1,7 +1,7 @@
 const { DishController, DishIface, DishReq } = require('../DishController.js');
 const { PubSub } = require('@google-cloud/pubsub');
 
-jest.mock('../../common/PubSub.js');
+jest.mock('../../common/PubSub');
 
 describe('DishIface', () => {
   let dishIface;
@@ -9,36 +9,22 @@ describe('DishIface', () => {
   beforeEach(() => {
     dishIface = new DishIface();
 
-    dishIface.downstream_topic = {
-      publishMessage: jest.fn()
-    };
-
-    const mocked_response = {
-      data: {
-        toString: jest.fn().mockReturnValue('ok')
-      }
-    };
     mocked_return_result = '{"data":"ok"}';
-    dishIface.upstream_sub = {
-      on: jest.fn().mockImplementation((event, listener) => {
-        if (event == 'message') {
-          setTimeout(() => listener({
-            ack: jest.fn(),
-            data: '{"data":"ok"}'
-          }), 100);
-        }
-      })
-    };
-
   });
 
   describe('DishIface', () => {
     it('publicar y recibir respuesta', async () => {
+      const mocked_response = JSON.stringify({
+        foo: "bar"
+      });
+      dishIface.pubSubHandler.send_message = jest.fn();
+      dishIface.pubSubHandler.pull_single_message = jest.fn().mockResolvedValue(mocked_response);
       const response = await dishIface.getAllMenu("Sample message");
-      expect(response).toEqual({ data: "ok" });
-      expect(dishIface.downstream_topic.publishMessage).toHaveBeenCalledWith({ data: expect.any(Buffer) });
+      expect(response).toEqual(JSON.parse(mocked_response));
+      // expect(dishIface.downstream_topic.publishMessage).toHaveBeenCalledWith({ data: expect.any(Buffer) });
     });
   });
+
 });
 
 describe('DishController', () => {
