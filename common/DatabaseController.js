@@ -104,6 +104,19 @@ class DatabaseController {
       return times;
     }
 
+    /**
+     * The function `getUser` retrieves a user's data from a Firestore database based on their email
+     * and returns it.
+     * 
+     * @param email The `email` parameter is used to specify the email address of the user you want to
+     * retrieve from the database.
+     * @param password The function `getUser` you provided searches for a user in a Firestore database
+     * based on the email provided. It retrieves the user's data if a matching user is found.
+     * 
+     * @return The `getUser` function is returning an object with the user's email, password, access
+     * level, and name if a user with the provided email is found in the Firestore database. If no
+     * matching user is found, it returns `null`.
+     */
     async getUser(email, password) {
         const userCollection = collection(this.db, 'User');
         const q = query(userCollection, where('email', '==', email));
@@ -125,6 +138,18 @@ class DatabaseController {
         
         return users[0];
     }
+    /**
+     * The function `addUser` asynchronously adds a new document to the 'User' collection in a database
+     * and returns the ID of the newly created document.
+     * 
+     * @param data The `data` parameter in the `addUser` function represents the information of the
+     * user that you want to add to the database. This data typically includes details such as the
+     * user's name, email, age, address, etc. It could be an object containing key-value pairs of user
+     * attributes.
+     * 
+     * @return The `addUser` function is returning the ID of the document that was written to the
+     * database.
+     */
     async addUser(data) {
         try {
             const userCollection = collection(this.db, 'User');
@@ -136,6 +161,25 @@ class DatabaseController {
             throw error;
           }
     }
+   /**
+    * The function `updateUserPassword` updates a user's password in a database if the provided
+    * recovery pin matches the one stored for the user.
+    * 
+    * @param email The `email` parameter is the email address of the user for whom you want to update
+    * the password.
+    * @param recovery_pin The `recovery_pin` parameter is typically a unique code or token that is
+    * provided to a user as a means of verifying their identity when they need to reset their password.
+    * It serves as a security measure to ensure that only the rightful owner of the account can change
+    * the password.
+    * @param new_password The `new_password` parameter in the `updateUserPassword` function represents
+    * the new password that the user wants to set for their account. This function is designed to
+    * update the password field in the user document in the database with this new password value.
+    * 
+    * @return The function `updateUserPassword` will return a value of `1` if the recovery pin provided
+    * matches the recovery pin stored in the database for the user, and the password field is
+    * successfully updated with the new password. If the recovery pin does not match, it will return a
+    * value of `0`. If there are no matching users found in the database, it will return `null`.
+    */
     async updateUserPassword(email, recovery_pin, new_password) {
         try {
             const userCollection = collection(this.db, 'User');
@@ -166,6 +210,21 @@ class DatabaseController {
             throw error;
         }
     } 
+    /**
+     * The function `updateUserPermit` updates the access level of a user in a database based on their
+     * email.
+     * 
+     * @param email The `email` parameter in the `updateUserPermit` function is used to specify the
+     * email address of the user whose access level needs to be updated.
+     * @param access_level The `access_level` parameter in the `updateUserPermit` function represents
+     * the level of access or permissions that you want to assign to a user. It is the new value that
+     * will be set for the `access_level` field in the user document in the database. This parameter
+     * allows you to
+     * 
+     * @return The `updateUserPermit` function returns either `1` if the access level was successfully
+     * updated for the user with the provided email, or `null` if no matching user was found in the
+     * database.
+     */
     async updateUserPermit(email, access_level) {
         try {
             const userCollection = collection(this.db, 'User');
@@ -188,6 +247,22 @@ class DatabaseController {
             throw error;
         }
     }
+   /**
+    * The function `deleteUser` deletes a user and all their associated reservations from a Firestore
+    * database based on the provided email and password.
+    * 
+    * @param email The `deleteUser` function you provided is designed to delete a user from a Firestore
+    * database along with all their associated reservations. The function first queries the `User`
+    * collection to find the user document based on the provided email. If the user is found, it
+    * deletes the user document and then proceeds to
+    * @param password The function `deleteUser` you provided seems to be deleting a user and all their
+    * associated reservations from a Firestore database. The parameters `email` and `password` are
+    * likely used to identify and authenticate the user before deleting their account.
+    * 
+    * @return The `deleteUser` function returns a promise that resolves to `1` if the user and all
+    * their reservations are successfully deleted from the database. If there is an error during the
+    * deletion process, the function will throw an error.
+    */
     async deleteUser(email, password){
         try {
             const userCollection = collection(this.db, 'User');
