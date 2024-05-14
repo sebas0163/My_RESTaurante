@@ -94,6 +94,7 @@ class DatabaseController {
 			timeCollection,
 			where("time", ">=", startOfDay.toDate()),
 			where("time", "<=", endOfDay.toDate()),
+			where("slots", ">", 0)
 		);
 		const snapshot = await getDocs(q);
 
@@ -106,11 +107,29 @@ class DatabaseController {
 		const times = snapshot.docs.map((doc) => {
 			const data = doc.data();
 			// Assuming 'timestamp' is stored as a Firestore Timestamp object
-			return moment(data.time.toDate());
+			return {datetime: moment(data.time.toDate()), cupos:data.slots}
 		});
 
 		return times;
 	}
+
+	async occupy_slot(timeId) {
+		const entryRef = doc(db, "Time", timeId);
+		const docSnap = await getDoc(entryRef);
+		if(docSnap.exists()) {
+			const currentSlots = docSnap.data().slots;
+
+			if (currentSlots <= 0)
+				throw new RangeError(`Document with id: ${timeId}, has no slots available`);
+
+			await updateDoc(entryRef, {slots: currentSlots--})
+			console.log("Decremented slots!");
+		} else {
+			console.log(`Document with id: ${timeId} not found`);
+			throw new ReferenceError(`Document with id: ${timeId} not found`);
+		}
+	}
+
 	//HERE STARTS RESERVARTION CONTROL
 	/**
 	 * Get a reservation by id

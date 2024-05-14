@@ -76,6 +76,35 @@ class ReservationCore {
     }
   }
   async createReservation(userid, timeid, people) {
+    try {
+      await this.databaseController.occupy_slot(timeId);
+    } catch (error) {
+      console.log(error);
+      let error_result;
+      switch(error.name) {
+        case 'ReferenceError':
+          error_result = {
+            status: 404,
+            data: "No se encontró el timeId especificado",
+          };
+          break;
+        case 'RangeError':
+          error_result = {
+            status: 416,
+            data: "No hay campo en el horario especificado",
+          };
+          break;
+        default:
+          console.log("Got an undefined error!");
+          error_result = {
+            status: 500,
+            data: "Error al actualizar los campos de un ",
+          };
+          break;
+      }
+      return error_result;
+    }
+
     const resp = await this.databaseController.createNewRervation(
       userid,
       timeid,
