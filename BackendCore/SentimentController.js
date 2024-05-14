@@ -40,8 +40,6 @@ class SentimentController {
         return {score: score, texto:texto}
     }
     askForSentiment(req, res) {
-        
-        
         const { feedback } = req.query;
         const { feedback: feedbackParam } = req.params;
       
@@ -82,4 +80,4 @@ class SentimentController {
         
     }
 }
-module.exports = { SentimentController };
+module.exports = { SentimentController, SentimentError};

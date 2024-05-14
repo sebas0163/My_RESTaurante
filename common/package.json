@@ -9,7 +9,7 @@
 	},
 	"scripts": {
 		"test": "jest"
-	}
+	},
   "dependencies": {
     "@google-cloud/pubsub": "^4.3.3",
     "firebase": "^10.10.0",
