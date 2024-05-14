@@ -2,10 +2,10 @@ const moment = require("moment");
 const { PubSubIface } = require("../common/PubSub");
 
 class TimeRes {
-  constructor(errorCode, schedule) {
-    this.errorCode = errorCode;
-    this.schedule = schedule;
-  }
+	constructor(errorCode, schedule) {
+		this.errorCode = errorCode;
+		this.schedule = schedule;
+	}
 }
 
 class TimeIface extends PubSubIface {

@@ -1,47 +1,18 @@
 
-const {PubSubIface} = require('../common/PubSub');
+const {PubSubIface, PubSubReceiverSender} = require('../common/PubSub');
 
 
-class UserIface extends PubSubIface{
-    constructor(topic_name='user', projectId='silken-tenure-419721'){
-      super(topic_name, projectId);
+class UserIface extends PubSubReceiverSender{
+    constructor(){
+      super("user-downstream", "user-upstream", "userController-sub");
     }
-  
-    async setupTopics(topics) {
-      await super.setupTopics(topics);
-      await this.create_upstream_sub();
-    }
-  
-    async create_upstream_sub() {
-      this.upstream_sub = await this.getSubscriptionByName(this.upstream_topic, this.upstream_sub_name);
-      this.subs.push(this.upstream_sub);
-      console.log("Created the upstream sub");
-    }
-  
-    waitForResponseOnUpstream() {
-      return new Promise(async (resolve, reject) => {
-        const responseListener = async (response) => {
-          response.ack();
-          resolve(response);
-        }
-  
-        const errorListener = async (response) => {
-          response.ack();
-          reject(response);
-        }
-  
-        this.upstream_sub.on('message', responseListener);
-        this.upstream_sub.on('error', errorListener);
-      })
-    }
-  
   
     async getUser(message) {
         
-      this.downstream_topic.publishMessage({data:Buffer.from(JSON.stringify(message))});
-      const upstream_res = await this.waitForResponseOnUpstream();
+      this.sender.send_message(JSON.stringify(message));
+      const upstream_res = await this.receiver.pull_single_message();
       console.log("Got upstream res");
-      return JSON.parse(upstream_res.data.toString());
+      return JSON.parse(upstream_res);
     }
   
   
@@ -56,6 +27,19 @@ class UserController{
         this.deleteUser = this.deleteUser.bind(this);
         this.addNewUser = this.addNewUser.bind(this);
       }
+   /**
+    * The function `addNewUser` takes user input, creates a user object, and then retrieves user data
+    * using the user interface.
+    * 
+    * @param req The `req` parameter typically represents the request object in Node.js applications.
+    * It contains information about the HTTP request that triggered the function, such as request
+    * headers, parameters, body, and more. In this context, `req` is used to extract data like name,
+    * email, password, access level
+    * @param res The `res` parameter in the `addNewUser` function is typically the response object that
+    * will be sent back to the client making the request. It is used to send a response back to the
+    * client with the appropriate status code and data. In this case, the function is likely creating a
+    * new
+    */
     addNewUser(req, res){
       const name = req.body.name;
       const email = req.body.email;
@@ -73,6 +57,18 @@ class UserController{
         res.status(user_res.status).json(user_res.data);
       });
     }
+    /**
+     * The function `verifyUserLogin` takes user email and password from a request, retrieves user data
+     * using the email and password, and sends the response back.
+     * 
+     * @param req The `req` parameter typically represents the request object in a Node.js application.
+     * It contains information about the HTTP request that triggered the function, such as request
+     * headers, parameters, body, and query parameters. In this specific function `verifyUserLogin`,
+     * `req` seems to be used to extract the
+     * @param res The `res` parameter in the `verifyUserLogin` function is typically the response
+     * object in Node.js Express framework. It is used to send a response back to the client making the
+     * request.
+     */
     verifyUserLogin(req, res){
       
       const email = req.query.email;
@@ -85,6 +81,17 @@ class UserController{
           res.status(user_res.status).json(user_res.data);
       });
     }
+    /**
+     * The function `changePassword` takes in user input for email, password, and recovery pin, then
+     * retrieves user data and updates the password.
+     * 
+     * @param req The `req` parameter typically represents the HTTP request object, which contains
+     * information about the incoming request such as headers, parameters, body, etc. It is commonly
+     * used in web development to access data sent by the client to the server.
+     * @param res The `res` parameter in the `changePassword` function is typically the response object
+     * that is used to send a response back to the client making the request. It is commonly used to
+     * set the status code and send data back in the response.
+     */
     changePassword(req, res){
       const email = req.body.email;
       const password = req.body.password;
@@ -98,6 +105,16 @@ class UserController{
           res.status(user_res.status).json(user_res.data);
       });
     }
+    /**
+     * The function `changeAccess` takes in request and response objects, extracts necessary data, and
+     * uses it to update user access level through a user interface method.
+     * 
+     * @param req The `req` parameter typically represents the HTTP request object, which contains
+     * information about the incoming request such as headers, parameters, body, etc.
+     * @param res The `res` parameter in the `changeAccess` function is typically the response object
+     * that is used to send a response back to the client making the request. It is commonly used to
+     * set the status code and send data back in the response.
+     */
     changeAccess(req, res){
       const admin_email = req.body.admin_email;
       const admin_password = req.body.admin_password;
@@ -113,6 +130,17 @@ class UserController{
           res.status(user_res.status).json(user_res.data);
       });
     }
+    /**
+     * The function deleteUser takes a request and response object, retrieves user information based on
+     * email and password, and sends the response with the user data.
+     * 
+     * @param req The `req` parameter typically represents the HTTP request object, which contains
+     * information about the incoming request such as headers, parameters, body, etc. It is commonly
+     * used in web development to access data sent by the client to the server.
+     * @param res The `res` parameter in the `deleteUser` function is typically the response object
+     * that is used to send a response back to the client making the request. It is commonly used to
+     * set the status code and send data back in the response.
+     */
     deleteUser(req, res){
       const email = req.body.email;
       const password = req.body.password;

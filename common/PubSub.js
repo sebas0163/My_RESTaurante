@@ -1,63 +1,99 @@
 const { PubSub } = require("@google-cloud/pubsub");
 
-class PubSubIface {
-  constructor(topic_name, projectId = "silken-tenure-419721") {
-    this.subs = [];
-    this.projectId = projectId;
+class PubSubSender {
+	constructor(topic_name) {
+		this.pubSubClient = new PubSub();
+		this.topic = this.pubSubClient.topic(topic_name);
+	}
 
-    this.downstream_topic_name =
-      "projects/" + this.projectId + "/topics/" + topic_name + "-downstream";
-    this.downstream_sub_name =
-      "projects/" +
-      this.projectId +
-      "/subscriptions/" +
-      topic_name +
-      "-downstream";
-
-    this.upstream_topic_name =
-      "projects/" + this.projectId + "/topics/" + topic_name + "-upstream";
-    this.upstream_sub_name =
-      "projects/" +
-      this.projectId +
-      "/subscriptions/" +
-      topic_name +
-      "-upstream";
-
-    this.pubsub = new PubSub({ projectId: this.projectId });
-    this.pubsub.getTopics().then(async (topics) => {
-      await this.setupTopics(topics);
-    });
-  }
-
-  async setupTopics(topics) {
-    this.downstream_topic = await this.getTopicByName(
-      this.downstream_topic_name
-    );
-    this.upstream_topic = await this.getTopicByName(this.upstream_topic_name);
-  }
-
-  async getTopicByName(topicName) {
-    const [topics] = await this.pubsub.getTopics();
-    let topic = topics.find((obj) => obj.name == topicName);
-
-    if (!topic) {
-      await this.pubsub.createTopic(topicName);
-      topic = await this.getTopicByName(topic, subName);
-    }
-    return topic;
-  }
-
-  async getSubscriptionByName(topic, subName) {
-    const [subscriptions] = await topic.getSubscriptions();
-    let sub = subscriptions.find((obj) => obj.name == subName);
-    if (!sub) {
-      await topic.createSubscription(subName);
-      console.log("Created sub with name " + subName);
-      sub = await this.getSubscriptionByName(topic, subName);
-      this.subs.push(sub);
-    }
-    return sub;
-  }
+	send_message(str_msg) {
+		const dataBuffer = Buffer.from(str_msg);
+		this.topic.publishMessage({ data: dataBuffer });
+		console.log("Sent a pubsub message to topic: " + this.topic.name);
+	}
 }
 
-module.exports = { PubSubIface };
+class PubSubReceiver {
+	constructor(topic_name, subscription_name) {
+		this.pubSubClient = new PubSub();
+		this.subscription = this.pubSubClient
+			.topic(topic_name)
+			.subscription(subscription_name);
+	}
+
+	waitForResponse() {
+		return new Promise((resolve, reject) => {
+			const responseListener = (response) => {
+				response.ack();
+				this.subscription.removeListener("message", responseListener);
+				this.subscription.removeListener("error", errorListener);
+
+				console.log("Received a success msg from PubSub! Returning to caller.");
+				resolve(response.data.toString());
+			};
+
+			const errorListener = (error) => {
+				error.ack();
+				this.subscription.removeListener("message", responseListener);
+				this.subscription.removeListener("error", errorListener);
+
+				console.log("Received an error. Propagating...");
+				reject(error);
+			};
+
+			console.log("Will start waiting for a new pubsub msg...");
+			this.subscription.on("message", responseListener);
+			this.subscription.on("error", errorListener);
+		});
+	}
+
+	waitForRawResponse() {
+		return new Promise((resolve, reject) => {
+			const responseListener = (response) => {
+				this.subscription.removeListener("message", responseListener);
+				this.subscription.removeListener("error", errorListener);
+
+				console.log("Received a success msg from PubSub! Returning to caller.");
+				resolve(response);
+			};
+
+			const errorListener = (error) => {
+				error.ack();
+				this.subscription.removeListener("message", responseListener);
+				this.subscription.removeListener("error", errorListener);
+
+				console.log("Received an error. Propagating...");
+				reject(error);
+			};
+
+			console.log("Will start waiting for a new pubsub msg...");
+			this.subscription.on("message", responseListener);
+			this.subscription.on("error", errorListener);
+		});
+	}
+
+	async pull_single_message() {
+		return await this.waitForResponse();
+	}
+
+	async pull_single_raw_message() {
+		return await this.waitForRawResponse();
+	}
+}
+
+class PubSubReceiverSender {
+	constructor(sender_topic_name, receiver_topic_name, subscription_name) {
+		this.sender = new PubSubSender(sender_topic_name);
+		this.receiver = new PubSubReceiver(receiver_topic_name, subscription_name);
+	}
+
+	async pull_single_message() {
+		return await this.receiver.pull_single_message();
+	}
+
+	send_message(str_msg) {
+		this.sender.send_message(str_msg);
+	}
+}
+
+module.exports = { PubSubSender, PubSubReceiver, PubSubReceiverSender };
