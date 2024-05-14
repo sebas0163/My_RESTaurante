@@ -9,11 +9,17 @@ const { UserController } = require('./UserController');
 sentiment = new SentimentController();
 dish_controller = new DishController();
 time_reco = new TimeController();
+reservationController = new ReservationController();
 user_cont = new UserController();
 
 router.get('/Sentiment/:feedback?', sentiment.askForSentiment);
 router.get('/food/menu', dish_controller.getAllMenu);
 
+router.get("/reservation/getAll", reservationController.getAllReservations);
+router.get("/reservation/getById:id?", reservationController.getReservationById);
+router.get("/reservation/getByEmail:email?", reservationController.getReservationByEmail);
+router.delete("/reservation/delete", reservationController.deleteReservation);
+router.post("/reservation/new", reservationController.createReservation);
 
 router.post('/recomendation/time', time_reco.askSchedule);
 router.post('/food/recomendation', dish_controller.askForDish);

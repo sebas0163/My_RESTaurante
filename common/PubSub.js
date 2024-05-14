@@ -33,7 +33,6 @@ class PubSubReceiver {
 			};
 
 			const errorListener = (error) => {
-				error.ack();
 				this.subscription.removeListener("message", responseListener);
 				this.subscription.removeListener("error", errorListener);
 
@@ -58,7 +57,6 @@ class PubSubReceiver {
 			};
 
 			const errorListener = (error) => {
-				error.ack();
 				this.subscription.removeListener("message", responseListener);
 				this.subscription.removeListener("error", errorListener);
 
