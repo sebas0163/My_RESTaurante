@@ -2,12 +2,7 @@
     <h2>Crear Nueva Reservación</h2>
   
     <form #editForm="ngForm" (ngSubmit)="onSubmit()" class="edit-form">
-      <div class="form-group">
-        <mat-form-field appearance="fill">
-          <input matInput placeholder="Name" [(ngModel)]="editedData.name" name="name" required>
-        </mat-form-field>
-      </div>
-  
+
       <div class="form-group">
         <mat-form-field appearance="fill">
           <input matInput type="time" placeholder="Time" [(ngModel)]="editedData.time" name="time" required>
@@ -16,7 +11,26 @@
 
       <div class="form-group">
         <mat-form-field appearance="fill">
-          <input matInput type="people" placeholder="People" [(ngModel)]="editedData.people" name="people" required>
+          <input matInput placeholder="Fecha" type="date" [(ngModel)]="editedData.date" name="date" required>
+        </mat-form-field>
+      </div>
+  
+
+      <div class="form-group">
+        <mat-form-field appearance="fill">
+          <mat-label>Cupos</mat-label>
+          <select matNativeControl required [(ngModel)]="editedData.quota" name="quota">
+            <option *ngFor="let value of dropdownValuesQuota" [value]="value">{{value}}</option>
+          </select>
+        </mat-form-field>
+      </div>
+      
+      <div class="form-group">
+        <mat-form-field appearance="fill">
+          <mat-label>Personas</mat-label>
+          <select matNativeControl required [(ngModel)]="editedData.people" name="people">
+            <option *ngFor="let value of dropdownValues" [value]="value">{{value}}</option>
+          </select>
         </mat-form-field>
       </div>
   

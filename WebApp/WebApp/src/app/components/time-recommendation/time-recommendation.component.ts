@@ -5,6 +5,8 @@ import moment from 'moment';
 import { AuthenticationService } from '../../_services/authentication.service';
 import { User } from '../../_models/user';
 import { Role } from '../../_models/role';
+import { ReservationService } from '../../_services/reservation.service';
+import { first } from 'rxjs';
 
 export interface TableData {
   date: string;
@@ -35,13 +37,14 @@ export class TimeRecommendationComponent {
 
   displayedColumns: string[] = ['date', 'time', 'quota', 'people', 'actions'];
   dataSource: TableData[] = [];
+  dropdownValues: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   
   user: User;
   isUser = false;
 
   
   constructor(private myService: MyServiceService,
-    private http: HttpClient,
+    private reservationService: ReservationService, 
     private authenticationService: AuthenticationService) {
     this.baseUrl = this.myService.getTimeUrl();
     this.user = <User>this.authenticationService.userValue;
@@ -49,7 +52,8 @@ export class TimeRecommendationComponent {
   }
 
   ngOnInit() {
-    this.http.get<TableData[]>('../assets/mockTimeAvailability.json')
+    this.reservationService.getAll()
+    .pipe(first())
       .subscribe((data) => {
         this.dataSource = data;
         for (let i = 0; i < this.dataSource.length; i++) {
@@ -71,61 +75,12 @@ export class TimeRecommendationComponent {
   }
   
 
-  getDateRecommendation(){
-    if(this.selectedDate){
-      this.showRecommendationContent = true;
-    }
-    try {
-        this.http.get<any>(this.baseUrl).subscribe(
-          (response) => {
-            console.log("Times", response);
-            this.times = response.times;
-          },
-          (error) => {
-            console.error('Error:', error);
-          }
-        )
-    } catch (error) {
-      console.error('Fetch error:', error);
-      // Propagate the error by rethrowing it
-      throw error;
-    }
-  }
-
-
-  postDateRecommendation() {
-
-    if (this.selectedDate) {
-      this.showRecommendationContent = true;
-
-      const body = {
-        "day": this.selectedDate.toLocaleDateString()
-      }
-
-      // Make the POST request
-      this.http.post<any>(this.baseUrl, body).subscribe(
-        (response) => {
-          this.times = response;
-          console.log(response);
-          this.times = this.times.map((item: moment.MomentInput) => moment(item).format('MMMM D, YYYY, h:mm A'));
-        },
-        (error) => {
-          console.error('Error:', error);
-        }
-      );
-    }
-  }
-
-
-  updateSelection(time: string) {
-    this.isTimeSelected = true;
-  }
-
-
   reserve(row: TableData): void {
     if (parseInt(row.quota, 10) == 0) {
       this.quotaLimit = true;
     }
+    console.log("ROW DATA: ", row);
+    console.log(localStorage.getItem('user'));
   }
 
 

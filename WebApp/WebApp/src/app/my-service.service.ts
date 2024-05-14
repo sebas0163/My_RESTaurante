@@ -8,12 +8,12 @@ export class MyServiceService {
 
   constructor() {
     this.baseUrl = 'https://us-central1-silken-tenure-419721.cloudfunctions.net/BackendCore-NewPubSub'
-    //this.menuUrl = 'http://localhost:1234/api/food/menu';
-    //this.menuRecUrl = 'http://localhost:1234/api/food/recomendation';
   }
 
+  
+
   getFeedbackUrl(): string {
-    return this.baseUrl + 'api/Sentiment/';
+    return this.baseUrl + '/api/Sentiment/';
   }
 
   getTimeUrl(): string {

@@ -77,8 +77,6 @@ export class AuthenticationService {
 
 
     resetPassword(email: string, password: string, recovery_pin: string) {
-    console.log("Auth enters ");
-    
     const requestBody = {
         email: email,
         password: password,
@@ -94,7 +92,6 @@ export class AuthenticationService {
             }),
             map(user => {
                 // store user details in local storage to keep user logged in between page refreshes
-                console.log("Auth: ", user);
                 return user;
             })
         );

@@ -9,10 +9,13 @@ import { AddItemDialogComponent } from '../add-item-dialog/add-item-dialog.compo
 export interface TableData {
   id: string;
   time: string;
+  date: string;
+  quota: string;
   name: string;
-  email: string;
   people: string;
+  email: string;
 }
+
 
   @Component({
     selector: 'app-admin-reservations',
@@ -20,8 +23,9 @@ export interface TableData {
     styleUrl: './admin-reservations.component.scss'
   })
   export class AdminReservationsComponent {
-    displayedColumns: string[] = ['name', 'time', 'people', 'actions'];
+    displayedColumns: string[] = ['name', 'date', 'time', 'quota', 'people', 'actions'];
     dataSource: TableData[] = [];
+
 
     constructor(private reservationService: ReservationService, private http: HttpClient, private dialog: MatDialog) {}
 
