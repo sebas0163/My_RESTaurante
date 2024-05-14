@@ -9,6 +9,7 @@ class SentimentError extends Error{
         this.httpsCode = 400;
     }
 }
+
 class SentimentController {
     constructor(){
         this.client = new language.LanguageServiceClient({keyFilename: 'BackendCore/credentials.json'});
@@ -39,8 +40,6 @@ class SentimentController {
         return {score: score, texto:texto}
     }
     askForSentiment(req, res) {
-        
-        
         const { feedback } = req.query;
         const { feedback: feedbackParam } = req.params;
       
@@ -81,4 +80,4 @@ class SentimentController {
         
     }
 }
-module.exports = { SentimentController };
+module.exports = { SentimentController, SentimentError};

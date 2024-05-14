@@ -19,8 +19,18 @@
       </div>
     </main>
     <div class="button-container">
-      <button class="pill" routerLink="/time-recommendation-component" (click)="getRecommendation()">Ver Disponibilidad</button>
+      <button class="pill" routerLink="/time-recommendation-component" (click)="postDateRecommendation()">Ver Disponibilidad</button>
     </div>
+
+    <div class="title" *ngIf="this.showRecommendationContent">
+    <h3 class="page-title">Las opciones de hora para la fecha seleccionada son:</h3>
+      <ul>
+        <div *ngFor="let time of times">
+          <p>{{ time }}</p>
+        </div>
+      </ul>
+  </div>
+
   </router-outlet>
 </div>
 

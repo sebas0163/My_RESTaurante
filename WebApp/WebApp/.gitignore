@@ -11,6 +11,12 @@
 npm-debug.log
 yarn-error.log
 
+
+# Other program stuff
+/BackendCore/.DS_Store
+/FoodRecomendation/test.js
+WebApp/.DS_Store
+
 # IDEs and editors
 .idea/
 .project

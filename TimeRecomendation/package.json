@@ -7,5 +7,10 @@
     "test": "echo \"This will be replaced\" && exit 0"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@google-cloud/pubsub": "^4.3.3",
+    "jest": "^29.7.0",
+    "moment": "^2.30.1"
+  }
 }
