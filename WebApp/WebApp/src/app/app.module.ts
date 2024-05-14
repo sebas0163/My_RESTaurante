@@ -24,6 +24,7 @@ import { EditFormComponent } from './components/edit-form/edit-form.component';
 import { RouterModule } from '@angular/router';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { ErrorPopupComponent } from './components/error-popup/error-popup.component';
+import { AddItemDialogComponent } from './components/add-item-dialog/add-item-dialog.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { ErrorPopupComponent } from './components/error-popup/error-popup.compon
     UserReservationsComponent,
     EditFormComponent,
     ResetPasswordComponent,
-    ErrorPopupComponent
+    ErrorPopupComponent,
+    AddItemDialogComponent
   ],
   imports: [
     BrowserModule,

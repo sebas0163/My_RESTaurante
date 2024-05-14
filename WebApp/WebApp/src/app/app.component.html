@@ -22,7 +22,7 @@
       <button class="login-icon" mat-icon-button routerLink="/user-login-component" *ngIf="!isUser && !isAdmin">
         <mat-icon>person</mat-icon>
       </button>
-      <button class="login-icon" mat-icon-button routerLink="/user-login-component" (click)="logout()" *ngIf="isUser">
+      <button class="login-icon" mat-icon-button routerLink="/user-login-component" (click)="logout()" *ngIf="isUser || isAdmin">
         <mat-icon>logout</mat-icon>
       </button>
     </div>

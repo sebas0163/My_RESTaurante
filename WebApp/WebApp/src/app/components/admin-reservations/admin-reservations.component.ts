@@ -2,6 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { EditFormComponent } from '../edit-form/edit-form.component';
+import { ReservationService } from '../../_services/reservation.service';
+import { first } from 'rxjs';
+import { AddItemDialogComponent } from '../add-item-dialog/add-item-dialog.component';
 
 export interface TableData {
   id: string;
@@ -20,27 +23,21 @@ export interface TableData {
     displayedColumns: string[] = ['name', 'time', 'people', 'actions'];
     dataSource: TableData[] = [];
 
-    constructor(private http: HttpClient, private dialog: MatDialog) {}
+    constructor(private reservationService: ReservationService, private http: HttpClient, private dialog: MatDialog) {}
 
     ngOnInit() {
-      try{
-        this.http.get<TableData[]>('https://us-central1-silken-tenure-419721.cloudfunctions.net/DatabaseControllerTest/api/reservation/getAll')
-        .subscribe((data) => {
-          
-          console.log('In try');
-          this.dataSource = data;
-          console.log(data);
-        },
-        (error) => {
-          console.error('Error:', error);
-        }
-      )
-  } catch (error) {
-    // Log the error (you can remove this line if not needed)
-    console.error('Fetch error:', error);
-    // Propagate the error by rethrowing it
-    throw error;
-  }
+      this.reservationService.getAll()
+      .pipe(first())
+      .subscribe({
+          next: (data) => {
+            console.log(data);
+            this.dataSource = data;
+          },
+          error: (error) => {
+              // Handle error
+              console.error("Error occurred: ", error);
+          }
+      });
 }
 
     openEditDialog(row: TableData): void {
@@ -56,6 +53,19 @@ export interface TableData {
           if (index !== -1) {
             this.dataSource[index] = result;
           }
+        }
+      });
+    }
+
+    openAddItemDialog(): void {
+      const dialogRef = this.dialog.open(AddItemDialogComponent, {
+        width: '250px',
+      });
+  
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          // Add the new item to the data source
+          this.dataSource.push(result);
         }
       });
     }

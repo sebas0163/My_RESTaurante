@@ -7,7 +7,7 @@ export class MyServiceService {
   private baseUrl: string;
 
   constructor() {
-    this.baseUrl = 'https://us-central1-silken-tenure-419721.cloudfunctions.net/Backend/'
+    this.baseUrl = 'https://us-central1-silken-tenure-419721.cloudfunctions.net/BackendCore-NewPubSub'
     //this.menuUrl = 'http://localhost:1234/api/food/menu';
     //this.menuRecUrl = 'http://localhost:1234/api/food/recomendation';
   }
@@ -21,10 +21,10 @@ export class MyServiceService {
   }
 
   getMenuUrl(): string {
-    return 'http://localhost:8000/api/food/menu';
+    return this.baseUrl + '/api/food/menu';
   }
   getMenuRecUrl(): string {
-    return 'http://localhost:8000/api/food/recomendation';
+    return this.baseUrl + '/api/food/recomendation';
   }
   
 

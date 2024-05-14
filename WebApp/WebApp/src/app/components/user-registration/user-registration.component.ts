@@ -21,7 +21,8 @@ export class UserRegistrationComponent {
 
 
   register() {
-    this.authService.signIn(this.name!, this.email!, this.password!, "user", this.recovery_pin!)
+    const userRole = "regular";
+    this.authService.signIn(this.name!, this.email!, this.password!, userRole, this.recovery_pin!)
       .pipe(first())
         .subscribe({
             next: (user) => {
