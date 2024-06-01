@@ -1,26 +1,7 @@
-
-const {PubSubIface, PubSubReceiverSender} = require('../common/PubSub');
-
-
-class UserIface extends PubSubReceiverSender{
-    constructor(){
-      super("user-downstream", "user-upstream", "userController-sub");
-    }
-  
-    async getUser(message) {
-        
-      this.sender.send_message(JSON.stringify(message));
-      const upstream_res = await this.receiver.pull_single_message();
-      console.log("Got upstream res");
-      return JSON.parse(upstream_res);
-    }
-  
-  
-  }
-
+const axios = require('axios');
 class UserController{
     constructor() {
-        this.user_interface = new UserIface();
+        
         this.verifyUserLogin = this.verifyUserLogin.bind(this);
         this.changeAccess = this.changeAccess.bind(this);
         this.changePassword = this.changePassword.bind(this);
@@ -53,9 +34,7 @@ class UserController{
         "access_level":access_level,
         "recovery_pin":recovery_pin
       }
-      this.user_interface.getUser(user_obj).then((user_res) => {
-        res.status(user_res.status).json(user_res.data);
-      });
+      
     }
     /**
      * The function `verifyUserLogin` takes user email and password from a request, retrieves user data
@@ -73,14 +52,19 @@ class UserController{
       
       const email = req.query.email;
       const user_password = req.query.password;
-      const user_obj = {'message_code':1,
-        'email' : email,
-        'password' : user_password
-      }
-      this.user_interface.getUser(user_obj).then((user_res) => {
-          res.status(user_res.status).json(user_res.data);
-      });
+      
+      const targetServiceUrl = 'http://localhost:1234/usr/user/login'; 
+      
+      axios.get(`${targetServiceUrl}?email=${email}&password=${user_password}`)
+      .then(response => {
+        console.log('Response from target service:', response.data);
+        res.status(response.status).json(response.data);
+      })
+      .catch(error=>{
+        res.status(error.response.status).json(error.response.data);
+      })
     }
+      
     /**
      * The function `changePassword` takes in user input for email, password, and recovery pin, then
      * retrieves user data and updates the password.
