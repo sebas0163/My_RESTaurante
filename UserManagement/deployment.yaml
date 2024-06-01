@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: api-deployment
+spec:
+  containers:
+    - name: api
+      image: soa_usr
+      ports:
+        - containerPort: 1234
