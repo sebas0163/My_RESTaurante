@@ -4,7 +4,9 @@ metadata:
   name: api-deployment
 spec:
   containers:
-    - name: api
-      image: soa_usr
-      ports:
-        - containerPort: 1234
+    - name: soa-usr
+      image: soa_usr:latest
+      imagePullPolicy : Never
+      resources:
+        limits:
+          memory: "200Mi"
