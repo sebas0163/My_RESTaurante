@@ -2,7 +2,7 @@
 const { UserAuthenticator } = require('./UserAuthenticator');
 
 
-class UserController{
+class UserEndpoint{
     constructor() {
         this.user_manager = new UserAuthenticator();
         this.verifyUserLogin = this.verifyUserLogin.bind(this);
@@ -141,4 +141,4 @@ class UserController{
 
 }
 
-module.exports = { UserController };
+module.exports = { UserEndpoint };

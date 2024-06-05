@@ -1,7 +1,8 @@
 const axios = require('axios');
+const jwt = require('jsonwebtoken');
 class UserController{
     constructor() {
-        
+        this.secretKey = 'SuperOdontologosAvanzados';
         this.verifyUserLogin = this.verifyUserLogin.bind(this);
         this.changeAccess = this.changeAccess.bind(this);
         this.changePassword = this.changePassword.bind(this);
@@ -27,13 +28,25 @@ class UserController{
       const password = req.body.password;
       const access_level = req.body.access_level;
       const recovery_pin = req.body.recovery_pin;
-      const user_obj = {"message_code": 0,
+
+      const targetServiceUrl = 'http://localhost:1234/usr/user/create'; 
+      
+      axios.post(targetServiceUrl, {
         "name" : name,
         "email":email,
         "password":password,
         "access_level":access_level,
         "recovery_pin":recovery_pin
-      }
+      })
+      .then(response => {
+        const token = jwt.sign({ email: email, password: password }, secretKey, { expiresIn: '1h' });
+        console.log('Response from target service:', response.data);
+        res.status(response.status).json(response.data, token);
+      })
+      .catch(error => {
+        res.status(error.response.status).json(error.response.data);
+      });
+      
       
     }
     /**
@@ -57,10 +70,12 @@ class UserController{
       
       axios.get(`${targetServiceUrl}?email=${email}&password=${user_password}`)
       .then(response => {
+        const token = jwt.sign({ email: email, password: user_password }, this.secretKey, { expiresIn: '1h' });
         console.log('Response from target service:', response.data);
-        res.status(response.status).json(response.data);
+        res.status(response.status).json({ ...response.data, token});
       })
       .catch(error=>{
+        console.log('Response from target service:', error);
         res.status(error.response.status).json(error.response.data);
       })
     }
@@ -80,13 +95,19 @@ class UserController{
       const email = req.body.email;
       const password = req.body.password;
       const recovery_pin = req.body.recovery_pin;
-      const user_obj = {"message_code": 2,
+      
+      const targetServiceUrl = 'http://localhost:1234/usr/user/change_password'; 
+      axios.put(targetServiceUrl, {
         "email":email,
         "password":password,
         "recovery_pin":recovery_pin
-      }
-      this.user_interface.getUser(user_obj).then((user_res) => {
-          res.status(user_res.status).json(user_res.data);
+      })
+      .then(response => {
+        console.log('Response from target service:', response.data);
+        res.status(response.status).json(response.data);
+      })
+      .catch(error => {
+        res.status(error.response.status).json(error.response.data);
       });
     }
     /**
@@ -104,14 +125,20 @@ class UserController{
       const admin_password = req.body.admin_password;
       const permit_email = req.body.permit_email;
       const access_level = req.body.access_level;
-      const user_obj = {"message_code": 3,
+      
+      const targetServiceUrl = 'http://localhost:1234/usr/user/change_access'; 
+      axios.put(targetServiceUrl, {
         "admin_email": admin_email,
         "admin_password": admin_password,
         "permit_email":permit_email,
         "access_level": access_level
-      }
-      this.user_interface.getUser(user_obj).then((user_res) => {
-          res.status(user_res.status).json(user_res.data);
+      })
+      .then(response => {
+        console.log('Response from target service:', response.data);
+        res.status(response.status).json(response.data);
+      })
+      .catch(error => {
+        res.status(error.response.status).json(error.response.data);
       });
     }
     /**
@@ -128,12 +155,18 @@ class UserController{
     deleteUser(req, res){
       const email = req.body.email;
       const password = req.body.password;
-      const user_obj = {"message_code": 4,
+      
+      const targetServiceUrl = 'http://localhost:1234/usr/user/delete'; 
+      axios.delete(targetServiceUrl, {
         "email":email,
         "password":password
-      }
-      this.user_interface.getUser(user_obj).then((user_res) => {
-          res.status(user_res.status).json(user_res.data);
+      })
+      .then(response => {
+        console.log('Response from target service:', response.data);
+        res.status(response.status).json(response.data);
+      })
+      .catch(error => {
+        res.status(error.response.status).json(error.response.data);
       });
     }
 
