@@ -18,7 +18,7 @@ export interface TableData {
 })
 export class UserReservationsComponent {
 
-  displayedColumns: string[] = ['time', 'people', 'actions'];
+  displayedColumns: string[] = ['time', 'date', 'people', 'actions'];
   dataSource: TableData[] = [];
 
   constructor(private reservationService: ReservationService) {}
