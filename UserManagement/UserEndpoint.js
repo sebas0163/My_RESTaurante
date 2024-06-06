@@ -1,8 +1,10 @@
-const axios = require('axios');
-const jwt = require('jsonwebtoken');
-class UserController{
+
+const { UserAuthenticator } = require('./UserAuthenticator');
+
+
+class UserEndpoint{
     constructor() {
-        this.secretKey = 'SuperOdontologosAvanzados';
+        this.user_manager = new UserAuthenticator();
         this.verifyUserLogin = this.verifyUserLogin.bind(this);
         this.changeAccess = this.changeAccess.bind(this);
         this.changePassword = this.changePassword.bind(this);
@@ -22,31 +24,22 @@ class UserController{
     * client with the appropriate status code and data. In this case, the function is likely creating a
     * new
     */
-    addNewUser(req, res){
+    async addNewUser(req, res){
       const name = req.body.name;
       const email = req.body.email;
       const password = req.body.password;
       const access_level = req.body.access_level;
       const recovery_pin = req.body.recovery_pin;
-
-      const targetServiceUrl = 'http://10.244.0.9:1234/usr/user/create'; 
-      
-      axios.post(targetServiceUrl, {
+      const user_obj = {"message_code": 0,
         "name" : name,
         "email":email,
         "password":password,
         "access_level":access_level,
         "recovery_pin":recovery_pin
-      })
-      .then(response => {
-        const token = jwt.sign({ email: email, password: password }, secretKey, { expiresIn: '1h' });
-        console.log('Response from target service:', response.data);
-        res.status(response.status).json(response.data, token);
-      })
-      .catch(error => {
-        res.status(error.response.status).json(error.response.data);
-      });
-      
+      }
+      const user_string = await this.user_manager.askForUserResponse(user_obj);
+      const user_res = JSON.parse(user_string);
+      res.status(user_res.status).json(user_res.data);
       
     }
     /**
@@ -61,25 +54,19 @@ class UserController{
      * object in Node.js Express framework. It is used to send a response back to the client making the
      * request.
      */
-    verifyUserLogin(req, res){
+    async verifyUserLogin(req, res){
       
       const email = req.query.email;
       const user_password = req.query.password;
+      const user_obj = {'message_code':1,
+        'email' : email,
+        'password' : user_password
+      }
+      const user_string = await this.user_manager.askForUserResponse(user_obj);
+      const user_res = JSON.parse(user_string);
+      res.status(user_res.status).json(user_res.data);
       
-      const targetServiceUrl = 'http://10.244.0.9:1234/usr/user/login'; 
-      
-      axios.get(`${targetServiceUrl}?email=${email}&password=${user_password}`)
-      .then(response => {
-        const token = jwt.sign({ email: email, password: user_password }, this.secretKey, { expiresIn: '1h' });
-        console.log('Response from target service:', response.data);
-        res.status(response.status).json({ ...response.data, token});
-      })
-      .catch(error=>{
-        console.log('Response from target service:', error);
-        res.status(error.response.status).json(error.response.data);
-      })
     }
-      
     /**
      * The function `changePassword` takes in user input for email, password, and recovery pin, then
      * retrieves user data and updates the password.
@@ -91,24 +78,18 @@ class UserController{
      * that is used to send a response back to the client making the request. It is commonly used to
      * set the status code and send data back in the response.
      */
-    changePassword(req, res){
+    async changePassword(req, res){
       const email = req.body.email;
       const password = req.body.password;
       const recovery_pin = req.body.recovery_pin;
-      
-      const targetServiceUrl = 'http://10.244.0.9:1234/usr/user/change_password'; 
-      axios.put(targetServiceUrl, {
+      const user_obj = {"message_code": 2,
         "email":email,
         "password":password,
         "recovery_pin":recovery_pin
-      })
-      .then(response => {
-        console.log('Response from target service:', response.data);
-        res.status(response.status).json(response.data);
-      })
-      .catch(error => {
-        res.status(error.response.status).json(error.response.data);
-      });
+      }
+      const user_string = await this.user_manager.askForUserResponse(user_obj);
+      const user_res = JSON.parse(user_string);
+      res.status(user_res.status).json(user_res.data);
     }
     /**
      * The function `changeAccess` takes in request and response objects, extracts necessary data, and
@@ -120,26 +101,20 @@ class UserController{
      * that is used to send a response back to the client making the request. It is commonly used to
      * set the status code and send data back in the response.
      */
-    changeAccess(req, res){
+    async changeAccess(req, res){
       const admin_email = req.body.admin_email;
       const admin_password = req.body.admin_password;
       const permit_email = req.body.permit_email;
       const access_level = req.body.access_level;
-      
-      const targetServiceUrl = 'http://10.244.0.9:1234/usr/user/change_access'; 
-      axios.put(targetServiceUrl, {
+      const user_obj = {"message_code": 3,
         "admin_email": admin_email,
         "admin_password": admin_password,
         "permit_email":permit_email,
         "access_level": access_level
-      })
-      .then(response => {
-        console.log('Response from target service:', response.data);
-        res.status(response.status).json(response.data);
-      })
-      .catch(error => {
-        res.status(error.response.status).json(error.response.data);
-      });
+      }
+      const user_string = await this.user_manager.askForUserResponse(user_obj);
+      const user_res = JSON.parse(user_string);
+      res.status(user_res.status).json(user_res.data);
     }
     /**
      * The function deleteUser takes a request and response object, retrieves user information based on
@@ -152,24 +127,18 @@ class UserController{
      * that is used to send a response back to the client making the request. It is commonly used to
      * set the status code and send data back in the response.
      */
-    deleteUser(req, res){
+    async deleteUser(req, res){
       const email = req.body.email;
       const password = req.body.password;
-      
-      const targetServiceUrl = 'http://10.244.0.9:1234/usr/user/delete'; 
-      axios.delete(targetServiceUrl, {
+      const user_obj = {"message_code": 4,
         "email":email,
         "password":password
-      })
-      .then(response => {
-        console.log('Response from target service:', response.data);
-        res.status(response.status).json(response.data);
-      })
-      .catch(error => {
-        res.status(error.response.status).json(error.response.data);
-      });
+      }
+      const user_string = await this.user_manager.askForUserResponse(user_obj);
+      const user_res = JSON.parse(user_string);
+      res.status(user_res.status).json(user_res.data);
     }
 
 }
 
-module.exports = { UserController };
+module.exports = { UserEndpoint };

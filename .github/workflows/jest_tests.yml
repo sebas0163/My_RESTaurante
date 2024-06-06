@@ -21,21 +21,27 @@ jobs:
 
       - name: Testing BackendCore
         run: |
-          cd BackendCore
+          cd common
+          npm install
+          cd ../BackendCore
           npm install
           npm test
           cd ..
 
       - name: Testing FoodRecommendation
         run: |
-          cd FoodRecomendation
+          cd common
+          npm install
+          cd ../FoodRecomendation
           npm install
           npm test
           cd ..
 
       - name: Testing TimeRecomendation
         run: |
-          cd TimeRecomendation
+          cd common
+          npm install
+          cd ../TimeRecomendation
           npm install
           npm test
           cd ..
