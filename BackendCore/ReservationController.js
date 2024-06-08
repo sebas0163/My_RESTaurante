@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { response } = require('express');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
@@ -77,6 +78,44 @@ class ReservationController {
       console.log('Response from target service:', error);
       res.status(error.response.status).json(error.response.data);
     })
+  }
+  getReservationByLocal(req,res){
+    const local = req.query.local;
+    const targetServiceUrl = `http://${this.serviceHost}:${this.servicePort}/reserv/reservation/getByLocal`; 
+
+    axios.get(`${targetServiceUrl}?local=${local}`)
+    .then(response =>{
+      console.log('Response from target service:', response.data);
+      res.status(response.status).json(response.data);
+    })
+    .catch(error=>{
+      console.log('Response from target service:', error);
+      res.status(error.response.status).json(error.response.data);
+    })
+       
+  }
+  editReservation(req,res){
+    const id = req.body.id;
+    const time = req.body.time;
+    const user = req.body.user;
+    const people = req.body.people;
+    const targetServiceUrl = `http://${this.serviceHost}:${this.servicePort}/reserv/reservation/edit`; 
+
+    axios.put(targetServiceUrl,{
+      "id": id,
+      "people": people,
+      "timeid": time,
+      "userid": user,
+    })
+    .then(response =>{
+      console.log('Response from target service:', response.data);
+      res.status(response.status).json(response.data);
+    })
+    .catch(error=>{
+      console.log('Response from target service:', error);
+      res.status(error.response.status).json(error.response.data);
+    })
+       
   }
   getReservationByEmail(req,res){
     const email = req.query.email;

@@ -34,12 +34,31 @@ class ReservationCore {
     if (message_code == 4) {
       const reserv_ = await this.getReservationByEmail(json_reserv.email);
       jsonString = JSON.stringify(reserv_);
+    }if(message_code == 5){
+      const reserv_ = await this.getReservationByLocal(json_reserv.local);
+      jsonString = JSON.stringify(reserv_);
+    }if(message_code == 6){
+      const reserv_ = await this.editReservation(json_reserv.id, json_reserv.time,json_reserv.user,json_reserv.people);
+      jsonString = JSON.stringify(reserv_);
     }
 
     console.log(" - sending: ",jsonString);
 		return jsonString
   }
-
+  async editReservation(id,time,user,people){
+    const resp = await this.databaseController.editReservation(id,time,user,people);
+    if (resp == 1) {
+      return {
+        status: 404,
+        data: "Reservacion no existente",
+      };
+    } else {
+      return {
+        status: 202,
+        data: resp,
+      };
+    }
+  }
   async getAllRerservation() {
     const resp = await this.databaseController.getAllReservations();
     return {
@@ -47,7 +66,20 @@ class ReservationCore {
       data: resp,
     };
   }
-
+  async getReservationByLocal(local) {
+    const resp = await this.databaseController.getReservationByLocal(local);
+    if (resp == 1) {
+      return {
+        status: 404,
+        data: "Local no asociado a ninguna reservacion",
+      };
+    } else {
+      return {
+        status: 202,
+        data: resp,
+      };
+    }
+  }
   async getReservationById(id) {
     const resp = await this.databaseController.getReservationByID(id);
     if (resp === 1) {

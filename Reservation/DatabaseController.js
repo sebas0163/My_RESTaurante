@@ -71,6 +71,7 @@ class DatabaseController {
 				name: userData.name,
 				time: formattedDateTime,
 				email: userData.email,
+				local: timeData.local
 			};
 			return reservation;
 		} catch (error) {
@@ -168,6 +169,7 @@ class DatabaseController {
 				name: userData.name,
 				people: reserv[i].people,
 				email: userData.email,
+				local: timeData.local
 			};
 			reservations.push(json);
 		}
@@ -218,10 +220,76 @@ class DatabaseController {
 				name: reserv[i].name,
 				people: reserv[i].people,
 				email: reserv[i].email,
+				local: timeData.local
 			};
 			reservations.push(json);
 		}
 		return reservations;
+	}
+	async getReservationByLocal_aux(local) {
+		const time_collection = collection(this.db, "Time");
+		const q = query(time_collection, where("local", "==", local));
+		const timeQuerySnapshot = await getDocs(q);
+		if (timeQuerySnapshot.empty) {
+			console.log("No existe ningun tiempo con el local asociado");
+			return 1;
+		}
+		const timeId = timeQuerySnapshot.docs[0].id;
+		const time_ = doc(this.db, "Time", timeId);
+		const timeData = await getDoc(time_);
+		const reservation_coll = collection(this.db, "Reservation");
+		const q_ = query(reservation_coll, where("time", "==", time_));
+		const reservationQuerySnapshot = await getDocs(q_);
+		const reservations = [];
+		const date = new Date(
+			timeData.time.seconds * 1000 + timeData.time.nanoseconds / 1e6,
+		);
+		const date_ = date.toLocaleString();
+		reservationQuerySnapshot.forEach((doc) => {
+			const reservationData = doc.data();
+			reservations.push({
+				id: doc.id,
+				people: reservationData.people,
+				time: date_,
+				local: timeData.local,
+				user: reservationData.user
+			});
+		});
+		return reservations;
+	}
+	async getReservationByLocal(local) {
+		const reserv = await this.getReservationByLocal_aux(local);
+		const reservations = [];
+		const num = reserv.length;
+		for (let i = 0; i < num; i++) {
+			const userRef = reserv[i].user;
+			const userSnap = await getDoc(userRef);
+			const userData = userSnap.data();
+			const json = {
+				id: reserv[i].id,
+				time: reserv[i].time,
+				name: userData.name,
+				people: reserv[i].people,
+				email: userData.email,
+				local: reserv[i].local
+			};
+			reservations.push(json);
+		}
+		return reservations;
+	}
+	async editReservation(id, time,user, people){
+		try {
+			const ref = doc(this.db, "Reservation", id);
+			const ref_doc = await getDoc(ref);
+			await updateDoc(ref_doc, {
+                'time': time,
+				'user': user,
+				'people': people
+            });
+		} catch (error) {
+			return 1;
+		}
+
 	}
 }
 
