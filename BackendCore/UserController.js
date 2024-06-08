@@ -42,7 +42,7 @@ class UserController{
         "recovery_pin":recovery_pin
       })
       .then(response => {
-        const token = jwt.sign({ email: email, password: password }, secretKey, { expiresIn: '1h' });
+        const token = jwt.sign({ email: email, password: password }, this.secretKey, { expiresIn: '1h' });
         console.log('Response from target service:', response.data);
         res.status(response.status).json(response.data, token);
       })
