@@ -2,13 +2,13 @@ const express = require("express");
 const router = express.Router();
 // const { SentimentController } = require('./SentimentController');
 // const { DishController } = require('./DishController');
-// const { TimeController } = require('./TimeController');
+const { TimeController } = require('./TimeController');
 const { UserController } = require('./UserController');
 const { ReservationController } = require('./ReservationController');
 
 // sentiment = new SentimentController();
 // dish_controller = new DishController();
-// time_reco = new TimeController();
+time_reco = new TimeController();
 reservationController = new ReservationController();
 user_cont = new UserController();
 
@@ -31,6 +31,11 @@ router.get('/user/login/:user?/:password?', user_cont.verifyUserLogin);
 router.put('/user/change_password', user_cont.changePassword);
 router.put('/user/change_access', user_cont.changeAccess);
 router.delete('/user/delete', user_cont.deleteUser);
+
+router.get('/time/getSchedule', time_reco.getSchedule);
+router.get('/time/time/getByLocal:local?', time_reco.getScheduleByLocal);
+
+
 
 module.exports = router;
 
