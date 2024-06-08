@@ -1,16 +1,14 @@
-const { DatabaseController } = require('../common/DatabaseController');
-const {PubSubSender} = require('../common/PubSub');
+const { DatabaseController } = require('./DatabaseController');
 
 class UserAuthenticator {
     constructor() {
         this.databaseController = new DatabaseController();
-		this.pubSubHandler = new PubSubSender("user-upstream");
     }
     
    /* The `askForUserResponse` method in the `UserAuthenticator` class is responsible for handling
    different types of user requests based on the `message_code` provided in the `json_usr` object.
    Here's a breakdown of what it does: */
-    askForUserResponse = async (json_usr) => {
+    async askForUserResponse (json_usr) {
         
         const message_code =json_usr.message_code;
         var jsonString = JSON.stringify({'status': 202,
@@ -36,8 +34,8 @@ class UserAuthenticator {
             jsonString = JSON.stringify(delete_response);
         }
         
-        console.log("PubSub triggered - sending: ", jsonString);
-		this.pubSubHandler.send_message(jsonString);
+        console.log(" - sending: ",jsonString);
+		return jsonString
 
 
     }

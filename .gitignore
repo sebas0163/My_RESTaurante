@@ -185,3 +185,4 @@ credentials.json
 # End of https://www.toptal.com/developers/gitignore/api/node,angular,firebase
 
 package-lock.json
+.DS_Store

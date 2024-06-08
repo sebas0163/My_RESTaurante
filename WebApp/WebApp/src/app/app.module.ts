@@ -25,6 +25,9 @@ import { RouterModule } from '@angular/router';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { ErrorPopupComponent } from './components/error-popup/error-popup.component';
 import { AddItemDialogComponent } from './components/add-item-dialog/add-item-dialog.component';
+import { AdminsComponent } from './components/admins/admins.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -39,7 +42,8 @@ import { AddItemDialogComponent } from './components/add-item-dialog/add-item-di
     EditFormComponent,
     ResetPasswordComponent,
     ErrorPopupComponent,
-    AddItemDialogComponent
+    AddItemDialogComponent,
+    AdminsComponent
   ],
   imports: [
     BrowserModule,
@@ -53,7 +57,9 @@ import { AddItemDialogComponent } from './components/add-item-dialog/add-item-di
     MatIconModule,
     MatButtonModule,
     MatTableModule,
-    RouterModule
+    RouterModule,
+    MatDialogModule,
+    CommonModule
   ],
 
   providers: [

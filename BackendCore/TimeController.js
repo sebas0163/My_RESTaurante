@@ -52,13 +52,16 @@ class TimeIface extends PubSubIface {
 }
 
 class TimeController {
-  constructor() {
-    this.askSchedule = this.askSchedule.bind(this);
-    this.timeIface = new TimeIface();
-  }
+	constructor() {
+		this.pubSubHandler = new PubSubReceiverSender("time-downstream", "time-upstream", "TimeCore-sub");
+		this.askSchedule = this.askSchedule.bind(this);
+	}
 
-  askSchedule(req, res) {
-    const dateString = req.body.day;
+	askSchedule(req, res) {
+		this.pubSubHandler.send_message("askSchedule");
+		this.pubSubHandler.pull_single_message().then((time_res) => {
+			res.json(JSON.parse(time_res));
+		})
 
     this.timeIface.askSchedule(dateString).then((time_res) => {
       res.json(time_res);

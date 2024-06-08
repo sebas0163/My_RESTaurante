@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: api-deployment
+spec:
+  containers:
+    - name: soa-usr
+      image: soa_usr:latest
+      imagePullPolicy : Never
+      resources:
+        limits:
+          memory: "200Mi"
