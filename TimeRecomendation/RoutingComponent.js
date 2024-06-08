@@ -1,13 +1,13 @@
 const express = require("express");
 const router = express.Router();
 
-const { timeEndpoint } = require('./TimeEndpoint');
+const { TimeEndpoint } = require('./TimeEndpoint');
 
 
 timeEndpoint = new TimeEndpoint();
 
 
-router.get("/time/getAll", timeEndpoint.getSchedule);
-router.put("/time/getByLocal", timeEndpoint.getScheduleByLocal);
+router.get("/time/getSchedule", timeEndpoint.getSchedule);
+router.get("/time/getByLocal/:local?", timeEndpoint.getScheduleByLocal);
 
 module.exports = router;

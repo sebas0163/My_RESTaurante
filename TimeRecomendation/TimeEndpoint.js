@@ -2,11 +2,11 @@ const { TimeCore } = require('./TimeCore');
 require('dotenv').config();
 
 
-class ReservationEndpoint {
+class TimeEndpoint {
   constructor() {
     this.time_manager = new TimeCore();
     this.getSchedule = this.getSchedule.bind(this) ;
-    this.occupied = this.occupied.bind(this);
+    this.getScheduleByLocal = this.getScheduleByLocal.bind(this) ;
   }
   async getSchedule(req,res){
     const time_obj = { message_code: 0 };
@@ -15,7 +15,7 @@ class ReservationEndpoint {
     res.status(time_res.status).json(time_res.data);
   }
   async getScheduleByLocal(req,res){
-    const time = req.query.local;
+    const local = req.query.local;
     const time_obj = { message_code: 1,
         local: local
      };
@@ -26,4 +26,4 @@ class ReservationEndpoint {
   
 }
 
-module.exports = { ReservationEndpoint };
+module.exports = { TimeEndpoint };

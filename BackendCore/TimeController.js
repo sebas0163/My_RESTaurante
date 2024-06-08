@@ -1,10 +1,12 @@
+const axios = require('axios');
+require('dotenv').config();
 class TimeController {
 	constructor() {
 		this.secretKey =  process.env.secret_key;
     	this.serviceHost = process.env.time_host;
     	this.servicePort = process.env.time_port;
-		this.askSchedule = this.askSchedule.bind(this);
-		this.getSheduleByLocal = this.getSheduleByLocal.bind(this);
+		this.getSchedule = this.getSchedule.bind(this);
+		this.getScheduleByLocal = this.getScheduleByLocal.bind(this);
 	}
 
 	getSchedule(req, res) {
@@ -20,7 +22,7 @@ class TimeController {
 		});
 
 	}
-	getSheduleByLocal(req,res){
+	getScheduleByLocal(req,res){
 		const local = req.query.local;
 		const targetServiceUrl = `http://${this.serviceHost}:${this.servicePort}/time/time/getByLocal`; 
 

@@ -31,9 +31,10 @@ class ReservationEndpoint {
 
   }
   async getReservationByLocal(req,res){
-    const email = req.query.local;
+    const local = req.query.local;
     const reserv_obj ={
-      message_code: 5, local: local
+      message_code: 5, 
+      local: local
     };
     const reserv_string = await this.reservation_manager.process_message(reserv_obj);
     const reserv_res = JSON.parse(reserv_string);

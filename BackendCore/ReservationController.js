@@ -13,6 +13,7 @@ class ReservationController {
     this.getAllReservations = this.getAllReservations.bind(this);
     this.getReservationById = this.getReservationById.bind(this);
     this.getReservationByEmail= this.getReservationByEmail.bind(this);
+    this.getReservationByLocal= this.getReservationByLocal.bind(this);
   }
   createReservation(req, res) {
     const people = req.body.people;
