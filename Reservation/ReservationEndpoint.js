@@ -10,6 +10,16 @@ class ReservationEndpoint {
     this.getAllReservations = this.getAllReservations.bind(this);
     this.getReservationById = this.getReservationById.bind(this);
     this.getReservationByEmail= this.getReservationByEmail.bind(this);
+    this.getReservationByLocal = this.getReservationByLocal.bind(this);
+  }
+  async getReservationByLocal(req,res){
+    const email = req.query.local;
+    const reserv_obj ={
+      message_code: 5, local: local
+    };
+    const reserv_string = await this.reservation_manager.process_message(reserv_obj);
+    const reserv_res = JSON.parse(reserv_string);
+    res.status(reserv_res.status).json(reserv_res.data);
   }
   async createReservation(req, res) {
     const people = req.body.people;
