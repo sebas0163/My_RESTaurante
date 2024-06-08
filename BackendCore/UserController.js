@@ -1,8 +1,11 @@
 const axios = require('axios');
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
 class UserController{
     constructor() {
-        this.secretKey = 'SuperOdontologosAvanzados';
+        this.secretKey =  process.env.secret_key;
+        this.serviceHost = process.env.usr_host;
+        this.servicePort = process.env.usr_port;
         this.verifyUserLogin = this.verifyUserLogin.bind(this);
         this.changeAccess = this.changeAccess.bind(this);
         this.changePassword = this.changePassword.bind(this);
@@ -29,7 +32,7 @@ class UserController{
       const access_level = req.body.access_level;
       const recovery_pin = req.body.recovery_pin;
 
-      const targetServiceUrl = 'http://10.244.0.9:1234/usr/user/create'; 
+      const targetServiceUrl = `http://${this.serviceHost}:${this.servicePort}/usr/user/create`; 
       
       axios.post(targetServiceUrl, {
         "name" : name,
@@ -66,7 +69,7 @@ class UserController{
       const email = req.query.email;
       const user_password = req.query.password;
       
-      const targetServiceUrl = 'http://10.244.0.9:1234/usr/user/login'; 
+      const targetServiceUrl = `http://${this.serviceHost}:${this.servicePort}/usr/user/login`; 
       
       axios.get(`${targetServiceUrl}?email=${email}&password=${user_password}`)
       .then(response => {
@@ -96,7 +99,7 @@ class UserController{
       const password = req.body.password;
       const recovery_pin = req.body.recovery_pin;
       
-      const targetServiceUrl = 'http://10.244.0.9:1234/usr/user/change_password'; 
+      const targetServiceUrl = `http://${this.serviceHost}:${this.servicePort}/usr/user/change_password`; 
       axios.put(targetServiceUrl, {
         "email":email,
         "password":password,
@@ -126,7 +129,7 @@ class UserController{
       const permit_email = req.body.permit_email;
       const access_level = req.body.access_level;
       
-      const targetServiceUrl = 'http://10.244.0.9:1234/usr/user/change_access'; 
+      const targetServiceUrl = `http://${this.serviceHost}:${this.servicePort}/usr/user/change_access`; 
       axios.put(targetServiceUrl, {
         "admin_email": admin_email,
         "admin_password": admin_password,
@@ -156,7 +159,7 @@ class UserController{
       const email = req.body.email;
       const password = req.body.password;
       
-      const targetServiceUrl = 'http://10.244.0.9:1234/usr/user/delete'; 
+      const targetServiceUrl = `http://${this.serviceHost}:${this.servicePort}/usr/user/delete`; 
       axios.delete(targetServiceUrl, {
         "email":email,
         "password":password

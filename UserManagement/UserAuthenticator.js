@@ -234,26 +234,5 @@ class UserAuthenticator {
     }
 
 }
-/**
- * The function `entry_function` processes a cloud message by decoding its data, asking for user
- * response, and handling errors.
- * 
- * @param cloud_message The `cloud_message` parameter seems to be an object that contains data related
- * to a message received from a cloud service, possibly a message from a pub/sub system. The code
- * snippet you provided is an asynchronous function that processes this `cloud_message`. It extracts a
- * message from the `cloud_message`, dec
- */
-const entry_function = async (cloud_message) => {
-    const userAuthenticator = new UserAuthenticator();
-    try{
-        const pubsub_message = cloud_message.data.message;
-        pubsub_message.ack();
-	    const msg_payload_str = Buffer.from(pubsub_message.data, "base64").toString();
-	    await userAuthenticator.askForUserResponse(JSON.parse(msg_payload_str));
 
-    }catch{
-        userAuthenticator.pubSubHandler.send_message('{"status": 401,"data":"Error"}');
-    }
-	
-};
-module.exports = { UserAuthenticator, entry_function }
+module.exports = { UserAuthenticator }

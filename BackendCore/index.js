@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 const app = express();
-const port = 8000;
+const port = process.env.PORT || 8000;
 
 const privateKey = fs.readFileSync('privatekey.pem', 'utf8');
 const certificate = fs.readFileSync('certificate.pem', 'utf8');
@@ -34,7 +34,7 @@ app.use((req, res, next) => {
         return res.status(403).send('Token is required');
     }
 
-    jwt.verify(token, "SuperOdontologosAvanzados", (err, decoded) => {
+    jwt.verify(token, process.env.secret_key, (err, decoded) => {
         if (err) {
             return res.status(401).send('Invalid token');
         }

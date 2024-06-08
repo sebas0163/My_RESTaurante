@@ -1,6 +1,6 @@
 
 const { UserAuthenticator } = require('./UserAuthenticator');
-
+require('dotenv').config();
 
 class UserEndpoint{
     constructor() {

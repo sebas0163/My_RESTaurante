@@ -1,15 +1,15 @@
-const { DatabaseController } = require("../common/DatabaseController");
-const { PubSubSender } = require("../common/PubSub");
+const { DatabaseController } = require("./DatabaseController");
 
 class ReservationCore {
   constructor() {
     this.databaseController = new DatabaseController();
-    this.pubSubHandler = new PubSubSender("reservation-upstream");
+    
   }
 
-  process_message = async (json_reserv)=> {
+  async process_message  (json_reserv) {
     const message_code = json_reserv.message_code;
-    var jsonString = "response not found";
+    var jsonString = JSON.stringify({'status': 202,
+      'data': ":o"});
     if (message_code == 0) {
       const all_reservations = await this.getAllRerservation();
       jsonString = JSON.stringify(all_reservations);
@@ -35,8 +35,8 @@ class ReservationCore {
       jsonString = JSON.stringify(reserv_);
     }
 
-    console.log("PubSub triggered - sending: ", jsonString);
-    this.pubSubHandler.send_message(jsonString);
+    console.log(" - sending: ",jsonString);
+		return jsonString
   }
 
   async getAllRerservation() {
@@ -148,19 +148,6 @@ class ReservationCore {
   }
 }
 
-entry_function = async (cloud_message) => {
-  const reservationCore = new ReservationCore();
-  try{
-    const pubsub_message = cloud_message.data.message;
-    // If local, uncomment
-    pubsub_message.ack()
-    const msg_payload_str = Buffer.from(pubsub_message.data, "base64").toString();
-    await reservationCore.process_message(JSON.parse(msg_payload_str));
-  }catch{
-    reservationCore.pubSubHandler.send_message('{"status": 401,"data":"Error"}');
-  }
-  
-};
 
 
-module.exports = { ReservationCore, entry_function };
+module.exports = { ReservationCore };
