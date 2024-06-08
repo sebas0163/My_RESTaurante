@@ -11,6 +11,24 @@ class ReservationEndpoint {
     this.getReservationById = this.getReservationById.bind(this);
     this.getReservationByEmail= this.getReservationByEmail.bind(this);
     this.getReservationByLocal = this.getReservationByLocal.bind(this);
+    this.editReservation = this.editReservation.bind(this);
+  }
+  async editReservation(req,res){
+    const id = req.body.id;
+    const time = req.body.time;
+    const user = req.body.user;
+    const people = req.body.people;
+    const reserv_obj = {
+      message_code: 6,
+      id: id,
+      people: people,
+      timeid: time,
+      userid: user,
+    };
+    const reserv_string = await this.reservation_manager.process_message(reserv_obj);
+    const reserv_res = JSON.parse(reserv_string);
+    res.status(reserv_res.status).json(reserv_res.data);
+
   }
   async getReservationByLocal(req,res){
     const email = req.query.local;

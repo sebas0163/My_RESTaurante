@@ -277,6 +277,20 @@ class DatabaseController {
 		}
 		return reservations;
 	}
+	async editReservation(id, time,user, people){
+		try {
+			const ref = doc(this.db, "Reservation", id);
+			const ref_doc = await getDoc(ref);
+			await updateDoc(ref_doc, {
+                'time': time,
+				'user': user,
+				'people': people
+            });
+		} catch (error) {
+			return 1;
+		}
+
+	}
 }
 
 module.exports = { DatabaseController };
