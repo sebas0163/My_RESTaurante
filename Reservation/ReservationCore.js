@@ -23,6 +23,7 @@ class ReservationCore {
         json_reserv.userid,
         json_reserv.timeid,
         json_reserv.people,
+        json_reserv.local
       );
       jsonString = JSON.stringify(create_response);
     }
@@ -75,7 +76,7 @@ class ReservationCore {
       };
     }
   }
-  async createReservation(userid, timeid, people) {
+  async createReservation(userid, timeid, people,local) {
     try {
       await this.databaseController.occupy_slot(timeid);
     } catch (error) {
@@ -109,6 +110,7 @@ class ReservationCore {
       userid,
       timeid,
       people,
+      local
     );
     if (!resp) {
       return {

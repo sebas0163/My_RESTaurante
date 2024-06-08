@@ -1,21 +1,12 @@
-const { PubSubReceiverSender, PubSubSender } = require("../common/PubSub");
-
-class ReservationIface extends PubSubReceiverSender{
-  constructor(){
-    super("reservation-downstream","reservation-upstream","ReservationController-sub"); 
-  }
-
-  async getReservationResponse(message) {
-    this.sender.send_message(JSON.stringify(message));
-    const upstream_res = await this.receiver.pull_single_message();
-    console.log("Got upstream res");
-    return JSON.parse(upstream_res);
-  }
-}
+const axios = require('axios');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 class ReservationController {
   constructor() {
-    this.reservation_interface = new ReservationIface();
+    this.secretKey =  process.env.secret_key;
+    this.serviceHost = process.env.reserv_host;
+    this.servicePort = process.env.reserv_port;
     this.createReservation = this.createReservation.bind(this);
     this.deleteReservation = this.deleteReservation.bind(this);
     this.getAllReservations = this.getAllReservations.bind(this);
@@ -26,55 +17,83 @@ class ReservationController {
     const people = req.body.people;
     const time = req.body.timeid;
     const user = req.body.userid;
-    const reserv_obj = {
+    const local = req.body.local;
+
+    const targetServiceUrl = `http://${this.serviceHost}:${this.servicePort}/reserv/reservation/new`; 
+      
+    axios.post(targetServiceUrl, {
       message_code: 2,
       people: people,
       timeid: time,
       userid: user,
-    };
-    this.reservation_interface
-      .getReservationResponse(reserv_obj)
-      .then((reserv_res) => {
-        res.status(reserv_res.status).json(reserv_res.data);
-      });
+      local: local
+    })
+    .then(response => {
+      console.log('Response from target service:', response.data);
+      res.status(response.status).json(response.data);
+    })
+    .catch(error => {
+      res.status(error.response.status).json(error.response.data);
+    });
   }
   getAllReservations(req, res) {
-    const reserv_obj = { message_code: 0 };
-    this.reservation_interface
-      .getReservationResponse(reserv_obj)
-      .then((reserv_res) => {
-        res.status(reserv_res.status).json(reserv_res.data);
-      });
+    const targetServiceUrl = `http://${this.serviceHost}:${this.servicePort}/reserv/reservation/getAll`; 
+      
+    axios.get(targetServiceUrl)
+    .then(response => {
+      console.log('Response from target service:', response.status);
+      res.status(response.status).json(response.data);
+    })
+    .catch(error => {
+      res.status(error.response.status).json(error.response.data);
+    });
   }
   deleteReservation(req, res) {
     const res_id = req.body.id;
     console.log(req.body.id);
-    const reserv_obj = { message_code: 1, id: res_id };
-    this.reservation_interface
-      .getReservationResponse(reserv_obj)
-      .then((reserv_res) => {
-        res.status(reserv_res.status).json(reserv_res.data);
-      });
+    const targetServiceUrl = `http://${this.serviceHost}:${this.servicePort}/reserv/reservation/delete`; 
+      
+    axios.delete(targetServiceUrl, {id: res_id })
+    .then(response => {
+      console.log('Response from target service:', response.data);
+      res.status(response.status).json(response.data);
+    })
+    .catch(error => {
+      res.status(error.response.status).json(error.response.data);
+    });
+    
   }
   getReservationById(req, res) {
     const res_id = req.query.id;
-    const reserv_obj = { message_code: 3, id: res_id };
-    this.reservation_interface
-      .getReservationResponse(reserv_obj)
-      .then((reserv_res) => {
-        res.status(reserv_res.status).json(reserv_res.data);
-      });
+    const targetServiceUrl = `http://${this.serviceHost}:${this.servicePort}/reserv/reservation/getById`; 
+      
+    axios.get(`${targetServiceUrl}?id=${res_id}`)
+    .then(response => {
+  
+      console.log('Response from target service:', response.data);
+      res.status(response.status).json(response.data);
+    })
+    .catch(error=>{
+      console.log('Response from target service:', error);
+      res.status(error.response.status).json(error.response.data);
+    })
   }
   getReservationByEmail(req,res){
     const email = req.query.email;
-    const reserv_obj ={
-      message_code: 4, email: email
-    };
-    this.reservation_interface
-      .getReservationResponse(reserv_obj)
-      .then((reserv_res) => {
-        res.status(reserv_res.status).json(reserv_res.data);
-      });
+    
+    const targetServiceUrl = `http://${this.serviceHost}:${this.servicePort}/reserv/reservation/getByEmail`; 
+      
+    axios.get(`${targetServiceUrl}?email=${email}`)
+    .then(response => {
+  
+      console.log('Response from target service:', response.data);
+      res.status(response.status).json(response.data);
+    })
+    .catch(error=>{
+      console.log('Response from target service:', error);
+      res.status(error.response.status).json(error.response.data);
+    })
+    
   }
 }
 

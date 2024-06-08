@@ -1,0 +1,17 @@
+const express = require("express");
+const router = express.Router();
+
+const { ReservationEndpoint } = require('./ReservationEndpoint');
+
+
+reservEndpoint = new ReservationEndpoint();
+
+
+router.get("/reservation/getAll", reservEndpoint.getAllReservations);
+router.get("/reservation/getById:id?", reservEndpoint.getReservationById);
+router.get("/reservation/getByEmail:email?", reservEndpoint.getReservationByEmail);
+router.delete("/reservation/delete", reservEndpoint.deleteReservation);
+router.post("/reservation/new", reservEndpoint.createReservation);
+
+module.exports = router;
+

@@ -47,6 +47,7 @@ class UserController{
         res.status(response.status).json(response.data, token);
       })
       .catch(error => {
+        console.log(error);
         res.status(error.response.status).json(error.response.data);
       });
       
