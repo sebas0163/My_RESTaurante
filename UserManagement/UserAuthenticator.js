@@ -9,33 +9,37 @@ class UserAuthenticator {
    different types of user requests based on the `message_code` provided in the `json_usr` object.
    Here's a breakdown of what it does: */
     async askForUserResponse (json_usr) {
-        
-        const message_code =json_usr.message_code;
-        var jsonString = JSON.stringify({'status': 202,
-                        'data': ":o"});
-        if(message_code == 0){
-            const new_user_response = await this.addNewUser(json_usr.name,json_usr.email,json_usr.password, json_usr.recovery_pin, json_usr.access_level);
-            jsonString = JSON.stringify(new_user_response);
-        }
-        if(message_code == 1){
-            const login_response = await this.loginUser(json_usr.email, json_usr.password);
-            jsonString = JSON.stringify(login_response);
-        }
-        if(message_code == 2){
-            const change_password_response = await this.changePassword(json_usr.email, json_usr.password, json_usr.recovery_pin)
-            jsonString = JSON.stringify(change_password_response);
-        }
-        if(message_code == 3){
-            const access_level_response = await this.changeAccessLevel(json_usr.admin_email, json_usr.admin_password, json_usr.permit_email, json_usr.access_level)
-            jsonString = JSON.stringify(access_level_response);
-        }
-        if(message_code == 4){
-            const delete_response = await this.deleteUser(json_usr.email, json_usr.password);
-            jsonString = JSON.stringify(delete_response);
-        }
-        
-        console.log(" - sending: ",jsonString);
-		return jsonString
+        try{
+            const message_code =json_usr.message_code;
+            var jsonString = JSON.stringify({'status': 202,
+                            'data': ":o"});
+            if(message_code == 0){
+                const new_user_response = await this.addNewUser(json_usr.name,json_usr.email,json_usr.password, json_usr.recovery_pin, json_usr.access_level);
+                jsonString = JSON.stringify(new_user_response);
+            }
+            if(message_code == 1){
+                const login_response = await this.loginUser(json_usr.email, json_usr.password);
+                jsonString = JSON.stringify(login_response);
+            }
+            if(message_code == 2){
+                const change_password_response = await this.changePassword(json_usr.email, json_usr.password, json_usr.recovery_pin)
+                jsonString = JSON.stringify(change_password_response);
+            }
+            if(message_code == 3){
+                const access_level_response = await this.changeAccessLevel(json_usr.admin_email, json_usr.admin_password, json_usr.permit_email, json_usr.access_level)
+                jsonString = JSON.stringify(access_level_response);
+            }
+            if(message_code == 4){
+                const delete_response = await this.deleteUser(json_usr.email, json_usr.password);
+                jsonString = JSON.stringify(delete_response);
+            }
+            
+            console.log(" - sending: ",jsonString);
+            return jsonString}
+            catch(error){
+                return {'status': 500,
+                  'data': error}
+              }
 
 
     }

@@ -7,43 +7,48 @@ class ReservationCore {
   }
 
   async process_message  (json_reserv) {
-    const message_code = json_reserv.message_code;
-    var jsonString = JSON.stringify({'status': 202,
-      'data': ":o"});
-    if (message_code == 0) {
-      const all_reservations = await this.getAllRerservation();
-      jsonString = JSON.stringify(all_reservations);
-    }
-    if (message_code == 1) {
-      const delete_response = await this.deleteReservation(json_reserv.id);
-      jsonString = JSON.stringify(delete_response);
-    }
-    if (message_code == 2) {
-      const create_response = await this.createReservation(
-        json_reserv.userid,
-        json_reserv.timeid,
-        json_reserv.people,
-        json_reserv.local
-      );
-      jsonString = JSON.stringify(create_response);
-    }
-    if (message_code == 3) {
-      const reservation_ = await this.getReservationById(json_reserv.id);
-      jsonString = JSON.stringify(reservation_);
-    }
-    if (message_code == 4) {
-      const reserv_ = await this.getReservationByEmail(json_reserv.email);
-      jsonString = JSON.stringify(reserv_);
-    }if(message_code == 5){
-      const reserv_ = await this.getReservationByLocal(json_reserv.local);
-      jsonString = JSON.stringify(reserv_);
-    }if(message_code == 6){
-      const reserv_ = await this.editReservation(json_reserv.id, json_reserv.time,json_reserv.user,json_reserv.people);
-      jsonString = JSON.stringify(reserv_);
-    }
+    try{
+      const message_code = json_reserv.message_code;
+      var jsonString = JSON.stringify({'status': 202,
+        'data': ":o"});
+      if (message_code == 0) {
+        const all_reservations = await this.getAllRerservation();
+        jsonString = JSON.stringify(all_reservations);
+      }
+      if (message_code == 1) {
+        const delete_response = await this.deleteReservation(json_reserv.id);
+        jsonString = JSON.stringify(delete_response);
+      }
+      if (message_code == 2) {
+        const create_response = await this.createReservation(
+          json_reserv.userid,
+          json_reserv.timeid,
+          json_reserv.people,
+          json_reserv.local
+        );
+        jsonString = JSON.stringify(create_response);
+      }
+      if (message_code == 3) {
+        const reservation_ = await this.getReservationById(json_reserv.id);
+        jsonString = JSON.stringify(reservation_);
+      }
+      if (message_code == 4) {
+        const reserv_ = await this.getReservationByEmail(json_reserv.email);
+        jsonString = JSON.stringify(reserv_);
+      }if(message_code == 5){
+        const reserv_ = await this.getReservationByLocal(json_reserv.local);
+        jsonString = JSON.stringify(reserv_);
+      }if(message_code == 6){
+        const reserv_ = await this.editReservation(json_reserv.id, json_reserv.time,json_reserv.user,json_reserv.people);
+        jsonString = JSON.stringify(reserv_);
+      }
 
-    console.log(" - sending: ",jsonString);
-		return jsonString
+      console.log(" - sending: ",jsonString);
+      return jsonString}
+      catch(error){
+        return {'status': 500,
+          'data': error}
+      }
   }
   async editReservation(id,time,user,people){
     const resp = await this.databaseController.editReservation(id,time,user,people);
