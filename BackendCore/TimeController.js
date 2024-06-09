@@ -1,72 +1,41 @@
-const moment = require("moment");
-const { PubSubIface } = require("../common/PubSub");
-
-class TimeRes {
-	constructor(errorCode, schedule) {
-		this.errorCode = errorCode;
-		this.schedule = schedule;
-	}
-}
-
-class TimeIface extends PubSubIface {
-  constructor(topic_name = "time", projectId = "silken-tenure-419721") {
-    super(topic_name, projectId);
-  }
-
-  async setupTopics(topics) {
-    await super.setupTopics(topics);
-    await this.create_upstream_sub();
-  }
-
-  async create_upstream_sub() {
-    this.upstream_sub = await this.getSubscriptionByName(
-      this.upstream_topic,
-      this.upstream_sub_name
-    );
-    console.log("Created the upstream sub");
-  }
-
-  waitForResponseOnUpstream() {
-    return new Promise(async (resolve, reject) => {
-      const responseListener = async (response) => {
-        response.ack();
-        resolve(response);
-      };
-
-      const errorListener = async (response) => {
-        response.ack();
-        reject(response);
-      };
-
-      this.upstream_sub.on("message", responseListener);
-      this.upstream_sub.on("error", errorListener);
-    });
-  }
-
-  async askSchedule(day) {
-    this.downstream_topic.publishMessage({ data: Buffer.from(day) });
-    const upstream_res = await this.waitForResponseOnUpstream();
-    console.log("Got upstream res");
-    return JSON.parse(upstream_res.data.toString());
-  }
-}
-
+const axios = require('axios');
+require('dotenv').config();
 class TimeController {
 	constructor() {
-		this.pubSubHandler = new PubSubReceiverSender("time-downstream", "time-upstream", "TimeCore-sub");
-		this.askSchedule = this.askSchedule.bind(this);
+		this.secretKey =  process.env.secret_key;
+    	this.serviceHost = process.env.time_host;
+    	this.servicePort = process.env.time_port;
+		this.getSchedule = this.getSchedule.bind(this);
+		this.getScheduleByLocal = this.getScheduleByLocal.bind(this);
 	}
 
-	askSchedule(req, res) {
-		this.pubSubHandler.send_message("askSchedule");
-		this.pubSubHandler.pull_single_message().then((time_res) => {
-			res.json(JSON.parse(time_res));
+	getSchedule(req, res) {
+		const targetServiceUrl = `http://${this.serviceHost}:${this.servicePort}/time/time/getSchedule`; 
+		
+		axios.get(targetServiceUrl)
+		.then(response => {
+		console.log('Response from target service:', response.status);
+		res.status(response.status).json(response.data);
 		})
+		.catch(error => {
+		res.status(error.response.status).json(error.response.data);
+		});
 
-    this.timeIface.askSchedule(dateString).then((time_res) => {
-      res.json(time_res);
-    });
-  }
+	}
+	getScheduleByLocal(req,res){
+		const local = req.query.local;
+		const targetServiceUrl = `http://${this.serviceHost}:${this.servicePort}/time/time/getByLocal`; 
+
+		axios.get(`${targetServiceUrl}?local=${local}`)
+		.then(response =>{
+		console.log('Response from target service:', response.data);
+		res.status(response.status).json(response.data);
+		})
+		.catch(error=>{
+		console.log('Response from target service:', error);
+		res.status(error.response.status).json(error.response.data);
+		})
+	}
 }
 
 module.exports = { TimeController };

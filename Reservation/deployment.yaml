@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: reserv-deployment
+spec:
+  containers:
+    - name: soa-reserv
+      image: soa_reserv:latest
+      imagePullPolicy : Never
+      resources:
+        limits:
+          memory: "200Mi"

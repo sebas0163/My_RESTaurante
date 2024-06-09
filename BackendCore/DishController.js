@@ -1,13 +1,4 @@
-const moment = require("moment");
-const { PubSubReceiverSender } = require("../common/PubSub");
-
-class DishRes {
-	constructor(errorCode, dish1, dish2) {
-		this.errorCode = errorCode;
-		this.dish1 = dish1;
-		this.dish2 = dish2;
-	}
-}
+const axios = require('axios');
 
 class DishReq {
 	constructor(dish1, dish2) {
@@ -16,47 +7,27 @@ class DishReq {
 	}
 }
 
-class DishIface {
-	constructor(
-		sender_topic_name = "food-downstream",
-		receiver_topic_name = "food-upstream",
-		subscription_name = "BackendCore-sub",
-	) {
-		this.pubSubHandler = new PubSubReceiverSender(
-			sender_topic_name,
-			receiver_topic_name,
-			subscription_name,
-		);
-	}
-
-	async getAllMenu(message) {
-		this.pubSubHandler.send_message(message);
-		const upstream_res = await this.pubSubHandler.pull_single_message();
-		console.log("Got upstream res");
-		return JSON.parse(upstream_res);
-	}
-
-	async askForDish(DishReq) {
-		const messageStr = JSON.stringify(DishReq);
-		this.pubSubHandler.send_message(messageStr);
-		const upstream_res = await this.pubSubHandler.pull_single_message();
-		console.log("Got upstream res");
-		return JSON.parse(upstream_res);
-	}
-}
-
 class DishController {
 	constructor() {
+		
+        this.serviceHost = process.env.food_host;
+        this.servicePort = process.env.food_port;
 		this.getAllMenu = this.getAllMenu.bind(this);
-		this.dishIface = new DishIface();
 		this.askForDish = this.askForDish.bind(this);
 	}
 
 	getAllMenu(req, res) {
 		const message = req.body.message || req.query.message || "default message";
-
-		this.dishIface.getAllMenu(message).then((time_res) => {
-			res.json(time_res);
+		const targetServiceUrl = `http://${this.serviceHost}:${this.servicePort}/food/food/menu`; 
+      
+		axios.get(targetServiceUrl)
+		.then(response => {
+		  console.log('Response from target service:', response.status);
+		  res.status(response.status).json(response.data);
+		})
+		.catch(error => {
+			console.log(error);
+		  res.status(error.response.status).json(error.response.data);
 		});
 	}
 
@@ -66,10 +37,21 @@ class DishController {
 
 		const dishReq = new DishReq(dish1, dish2);
 
-		console.log(dishReq);
+		console.log("controller",dishReq);
 
-		this.dishIface.askForDish(dishReq).then((time_res) => {
-			res.json(time_res);
+		const targetServiceUrl = `http://${this.serviceHost}:${this.servicePort}/food/food/recomendation`; 
+      
+		axios.post(targetServiceUrl, {
+			"dish1":dish1,
+			"dish2":dish2
+		  })
+		.then(response => {
+		  console.log('Response from target service:', response.status);
+		  res.status(response.status).json(response.data);
+		})
+		.catch(error => {
+			console.log(error);
+		  res.status(error.response.status).json(error.response.data);
 		});
 	}
 }

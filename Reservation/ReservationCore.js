@@ -1,15 +1,15 @@
-const { DatabaseController } = require("../common/DatabaseController");
-const { PubSubSender } = require("../common/PubSub");
+const { DatabaseController } = require("./DatabaseController");
 
 class ReservationCore {
   constructor() {
     this.databaseController = new DatabaseController();
-    this.pubSubHandler = new PubSubSender("reservation-upstream");
+    
   }
 
-  process_message = async (json_reserv)=> {
+  async process_message  (json_reserv) {
     const message_code = json_reserv.message_code;
-    var jsonString = "response not found";
+    var jsonString = JSON.stringify({'status': 202,
+      'data': ":o"});
     if (message_code == 0) {
       const all_reservations = await this.getAllRerservation();
       jsonString = JSON.stringify(all_reservations);
@@ -23,6 +23,7 @@ class ReservationCore {
         json_reserv.userid,
         json_reserv.timeid,
         json_reserv.people,
+        json_reserv.local
       );
       jsonString = JSON.stringify(create_response);
     }
@@ -33,12 +34,31 @@ class ReservationCore {
     if (message_code == 4) {
       const reserv_ = await this.getReservationByEmail(json_reserv.email);
       jsonString = JSON.stringify(reserv_);
+    }if(message_code == 5){
+      const reserv_ = await this.getReservationByLocal(json_reserv.local);
+      jsonString = JSON.stringify(reserv_);
+    }if(message_code == 6){
+      const reserv_ = await this.editReservation(json_reserv.id, json_reserv.time,json_reserv.user,json_reserv.people);
+      jsonString = JSON.stringify(reserv_);
     }
 
-    console.log("PubSub triggered - sending: ", jsonString);
-    this.pubSubHandler.send_message(jsonString);
+    console.log(" - sending: ",jsonString);
+		return jsonString
   }
-
+  async editReservation(id,time,user,people){
+    const resp = await this.databaseController.editReservation(id,time,user,people);
+    if (resp == 1) {
+      return {
+        status: 404,
+        data: "Reservacion no existente",
+      };
+    } else {
+      return {
+        status: 202,
+        data: resp,
+      };
+    }
+  }
   async getAllRerservation() {
     const resp = await this.databaseController.getAllReservations();
     return {
@@ -46,7 +66,20 @@ class ReservationCore {
       data: resp,
     };
   }
-
+  async getReservationByLocal(local) {
+    const resp = await this.databaseController.getReservationByLocal(local);
+    if (resp == 1) {
+      return {
+        status: 404,
+        data: "Local no asociado a ninguna reservacion",
+      };
+    } else {
+      return {
+        status: 202,
+        data: resp,
+      };
+    }
+  }
   async getReservationById(id) {
     const resp = await this.databaseController.getReservationByID(id);
     if (resp === 1) {
@@ -75,7 +108,7 @@ class ReservationCore {
       };
     }
   }
-  async createReservation(userid, timeid, people) {
+  async createReservation(userid, timeid, people,local) {
     try {
       await this.databaseController.occupy_slot(timeid);
     } catch (error) {
@@ -109,6 +142,7 @@ class ReservationCore {
       userid,
       timeid,
       people,
+      local
     );
     if (!resp) {
       return {
@@ -148,19 +182,6 @@ class ReservationCore {
   }
 }
 
-entry_function = async (cloud_message) => {
-  const reservationCore = new ReservationCore();
-  try{
-    const pubsub_message = cloud_message.data.message;
-    // If local, uncomment
-    pubsub_message.ack()
-    const msg_payload_str = Buffer.from(pubsub_message.data, "base64").toString();
-    await reservationCore.process_message(JSON.parse(msg_payload_str));
-  }catch{
-    reservationCore.pubSubHandler.send_message('{"status": 401,"data":"Error"}');
-  }
-  
-};
 
 
-module.exports = { ReservationCore, entry_function };
+module.exports = { ReservationCore };
