@@ -8,6 +8,7 @@ timeEndpoint = new TimeEndpoint();
 
 
 router.get("/time/getSchedule", timeEndpoint.getSchedule);
+router.post("/time/newTime", timeEndpoint.newTime);
 router.get("/time/getByLocal/:local?", timeEndpoint.getScheduleByLocal);
 
 module.exports = router;

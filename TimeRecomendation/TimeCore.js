@@ -18,6 +18,9 @@ class TimeCore {
       if (message_code == 1) {
         const occupy = await this.getScheduleByLocal(json_reserv.local);
         jsonString = JSON.stringify(occupy);
+      }if (message_code == 2) {
+        const occupy = await this.newTime(json_reserv.time, json_reserv.slots,json_reserv.local);
+        jsonString = JSON.stringify(occupy);
       }
       console.log(" - sending: ",jsonString);
       return jsonString}
@@ -25,6 +28,13 @@ class TimeCore {
         return {'status': 500,
           'data': error}
       }
+  }
+  async newTime(time,slots,local){
+    const resp = await this.databaseController.newTime(time,slots,local);
+    return {
+      status: 202,
+      data: resp,
+    };
   }
   async getSchedule(){
     const resp = await this.databaseController.get_available_schedule();

@@ -84,7 +84,7 @@ class DatabaseController {
 	 * @param {*} timeid time's id
 	 * @param {*} people number of people
 	 */
-	async createNewRervation(userid, timeid, people, local) {
+	async createNewRervation(userid, timeid, people) {
 		try {
 			// Crear una nueva reserva en la colección "Reservation"
 			const time_ = doc(this.db, "Time", timeid);
@@ -101,7 +101,6 @@ class DatabaseController {
 					people: people,
 					time: time_,
 					user: user_,
-					local: local
 				});
 				console.log("Documento de reserva creado con ID:", docRef.id);
 				const resp = {
@@ -234,27 +233,27 @@ class DatabaseController {
 			console.log("No existe ningun tiempo con el local asociado");
 			return 1;
 		}
-		const timeId = timeQuerySnapshot.docs[0].id;
-		const time_ = doc(this.db, "Time", timeId);
-		const timeData = await getDoc(time_);
-		const reservation_coll = collection(this.db, "Reservation");
-		const q_ = query(reservation_coll, where("time", "==", time_));
-		const reservationQuerySnapshot = await getDocs(q_);
 		const reservations = [];
-		const date = new Date(
-			timeData.time.seconds * 1000 + timeData.time.nanoseconds / 1e6,
-		);
-		const date_ = date.toLocaleString();
-		reservationQuerySnapshot.forEach((doc) => {
-			const reservationData = doc.data();
-			reservations.push({
-				id: doc.id,
-				people: reservationData.people,
-				time: date_,
-				local: timeData.local,
-				user: reservationData.user
-			});
-		});
+		timeQuerySnapshot.forEach(async (tim)=>{
+			const tim_data = tim.data();
+			const reservation_coll = collection(this.db, "Reservation");
+			const q_ = query(reservation_coll, where("time", "==", tim_data.id));
+			const reservationQuerySnapshot = await getDocs(q_); //posible error async dentro del for
+			const date = new Date(
+				tim_data.time.seconds * 1000 + tim_data.time.nanoseconds / 1e6,
+			);
+			const date_ = date.toLocaleString();
+			reservationQuerySnapshot.forEach((reserv)=>{
+				const reservationData = reserv.data();
+				reservations.push({
+					id: reserv.id,
+					people: reservationData.people,
+					time: date_,
+					local: timeData.local,
+					user: reservationData.user
+				});
+			})
+		})
 		return reservations;
 	}
 	async getReservationByLocal(local) {
@@ -277,13 +276,15 @@ class DatabaseController {
 		}
 		return reservations;
 	}
-	async editReservation(id, time,user, people){
+	async editReservation(id, timeid,userid, people){
 		try {
+			const time_ = doc(this.db, "Time", timeid);
+			const user_ = doc(this.db, "User", userid);
 			const ref = doc(this.db, "Reservation", id);
 			const ref_doc = await getDoc(ref);
 			await updateDoc(ref_doc, {
-                'time': time,
-				'user': user,
+                'time': time_,
+				'user': user_,
 				'people': people
             });
 		} catch (error) {

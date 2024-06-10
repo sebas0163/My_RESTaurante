@@ -7,8 +7,29 @@ class TimeController {
     	this.servicePort = process.env.time_port;
 		this.getSchedule = this.getSchedule.bind(this);
 		this.getScheduleByLocal = this.getScheduleByLocal.bind(this);
+		this.newTime = this.newTime.bind(this);
 	}
+	newTime(req,res){
+		const time = req.body.time;
+    	const slots = req.body.slots;
+    	const local = req.body.local;
 
+    	const targetServiceUrl = `http://${this.serviceHost}:${this.servicePort}/time/time/new`; 
+      
+		axios.post(targetServiceUrl, {
+		message_code: 2,
+		time: time,
+		slots: slots,
+		local: local,
+		})
+		.then(response => {
+		console.log('Response from target service:', response.data);
+		res.status(response.status).json(response.data);
+		})
+		.catch(error => {
+		res.status(error.response.status).json(error.response.data);
+		});
+	}
 	getSchedule(req, res) {
 		const targetServiceUrl = `http://${this.serviceHost}:${this.servicePort}/time/time/getSchedule`; 
 		
