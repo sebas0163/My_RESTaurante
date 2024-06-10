@@ -51,11 +51,10 @@ export class UserReservationsComponent {
 
 editReservation(row: TableData){
   const user = this.authService.userValue;
-  this.reservationService.editReservationAdmin(row.people, row.id, user!.id, row.time, row.date, row.local)
+  this.reservationService.editReservationAdmin(row.people, row.time, user!.id)
   .pipe(first())
   .subscribe({
       next: (data) => {
-        console.log(data);
         this.dataSource = data;
       },
       error: (error) => {

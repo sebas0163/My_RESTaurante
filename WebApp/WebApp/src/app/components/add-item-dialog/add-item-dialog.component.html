@@ -3,18 +3,12 @@
   
     <form #editForm="ngForm" (ngSubmit)="onSubmit()" class="edit-form">
 
-      <div class="form-group">
-        <mat-form-field appearance="fill">
-          <input matInput type="time" placeholder="Time" [(ngModel)]="editedData.time" name="time" required>
-        </mat-form-field>
-      </div>
->
 
       <div class="form-group">
         <mat-form-field appearance="fill">
-          <mat-label>Local</mat-label>
-          <select matNativeControl required [(ngModel)]="editedData.local" name="local">
-            <option *ngFor="let value of dropdownValuesLocal" [value]="value">{{value}}</option>
+          <mat-label>Fecha y hora</mat-label>
+          <select matNativeControl required [(ngModel)]="editedData.time" name="time">
+            <option *ngFor="let value of dropdownValuesTimes" [value]="value">{{value}}</option>
           </select>
         </mat-form-field>
       </div>

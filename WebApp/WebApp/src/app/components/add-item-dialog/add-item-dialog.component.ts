@@ -13,7 +13,7 @@ import { first, pipe } from 'rxjs';
 export class AddItemDialogComponent {
   editedData: TableData;
   dropdownValues: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  dropdownValuesLocal: string[] = ["alajuela", "cartago", "heredia"];
+  dropdownValuesTime: string[] = [];
 
   constructor(private authService: AuthenticationService,
     private reservationService: ReservationService,
@@ -22,6 +22,18 @@ export class AddItemDialogComponent {
   ) {
     // Make a copy of the data to avoid modifying the original data until the form is submitted
     this.editedData = { ...data };
+  }
+
+  onInit(): void{
+    this.reservationService.getTimes().pipe(first())
+      .subscribe((data) => {
+        console.log("Times: ", data);
+        this.dropdownValuesTime = data;
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    );
   }
 
   onCancel(): void {
@@ -40,10 +52,8 @@ transformDateToHyphenFormat(date: string): string {
     this.dialogRef.close(this.editedData);
     const user = this.authService.userValue;
 
-    this.editedData.date = this.transformDateToHyphenFormat(this.editedData.date);
-
-    this.reservationService.createReservationAdmin(this.editedData.people, user!.id, user!.email, this.editedData.time,
-      this.editedData.date, this.editedData.local
+    this.reservationService.createReservationAdmin(this.editedData.people, this.editedData.time,
+      user!.id
     )    .pipe(first())
       .subscribe((data) => {
         console.log(data);

@@ -22,7 +22,7 @@ export interface TableData {
     styleUrl: './admin-reservations.component.scss'
   })
   export class AdminReservationsComponent {
-    displayedColumns: string[] = ['time', 'date', 'local', 'people', 'actions'];
+    displayedColumns: string[] = ['time', 'local', 'people', 'actions'];
     dataSource: TableData[] = [];
 
 
