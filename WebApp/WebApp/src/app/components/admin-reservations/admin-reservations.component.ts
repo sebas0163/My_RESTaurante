@@ -29,7 +29,7 @@ export interface TableData {
     constructor(private reservationService: ReservationService, private http: HttpClient, private dialog: MatDialog) {}
 
     ngOnInit() {
-      this.reservationService.getAll()
+      this.reservationService.getByLocal()
       .pipe(first())
       .subscribe({
           next: (data) => {

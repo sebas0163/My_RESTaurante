@@ -52,7 +52,7 @@ export class TimeRecommendationComponent {
   }
 
   ngOnInit() {
-    this.reservationService.getAll()
+    this.reservationService.getByLocal()
     .pipe(first())
       .subscribe((data) => {
         this.dataSource = data;

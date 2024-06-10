@@ -4,12 +4,13 @@
   <router-outlet>
     <div class="title-container">
       <p class="page-title">{{ title }}</p>
-      <select class="location-dropdown">
+      <select class="location-dropdown" [(ngModel)]="selectedLocation" (ngModelChange)="onLocationChange($event)">
         <option value="alajuela">Alajuela</option>
         <option value="heredia">Heredia</option>
         <option value="cartago">Cartago</option>
       </select>
     </div>
+    
 
     <div class="nav-bar">
       <div class="button-group">
@@ -36,4 +37,3 @@
 
   </router-outlet>
 </div>
-  

@@ -1,7 +1,7 @@
 
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
@@ -26,15 +26,17 @@ export class ReservationService {
         return this.userSubject.value;
     }
 
-    getAll() {
-        console.log("GetAll enters ");
-
-        return this.http.get<any>(`${environment.apiUrl}/api/reservation/getAll`)
-            .pipe(map(data => {
-                // store user details in local storage to keep user logged in between page refreshes
-                console.log("Auth: ", data);
-                return data;
-            }));
+    getByLocal() {
+        const location = localStorage.getItem('selectedLocation');
+        const headers = new HttpHeaders({
+            'authorization': 'Bearer ' + this.userValue?.id
+          });
+        return this.http.get<any>(`${environment.apiUrl}/api/reservation/getByLocal?local=${location}`, { headers: headers })
+        .pipe(map(data => {
+        // store user details in local storage to keep user logged in between page refreshes
+        console.log("Auth: ", data);
+        return data;
+        }));
     }
 
     getReservationByID(id: string) {

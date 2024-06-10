@@ -18,7 +18,8 @@ export class AdminsComponent {
   recovery_pin: string | undefined;
   loading: boolean | undefined;
   admin_location: string | undefined;
-  locals: string[] = ["Alajuela", "San Jose", "Cartago"];
+  locals: string[] = ["alajuela", "heredia", "cartago"];
+  selectedLocation: string = 'alajuela'; // Set default value to 'alajuela'
 
   constructor(
     private authService: AuthenticationService,
@@ -26,9 +27,24 @@ export class AdminsComponent {
     private dialog: MatDialog
   ) {}
 
+  getAdmin(local: string){
+    let admin = "";
+    switch(local) {
+      case 'alajuela':
+        admin = "admin-alajuela";
+        break;
+      case 'heredia':
+        admin = "admin-heredia";
+        break;
+      case 'cartago':
+        admin = "admin-cartago";
+    }
+    return admin;
+  }
+
   register() {
-    const userRole = "admin";
-    this.authService.signIn(this.name!, this.email!, this.password!, userRole, this.recovery_pin!)
+    const adminLocal = this.getAdmin(this.selectedLocation);
+    this.authService.signIn(this.name!, this.email!, this.password!, adminLocal, this.recovery_pin!)
       .pipe(first())
       .subscribe({
         next: (user) => {

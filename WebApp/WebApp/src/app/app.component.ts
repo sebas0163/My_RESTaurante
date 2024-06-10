@@ -17,6 +17,7 @@ export class AppComponent {
   title = 'My RESTaurant';
   userLoggedIn: any;
   adminLoggedIn: any;
+  selectedLocation: string = 'alajuela'; // Set default value to 'alajuela'
 
 
   constructor(private authenticationService: AuthenticationService) {
@@ -34,5 +35,33 @@ export class AppComponent {
 
   logout() {
     this.authenticationService.logout();
+  }
+
+  getAdminLocal(user: String){
+    let local = "";
+    switch(user) {
+      case 'admin-alajuela':
+        local = "alajuela";
+        break;
+      case 'admin-heredia':
+        local = "heredia";
+        break;
+      case 'admin-cartago':
+        local = "cartago";
+    }
+    return local;
+  }
+
+  onLocationChange(value: string){
+
+    this.selectedLocation = value;
+    if(this.isUser){
+      localStorage.setItem('selectedLocation', value);
+    } else{
+      const adminLocal = this.getAdminLocal(this.authenticationService.userValue?.access_level!);
+      localStorage.setItem('selectedLocation', adminLocal);
+    }
+    console.log('Selected location:', value);
+    // You can perform any action you want here based on the selected location
   }
 }
