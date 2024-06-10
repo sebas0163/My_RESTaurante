@@ -50,7 +50,10 @@ export class ReservationService {
     }
 
     getReservationByID(id: string) {
-        return this.http.get<any>(`${environment.apiUrl}/api/reservation/getById?id=${id}`)
+        const headers = new HttpHeaders({
+            'authorization': 'Bearer ' + this.userValue?.id
+          });
+        return this.http.get<any>(`${environment.apiUrl}/api/reservation/getById?id=${id}`, { headers: headers })
             .pipe(map(data => {
                 console.log("getReservationById: ", data);
                 return data;
@@ -109,7 +112,10 @@ export class ReservationService {
 
 
     deleteReservation(reservationID: string) {
-        return this.http.delete<any>(`${environment.apiUrl}/api/time/getSchedule?id=${reservationID}`)
+        const headers = new HttpHeaders({
+            'authorization': 'Bearer ' + this.userValue?.id
+          });
+        return this.http.delete<any>(`${environment.apiUrl}/api/time/getSchedule?id=${reservationID}`, { headers: headers })
             .pipe(map(data => {
                 return data;
             }));
