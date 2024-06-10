@@ -1,203 +1,156 @@
-
 :host {
---blue: #576CA8;
---purple: #7C134E;
---light-pink: #FFF5F7;
---orange-red: #E93331;
---tiffany-blue: #84DCCF;
+  --blue: #576CA8;
+  --purple: #7C134E;
+  --light-pink: #FFF5F7;
+  --orange-red: #E93331;
+  --tiffany-blue: #84DCCF;
 
---gray-900: oklch(19.37% 0.006 300.98);
---gray-700: oklch(36.98% 0.014 302.71);
---gray-400: oklch(70.9% 0.015 304.04);
+  --gray-900: oklch(19.37% 0.006 300.98);
+  --gray-700: oklch(36.98% 0.014 302.71);
+  --gray-400: oklch(70.9% 0.015 304.04);
 
---blue-to-orange-to-purple-vertical-gradient: linear-gradient(
+  --blue-to-orange-to-purple-vertical-gradient: linear-gradient(
     180deg,
     var(--tiffany-blue) 0%,
     var(--orange-red) 50%,
     var(--purple) 100%
-);
+  );
 
-
---pill-accent: var(--bright-blue);
-
-font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
     "Segoe UI Symbol";
-box-sizing: border-box;
--webkit-font-smoothing: antialiased;
--moz-osx-font-smoothing: grayscale;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
-
 
 .title-container {
-text-align: center;
-font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-align: center;
+  margin: 20px 0;
 }
-  
+
 .page-title {
-font-size: 24px;
-color: var(--blue);
+  font-size: 2rem;
+  color: var(--blue);
 }
 
 .page-subtitle {
-font-size: 4rem;
-font-family: 'Great Vibes';
-color: var(--orange-red);
+  font-size: 4rem;
+  font-family: 'Great Vibes';
+  color: var(--orange-red);
 }
 
-
-
-main {
-width: 100%;
-min-height: 100%;
-display: flex;
-justify-content: center;
-align-items: center;
-padding: 1rem;
-box-sizing: inherit;
-
-position: relative;
-}
-
-.content {
-display: flex;
-justify-content: space-around;
-width: 100%;
-max-width: 700px;
-margin-bottom: 3rem;
-}
-
-
-.divider {
-width: 1px;
-background: var(--blue-to-orange-to-purple-vertical-gradient);
-margin-inline: 0.5rem;
+.location-dropdown {
+  font-size: 1rem;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid var(--gray-400);
+  background-color: var(--light-pink);
+  color: var(--purple);
 }
 
 .outer-container {
-display: flex;
-flex-direction: column;
-align-items: center;
-flex-wrap: wrap;
-}
-
-.feedbackResponse-container {
-  margin-top: 3rem;
+  width: 100%;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  flex-wrap: wrap;
+  padding: 1rem;
+  background: var(--light-pink);
 }
 
-.feedback-container {
-  margin-top: 3rem;
+.nav-bar {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
+  width: 100%;
+  gap: 10px;
+  margin-top: 20px;
   flex-wrap: wrap;
-  justify-content: space-between;
-  }
-
-.button-container {
-display: flex;
-justify-content: center;
-margin-bottom: 5rem;
-}
-
-.pill {
-display: flex;
-align-items: center;
---pill-accent: var(--orange-red);
-background: color-mix(in srgb, var(--pill-accent) 5%, transparent);
-color: var(--pill-accent);
-padding-inline: 0.75rem;
-padding-block: 0.375rem;
-border-radius: 2.75rem;
-border: 1;
-border-color: #E93331;
-transition: background 0.3s ease;
-font-family: var(--inter-font);
-font-size: 0.875rem;
-font-style: normal;
-font-weight: 500;
-line-height: 1.4rem;
-letter-spacing: -0.00875rem;
-text-decoration: none;
-}
-
-.pill:hover {
-background: color-mix(in srgb, var(--pill-accent) 15%, transparent);
-}
-
-
-.menupill {
-  --pill-accent: var(--orange-red);
-  background: color-mix(in srgb, var(--blue) 5%, transparent);
-  color: var(--pill-accent);
-  padding-inline: 0.75rem;
-  padding-block: 0.375rem;
-  border-radius: 2.75rem;
-  transition: background 0.3s ease;
-  font-family: var(--inter-font);
-  font-size: 0.875rem;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 1.4rem;
-  letter-spacing: -0.00875rem;
-  text-decoration: none;
-  }
-  
-  .pill:hover {
-  background: color-mix(in srgb, var(--pill-accent) 15%, transparent);
-  }
-  
-  .selected {
-    background-color: green; /* Change to your desired color */
-    color: white; /* Change to your desired color */
-  }
-.selected {
-  background-color: green; /* Change to your desired color */
-  color: white; /* Change to your desired color */
 }
 
 .button-group {
-    display: flex; // Use flexbox to align buttons horizontally
-    gap: 10px; // Add some spacing between buttons
-    margin-top: 1.75rem;
-  }
-  
-  .button-group button {
-    flex: 1; // Make each button grow to fill available space equally
-    display: flex; // Use flexbox to align text vertically and horizontally
-    justify-content: center; // Center the text horizontally
-    align-items: center; // Center the text vertically
-    width: 20rem;
-  }
-  
-  .nav-bar {
-    display: flex; // Use flexbox to align buttons horizontally
-    gap: 0px; // Add some spacing between buttons
-  }
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
 
+.pill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--light-pink);
+  color: var(--orange-red);
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+  border: 2px solid var(--orange-red);
+  transition: background 0.3s ease, color 0.3s ease;
+  cursor: pointer;
+  font-size: 1rem;
+}
 
-  .wide-textarea {
-    width: 30rem; /* Adjust the width as needed */
-  }
+.pill:hover {
+  background: var(--orange-red);
+  color: var(--light-pink);
+}
 
-  .custom-datepicker {
-    font-size: 0.875rem;
-  }
-  
-  .error {
-    color: red;
-    font-size: 0.75rem;
-  }
+.login-icon {
+  background: var(--tiffany-blue);
+  color: var(--blue);
+  border-radius: 50%;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+  cursor: pointer;
+}
 
-  .login-icon {
-    background: #a4c4fc;
-    color: #4374e3;
-    -webkit-border-radius: 50%;
-    border-radius: 50%;
-    margin-top: 1.75rem;
-    margin-left: 0.5rem;
-  }
+.login-icon mat-icon {
+  font-size: 1.5rem;
+}
+
+.main {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+.page-subtitle {
+  font-family: 'Great Vibes';
+  color: var(--orange-red);
+}
+
+.content {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.left-side, .center, .right-side {
+  flex: 1;
+}
+
+.left-side, .center, .right-side p {
+  color: var(--blue);
+}
+
+.button-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.button-container .pill {
+  background: var(--light-pink);
+  color: var(--orange-red);
+  border: 2px solid var(--orange-red);
+  transition: background 0.3s ease, color 0.3s ease;
+  cursor: pointer;
+}
+
+.button-container .pill:hover {
+  background: var(--orange-red);
+  color: var(--light-pink);
+}

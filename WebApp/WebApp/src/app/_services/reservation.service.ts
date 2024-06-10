@@ -7,6 +7,7 @@ import { catchError, map } from 'rxjs/operators';
 
 import { User } from '../_models/user';
 import { environment } from '../environments/environment';
+import { platformBrowser } from '@angular/platform-browser';
 
 @Injectable({ providedIn: 'root' })
 export class ReservationService {
@@ -36,11 +37,11 @@ export class ReservationService {
             }));
     }
 
-    getReservationByEmail(email: string) {
-        return this.http.get<any>(`${environment.apiUrl}/api/reservation/getByEmail?email=${email}`)
+    getReservationByID(id: string) {
+        return this.http.get<any>(`${environment.apiUrl}/api/reservation/getById?id=${id}`)
             .pipe(map(data => {
                 // store user details in local storage to keep user logged in between page refreshes
-                console.log("getReservationByEmail: ", data);
+                console.log("getReservationById: ", data);
                 return data;
             }));
     }
@@ -67,13 +68,14 @@ export class ReservationService {
             );
     }
 
-    createReservationAdmin(email: string, time: string, date: string, people: string, quota: string) {
+    createReservationAdmin(people: string, id: string, user: string, time: string, date: string, local: string) {
         const requestBody = {
-            email: email,
+            people: people,
+            id: id,
+            user: user,
             time: time,
             date: date,
-            people: people,
-            quota: quota
+            local: local
         };
     
         return this.http.post<any>(`${environment.apiUrl}/api/reservation/newAdmin`, requestBody)
@@ -91,16 +93,18 @@ export class ReservationService {
             );
     }
 
-    editReservationAdmin(email: string, time: string, date: string, people: string, quota: string) {
+    editReservationAdmin(people: string, id: string, user: string, time: string, date: string, local: string) {
         const requestBody = {
-            email: email,
+            people: people,
+            id: id,
+            user: user,
             time: time,
             date: date,
-            people: people,
-            quota: quota
+            local: local
         };
-    
-        return this.http.post<any>(`${environment.apiUrl}/api/reservation/newAdmin`, requestBody)
+
+ 
+        return this.http.put<any>(`${environment.apiUrl}/api/reservation/edit`, requestBody)
             .pipe(
                 catchError(error => {
                     console.error('Error occurred: ', error);

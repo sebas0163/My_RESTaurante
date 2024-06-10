@@ -1,14 +1,9 @@
 <div class="table">
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-
+   
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef> Nombre </th>
     <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-  </ng-container>
-
-  <ng-container matColumnDef="date">
-    <th mat-header-cell *matHeaderCellDef> Fecha </th>
-    <td mat-cell *matCellDef="let element"> {{element.date}} </td>
   </ng-container>
 
   <ng-container matColumnDef="time">
@@ -16,15 +11,15 @@
     <td mat-cell *matCellDef="let element"> {{element.time}} </td>
   </ng-container>
 
-  <ng-container matColumnDef="quota">
-    <th mat-header-cell *matHeaderCellDef> Cupos </th>
-    <td mat-cell *matCellDef="let element"> {{element.quota}} </td>
+  <ng-container matColumnDef="people">
+    <th mat-header-cell *matHeaderCellDef> Personas </th>
+    <td mat-cell *matCellDef="let element"> {{element.people}} </td>
   </ng-container>
 
-  <ng-container matColumnDef="people">
-      <th mat-header-cell *matHeaderCellDef> Personas </th>
-      <td mat-cell *matCellDef="let element"> {{element.people}} </td>
-    </ng-container>
+  <ng-container matColumnDef="local">
+    <th mat-header-cell *matHeaderCellDef> Local </th>
+    <td mat-cell *matCellDef="let element"> {{element.local}} </td>
+  </ng-container>
 
   <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef> Editar/Eliminar </th>

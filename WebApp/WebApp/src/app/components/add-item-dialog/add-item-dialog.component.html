@@ -8,19 +8,13 @@
           <input matInput type="time" placeholder="Time" [(ngModel)]="editedData.time" name="time" required>
         </mat-form-field>
       </div>
+>
 
       <div class="form-group">
         <mat-form-field appearance="fill">
-          <input matInput placeholder="Fecha" type="date" [(ngModel)]="editedData.date" name="date" required>
-        </mat-form-field>
-      </div>
-  
-
-      <div class="form-group">
-        <mat-form-field appearance="fill">
-          <mat-label>Cupos</mat-label>
-          <select matNativeControl required [(ngModel)]="editedData.quota" name="quota">
-            <option *ngFor="let value of dropdownValuesQuota" [value]="value">{{value}}</option>
+          <mat-label>Local</mat-label>
+          <select matNativeControl required [(ngModel)]="editedData.local" name="local">
+            <option *ngFor="let value of dropdownValuesLocal" [value]="value">{{value}}</option>
           </select>
         </mat-form-field>
       </div>

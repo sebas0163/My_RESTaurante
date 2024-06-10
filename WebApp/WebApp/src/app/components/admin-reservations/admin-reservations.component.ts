@@ -7,15 +7,14 @@ import { first } from 'rxjs';
 import { AddItemDialogComponent } from '../add-item-dialog/add-item-dialog.component';
 
 export interface TableData {
-  id: string;
-  time: string;
-  date: string;
-  quota: string;
   name: string;
   people: string;
-  email: string;
+  id: string;
+  user: string;
+  time: string;
+  date: string;
+  local: string;
 }
-
 
   @Component({
     selector: 'app-admin-reservations',
@@ -23,7 +22,7 @@ export interface TableData {
     styleUrl: './admin-reservations.component.scss'
   })
   export class AdminReservationsComponent {
-    displayedColumns: string[] = ['name', 'date', 'time', 'quota', 'people', 'actions'];
+    displayedColumns: string[] = ['time', 'date', 'local', 'people', 'actions'];
     dataSource: TableData[] = [];
 
 
@@ -53,7 +52,7 @@ export interface TableData {
       dialogRef.afterClosed().subscribe(result => {
         if (result) {
           // Update the row data if the edit form was submitted
-          const index = this.dataSource.findIndex(item => item.email === row.email);
+          const index = this.dataSource.findIndex(item => item.id === row.id);
           if (index !== -1) {
             this.dataSource[index] = result;
           }

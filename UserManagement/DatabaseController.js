@@ -17,13 +17,13 @@ require('dotenv').config();
 class DatabaseController {
 	constructor() {
 		this.firebaseApp_ = firebaseApp.initializeApp({
-			apiKey: process.env.apiKey,
-			authDomain: process.env.authDomain,
-			projectId: process.env.projectId,
-			storageBucket: process.env.storageBucket,
-			messagingSenderId: process.env.messagingSenderId,
-			appId: process.env.appId,
-			measurementId: process.env.measurementId,
+			apiKey: "AIzaSyAGqShV0l2hfX2eO8hYzgXnXDmpO5F0xsI",
+            authDomain: "silken-tenure-419721.firebaseapp.com",
+            projectId: "silken-tenure-419721",
+            storageBucket: "silken-tenure-419721.appspot.com",
+            messagingSenderId: "245250661585",
+            appId: "1:245250661585:web:194d2c6ccce99dd6aab9f0",
+            measurementId: "G-L0BFNM9LDG",
 		});
 		this.db = firestore.getFirestore("myrestaurant");
 	}

@@ -19,7 +19,7 @@ const routes: Routes = [
   { path: 'user-login-component', component: UserLoginComponent },
   { path: 'user-registration-component', component: UserRegistrationComponent },
   { path: 'admin-reservations-component', component: AdminReservationsComponent, canActivate: [AuthGuard],
-  data: { roles: [Role.Admin] } },
+  data: { roles: [Role.Admin1, Role.Admin2, Role.Admin3] } },
   { path: 'user-reservations-component', component: UserReservationsComponent },
   { path: 'reset-password-component', component: ResetPasswordComponent },
   { path: 'admins-component', component: AdminsComponent },

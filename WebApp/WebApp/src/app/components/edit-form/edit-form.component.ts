@@ -36,34 +36,11 @@ export class EditFormComponent {
     this.dialogRef.close();
   }
 
-  transformTimeToSecondsFormat(time: string): string {
-    const parts = time.split(':');
-    if (parts.length === 2) {
-        // Format is "hh:mm"
-        return `${parts[0].padStart(2, '0')}:${parts[1].padStart(2, '0')}:00`;
-    } else if (parts.length === 1 && parts[0].length <= 2) {
-        // Format is "h"
-        return `${parts[0].padStart(2, '0')}:00:00`;
-    } else {
-        throw new Error('Invalid time format');
-    }
-}
 
 transformDateToHyphenFormat(date: string): string {
   return date.replace(/\//g, '-');
 }
 
-  onSubmit(): void {
-    // Submit the edited data and close the dialog
-    this.dialogRef.close(this.editedData);
-    const user = this.authService.userValue;
-    console.log("DATA: ", user!.email);
-
-    // Example usage
-    const timeWithSeconds1 = this.transformTimeToSecondsFormat(this.editedData.time);
-    console.log("TIME: ", timeWithSeconds1); // Output: 12:34:00
-        
-  }
 
   onDelete(): void {
     // Open delete confirmation dialog
@@ -106,19 +83,15 @@ transformDateToHyphenFormat(date: string): string {
   }
 
 
-  onEdit(): void {
+  onSubmit(): void {
     // Submit the edited data and close the dialog
     this.dialogRef.close(this.editedData);
     const user = this.authService.userValue;
 
-    this.editedData.time = this.transformTimeToSecondsFormat(this.editedData.time);
-    this.editedData.date = this.transformDateToHyphenFormat(this.editedData.date);
-
     console.log("DATA ADD: ", this.editedData);
 
-    this.reservationService.editReservationAdmin(user!.email, this.editedData.time, this.editedData.date,
-      this.editedData.people, this.editedData.quota
-    )
+    this.reservationService.editReservationAdmin(this.editedData.people, this.editedData.id, user!.email,
+      this.editedData.time, this.editedData.date, this.editedData.local)
     .pipe(first())
       .subscribe((data) => {
         console.log(data);

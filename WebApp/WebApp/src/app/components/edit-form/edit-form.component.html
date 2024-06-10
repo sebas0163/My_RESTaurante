@@ -2,11 +2,6 @@
   <h2>Edit Data</h2>
 
   <form #editForm="ngForm" (ngSubmit)="onSubmit()" class="edit-form">
-    <div class="form-group">
-      <mat-form-field appearance="fill">
-        <input matInput placeholder="Name" [(ngModel)]="editedData.name" name="name" required>
-      </mat-form-field>
-    </div>
 
     <div class="form-group">
       <mat-form-field appearance="fill">
@@ -22,12 +17,10 @@
 
     <div class="form-group">
       <mat-form-field appearance="fill">
-        <mat-label>Cupos</mat-label>
-        <select matNativeControl required [(ngModel)]="editedData.quota" name="quota">
-          <option *ngFor="let value of dropdownValuesQuota" [value]="value">{{value}}</option>
-        </select>
+        <input matInput placeholder="Local" [(ngModel)]="editedData.local" name="local" required>
       </mat-form-field>
     </div>
+
     <div class="form-group">
       <mat-form-field appearance="fill">
         <mat-label>Personas</mat-label>
