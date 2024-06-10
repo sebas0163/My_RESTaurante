@@ -1,0 +1,19 @@
+.table {
+    margin-top: 5rem;
+    width: 100%;
+    overflow-x: auto;
+  }
+  
+  
+  .mat-cell {
+    height: 100%; /* Set height to 100% to ensure proper vertical alignment */
+    display: flex;
+    align-content: center;
+    text-align: center;
+  }
+  
+  .mat-header-row, .mat-row {
+    display: flex; /* Use flexbox for row layout */
+    align-items: center; /* Align items vertically in the middle */
+    text-align: center;
+  }

@@ -39,4 +39,3 @@ class TimeController {
 }
 
 module.exports = { TimeController };
-

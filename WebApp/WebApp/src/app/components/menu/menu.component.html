@@ -2,8 +2,7 @@
 
 <div class="outer-container">
   <router-outlet>
-    <div class="title-container">
-    </div>
+
     <div class="title-container">
       <p class="page-subtitle"> Menu </p>
     </div>
@@ -36,17 +35,24 @@
             </label>
           </div>
         </div>
+        
+      </div>
+      <div *ngIf="!this.is_two_values">
+        <p class="error">Por favor seleccione 2 opciones</p>
       </div>
       
-      
     </main>
+    
+    
+    <div>
     <div class="content">
       <div class="button-container">
         <button class="pill" (click)="clearSelections()">Limpiar</button>
       </div>
       <div class="button-container">
-        <button class="pill" (click)="getMenuRecommendation()">Obtener Reccomendacion</button>
+        <button class="pill" (click)="postMenuRecommendation()">Obtener Reccomendacion</button>
       </div>
+      
     </div>
     
 
@@ -58,9 +64,8 @@
       <div class="content" *ngIf="this.showRecommendationContent">
         <div class="left-side">
           <p>Gracias por seleccionar tus opciones favoritas. Te recomendamos combinar tu selección con:</p>
-          <p>{{mainDishRec}}</p>
-          <p>{{dessertRec}}</p>
-          <p>{{beverageRec}}</p>
+          <p>{{dishRec1}}</p>
+          <p>{{dishRec2}}</p>
         </div>
 
       </div>
@@ -69,7 +74,7 @@
       <button class="pill" routerLink="/time-recommendation-component">Ver Disponibilidad</button>
     </div>
 
-
+  </div>
 
   </router-outlet>
 </div>

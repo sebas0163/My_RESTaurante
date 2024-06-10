@@ -35,4 +35,3 @@ router.get('/time/getByLocal/:local?', time_reco.getScheduleByLocal);
 
 
 module.exports = router;
-
