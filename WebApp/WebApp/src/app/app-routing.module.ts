@@ -13,18 +13,23 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
 import { AdminsComponent } from './components/admins/admins.component';
 
 const routes: Routes = [
-  { path: 'time-recommendation-component', component: TimeRecommendationComponent },
-  { path: 'feedback-component', component: FeedbackComponent },
-  { path: 'menu-component', component: MenuComponent },
+  { path: 'time-recommendation-component', component: TimeRecommendationComponent, canActivate: [AuthGuard],
+    data: { roles: [Role.User] }   },
+  { path: 'feedback-component', component: FeedbackComponent, canActivate: [AuthGuard],
+    data: { roles: [Role.User] }   },
+  { path: 'menu-component', component: MenuComponent, canActivate: [AuthGuard],
+    data: { roles: [Role.User] }   },
   { path: 'user-login-component', component: UserLoginComponent },
   { path: 'user-registration-component', component: UserRegistrationComponent },
   { path: 'admin-reservations-component', component: AdminReservationsComponent, canActivate: [AuthGuard],
   data: { roles: [Role.Admin1, Role.Admin2, Role.Admin3] } },
-  { path: 'user-reservations-component', component: UserReservationsComponent },
+  { path: 'user-reservations-component', component: UserReservationsComponent, canActivate: [AuthGuard],
+    data: { roles: [Role.User] }  },
   { path: 'reset-password-component', component: ResetPasswordComponent },
-  { path: 'admins-component', component: AdminsComponent },
+  { path: 'admins-component', component: AdminsComponent, canActivate: [AuthGuard],
+    data: { roles: [Role.Admin1, Role.Admin2, Role.Admin3] } },
   // otherwise redirect to home
-  { path: '**', redirectTo: 'menu-component' }
+  { path: '**', redirectTo: 'user-login-component' }
 ];
 
 @NgModule({

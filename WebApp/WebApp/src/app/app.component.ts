@@ -26,7 +26,7 @@ export class AppComponent {
 
   get isAdmin() {
     console.log("access: ", this.user?.access_level);
-    return this.user?.access_level === Role.Admin1 || Role.Admin2 || Role.Admin3;
+    return this.user?.access_level === (Role.Admin1 || Role.Admin2 || Role.Admin3);
   }
 
   get isUser() {

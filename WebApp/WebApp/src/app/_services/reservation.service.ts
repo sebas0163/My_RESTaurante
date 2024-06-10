@@ -31,7 +31,7 @@ export class ReservationService {
         const headers = new HttpHeaders({
             'authorization': 'Bearer ' + this.userValue?.id
           });
-        return this.http.get<any>(`${environment.apiUrl}/api/reservation/getByLocal?local=${location}`, { headers: headers })
+        return this.http.get<any>(`${environment.apiUrl}/api/reservation/getAll`, { headers: headers })
         .pipe(map(data => {
         // store user details in local storage to keep user logged in between page refreshes
         console.log("Auth: ", data);
