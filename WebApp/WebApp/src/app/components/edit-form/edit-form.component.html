@@ -1,0 +1,42 @@
+<div class="edit-data-container" *ngIf="!isDeleted">
+  <h2>Edit Data</h2>
+
+  <form #editForm="ngForm" (ngSubmit)="onSubmit()" class="edit-form">
+
+    <div class="form-group">
+      <mat-form-field appearance="fill">
+        <mat-label>Fecha y hora</mat-label>
+        <select matNativeControl required [(ngModel)]="editedData.time" name="time">
+          <option *ngFor="let value of dropdownValuesTime" [value]="value">{{value}}</option>
+        </select>
+      </mat-form-field>
+    </div>
+
+    <div class="form-group">
+      <mat-form-field appearance="fill">
+        <mat-label>Personas</mat-label>
+        <select matNativeControl required [(ngModel)]="editedData.people" name="people">
+          <option *ngFor="let value of dropdownValues" [value]="value">{{value}}</option>
+        </select>
+      </mat-form-field>
+    </div>
+    
+
+    <div class="button-group">
+        <button mat-raised-button type="submit" color="primary" class="button" [disabled]="editForm.invalid">Guardar</button>
+        <button mat-raised-button type="button" color="warn" class="button" (click)="onDelete()">Eliminar</button>
+        <button mat-raised-button type="button" class="button" (click)="onCancel()">Cancelar</button>
+      </div>
+    </form>
+  
+    <!-- Delete confirmation dialog -->
+    <div *ngIf="isDeleteDialogOpen" class="delete-dialog">
+      <p>¿Seguro de que quiere eliminar este elemento?</p>
+      <div class="button-group">
+        <button mat-raised-button color="warn" class="button" (click)="confirmDelete()">Sí</button>
+        <button mat-raised-button class="button" (click)="cancelDelete()">No</button>
+    </div>
+    </div>
+
+
+  </div>

@@ -1,33 +1,30 @@
 import { Injectable } from '@angular/core';
+import {environment} from './environments/environment'
 
 @Injectable({
   providedIn: 'root'
 })
 export class MyServiceService {
-  private feedbackUrl: string;
-  private timeUrl: string;
-  private menuUrl: string;
-  private menuRecUrl: string;
+  private baseUrl: string;
 
   constructor() {
-    this.feedbackUrl = 'https://us-central1-silken-tenure-419721.cloudfunctions.net/Backend/api/Sentiment/';
-    this.timeUrl = 'http://localhost:1234/api/recomendation/time';
-    this.menuUrl = 'https://us-central1-silken-tenure-419721.cloudfunctions.net/Backend/api/';
-    this.menuRecUrl = 'https://us-central1-silken-tenure-419721.cloudfunctions.net/Backend/api/';
+    this.baseUrl = environment.apiUrl;
   }
 
   getFeedbackUrl(): string {
-    return this.feedbackUrl;
+    return this.baseUrl + '/api/Sentiment/';
   }
 
   getTimeUrl(): string {
-    return this.timeUrl;
+    return  this.baseUrl + '/api/recomendation/time';
   }
+
   getMenuUrl(): string {
-    return this.menuUrl;
+    return this.baseUrl + '/api/food/menu';
   }
   getMenuRecUrl(): string {
-    return this.menuRecUrl;
+    return this.baseUrl + '/api/food/recomendation';
   }
+
 
 }

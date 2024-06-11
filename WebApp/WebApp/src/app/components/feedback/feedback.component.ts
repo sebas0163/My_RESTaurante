@@ -32,7 +32,6 @@ export class FeedbackComponent {
   getFeedbackResponse(){
     try {
       const apiUrl = this.baseUrl + `?feedback=${this.textareaValue}`;
-      console.log("URLAA" + apiUrl);
       if (this.textareaValue != '') {
 
         this.http.get<any>(apiUrl).subscribe(

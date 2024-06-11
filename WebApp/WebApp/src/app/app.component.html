@@ -3,13 +3,36 @@
 <div class="outer-container">
   <router-outlet>
     <div class="title-container">
-      <p class="page-title"> {{ title }}</p>
+      <p class="page-title">{{ title }}</p>
+      <select class="location-dropdown" [(ngModel)]="selectedLocation" (ngModelChange)="onLocationChange($event)">
+        <option value="alajuela">Alajuela</option>
+        <option value="heredia">Heredia</option>
+        <option value="cartago">Cartago</option>
+      </select>
     </div>
-    <div class="button-group">
-      <button class="pill" routerLink="/menu-component">Menu</button>
-      <button class="pill" routerLink="/time-recommendation-component">Disponibilidad</button>
-      <button class="pill" routerLink="/feedback-component">Quiero dar Feedback</button>
+    
+
+    <div class="nav-bar">
+      <div class="button-group">
+        <button class="pill" routerLink="/menu-component" *ngIf="isUser || isAdmin">Menu</button>
+        <button class="pill" routerLink="/time-recommendation-component" *ngIf="isUser || isAdmin">Disponibilidad de Horarios</button>
+        <ng-container>
+          <button class="pill" routerLink="/user-reservations-component" *ngIf="isUser">Mis Reservas</button>
+        </ng-container>
+        <ng-container>
+          <button class="pill" routerLink="/admin-reservations-component" *ngIf="isAdmin">Ver Reservas</button>
+        </ng-container>
+        <ng-container>
+          <button class="pill" routerLink="/admins-component" *ngIf="isAdmin">Crear Admin</button>
+        </ng-container>
+      </div>
+      <button class="login-icon" mat-icon-button routerLink="/user-login-component" *ngIf="!isUser && !isAdmin">
+        <mat-icon>person</mat-icon>
+      </button>
+      <button class="login-icon" mat-icon-button routerLink="/user-login-component" (click)="logout()" *ngIf="isUser || isAdmin">
+        <mat-icon>logout</mat-icon>
+      </button>
     </div>
+
   </router-outlet>
 </div>
-

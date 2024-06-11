@@ -1,43 +1,45 @@
-const { DatabaseController } = require('../common/DatabaseController');
-const {PubSubSender} = require('../common/PubSub');
+const { DatabaseController } = require('./DatabaseController');
 
 class UserAuthenticator {
     constructor() {
         this.databaseController = new DatabaseController();
-		this.pubSubHandler = new PubSubSender("user-upstream");
     }
     
    /* The `askForUserResponse` method in the `UserAuthenticator` class is responsible for handling
    different types of user requests based on the `message_code` provided in the `json_usr` object.
    Here's a breakdown of what it does: */
-    askForUserResponse = async (json_usr) => {
-        
-        const message_code =json_usr.message_code;
-        var jsonString = JSON.stringify({'status': 202,
-                        'data': ":o"});
-        if(message_code == 0){
-            const new_user_response = await this.addNewUser(json_usr.name,json_usr.email,json_usr.password, json_usr.recovery_pin, json_usr.access_level);
-            jsonString = JSON.stringify(new_user_response);
-        }
-        if(message_code == 1){
-            const login_response = await this.loginUser(json_usr.email, json_usr.password);
-            jsonString = JSON.stringify(login_response);
-        }
-        if(message_code == 2){
-            const change_password_response = await this.changePassword(json_usr.email, json_usr.password, json_usr.recovery_pin)
-            jsonString = JSON.stringify(change_password_response);
-        }
-        if(message_code == 3){
-            const access_level_response = await this.changeAccessLevel(json_usr.admin_email, json_usr.admin_password, json_usr.permit_email, json_usr.access_level)
-            jsonString = JSON.stringify(access_level_response);
-        }
-        if(message_code == 4){
-            const delete_response = await this.deleteUser(json_usr.email, json_usr.password);
-            jsonString = JSON.stringify(delete_response);
-        }
-        
-        console.log("PubSub triggered - sending: ", jsonString);
-		this.pubSubHandler.send_message(jsonString);
+    async askForUserResponse (json_usr) {
+        try{
+            const message_code =json_usr.message_code;
+            var jsonString = JSON.stringify({'status': 202,
+                            'data': ":o"});
+            if(message_code == 0){
+                const new_user_response = await this.addNewUser(json_usr.name,json_usr.email,json_usr.password, json_usr.recovery_pin, json_usr.access_level);
+                jsonString = JSON.stringify(new_user_response);
+            }
+            if(message_code == 1){
+                const login_response = await this.loginUser(json_usr.email, json_usr.password);
+                jsonString = JSON.stringify(login_response);
+            }
+            if(message_code == 2){
+                const change_password_response = await this.changePassword(json_usr.email, json_usr.password, json_usr.recovery_pin)
+                jsonString = JSON.stringify(change_password_response);
+            }
+            if(message_code == 3){
+                const access_level_response = await this.changeAccessLevel(json_usr.admin_email, json_usr.admin_password, json_usr.permit_email, json_usr.access_level)
+                jsonString = JSON.stringify(access_level_response);
+            }
+            if(message_code == 4){
+                const delete_response = await this.deleteUser(json_usr.email, json_usr.password);
+                jsonString = JSON.stringify(delete_response);
+            }
+            
+            console.log(" - sending: ",jsonString);
+            return jsonString}
+            catch(error){
+                return {'status': 500,
+                  'data': error}
+              }
 
 
     }
@@ -187,7 +189,7 @@ class UserAuthenticator {
             return  {'status': 401,
                     'data':"Error: No se encontro un usuario con esa direccion de correo"};
         }
-        if (db_user.access_level==="admin" ){
+        if (db_user.access_level==="admin-cartago" || db_user.access_level==="admin-sanjose" || db_user.access_level==="admin-heredia"){
             if(db_user.password===encrypted_password){
                 const updated_user = await this.databaseController.updateUserPermit(encrypted_permit_email,access_level)
                 return  {'status': 200,
@@ -236,26 +238,5 @@ class UserAuthenticator {
     }
 
 }
-/**
- * The function `entry_function` processes a cloud message by decoding its data, asking for user
- * response, and handling errors.
- * 
- * @param cloud_message The `cloud_message` parameter seems to be an object that contains data related
- * to a message received from a cloud service, possibly a message from a pub/sub system. The code
- * snippet you provided is an asynchronous function that processes this `cloud_message`. It extracts a
- * message from the `cloud_message`, dec
- */
-const entry_function = async (cloud_message) => {
-    const userAuthenticator = new UserAuthenticator();
-    try{
-        const pubsub_message = cloud_message.data.message;
-        pubsub_message.ack();
-	    const msg_payload_str = Buffer.from(pubsub_message.data, "base64").toString();
-	    await userAuthenticator.askForUserResponse(JSON.parse(msg_payload_str));
 
-    }catch{
-        userAuthenticator.pubSubHandler.send_message('{"status": 401,"data":"Error"}');
-    }
-	
-};
-module.exports = { UserAuthenticator, entry_function }
+module.exports = { UserAuthenticator }
