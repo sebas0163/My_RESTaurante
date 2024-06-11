@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { User } from '../_models/user';
 import { environment } from '../environments/environment';
+
+import { HashService } from './hash.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
@@ -14,7 +16,8 @@ export class AuthenticationService {
 
     constructor(
         private router: Router,
-        private http: HttpClient
+        private http: HttpClient,
+        private hashService:HashService
     ) {
         this.userSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('user')!));
         this.user = this.userSubject.asObservable();
@@ -26,7 +29,7 @@ export class AuthenticationService {
 
     signIn(name: string, email: string, password: string, access_level: string, recovery_pin: string) {
         console.log("Auth enters ");
-        
+
         const requestBody = {
             name: name,
             email: email,
@@ -34,8 +37,14 @@ export class AuthenticationService {
             access_level: access_level,
             recovery_pin: recovery_pin
         };
-    
-        return this.http.post<any>(`${environment.apiUrl}/api/user/create`, requestBody)
+        const hash = this.hashService.generateHash(requestBody);
+        console.log("Hash would've been", hash);
+        const headers = new HttpHeaders({
+            'x-auth-required': 'true',
+            'x-auth-hash': hash
+        });
+
+        return this.http.post<any>(`${environment.apiUrl}/api/user/create`, requestBody, {headers: headers})
             .pipe(
                 catchError(error => {
                     console.error('Error occurred: ', error);
@@ -55,9 +64,17 @@ export class AuthenticationService {
         let httpParams = new HttpParams()
             .set('email', email)
             .set('password', password);
-    
+        const requestBody = {};
+        const hash = this.hashService.generateHash(requestBody);
+        console.log("Hash would've been", hash);
+
+        const headers = new HttpHeaders({
+            'x-auth-required': 'true',
+            'x-auth-hash': hash
+        });
+
         // Send GET request with parameters
-        return this.http.get<User>(`${environment.apiUrl}/api/user/login`, { params: httpParams })
+        return this.http.get<User>(`${environment.apiUrl}/api/user/login`, { params: httpParams, headers: headers })
             .pipe(
                 catchError(error => {
                     console.error('Error occurred: ', error);
@@ -82,8 +99,14 @@ export class AuthenticationService {
         password: password,
         recovery_pin: recovery_pin
     };
+    const hash = this.hashService.generateHash(requestBody);
+    console.log("Hash would've been", hash);
+    const headers = new HttpHeaders({
+        'x-auth-required': 'true',
+        'x-auth-hash': hash
+    });
 
-    return this.http.put<any>(`${environment.apiUrl}/api/user/change_password`, requestBody)
+    return this.http.put<any>(`${environment.apiUrl}/api/user/change_password`, requestBody, {headers:headers})
         .pipe(
             catchError(error => {
                 console.error('Error occurred: ', error);
@@ -96,7 +119,7 @@ export class AuthenticationService {
             })
         );
     }
-    
+
     logout() {
         // remove user from local storage to log user out
         localStorage.removeItem('user');

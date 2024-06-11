@@ -65,7 +65,7 @@ export class ReservationService {
         const headers = new HttpHeaders({
             'authorization': 'Bearer ' + this.userValue?.token
           });
-        
+
         return this.http.get<any>(`${environment.apiUrl}/api/reservation/getByEmail?email=${atob(email)}`, { headers: headers })
             .pipe(map(data => {
                 console.log("getReservationByEmail: ", data);
@@ -82,7 +82,7 @@ export class ReservationService {
             timeid: timeid,
             userid: userid
         };
-    
+
         return this.http.post<any>(`${environment.apiUrl}/api/reservation/new`, requestBody, { headers: headers })
             .pipe(
                 catchError(error => {
@@ -108,7 +108,7 @@ export class ReservationService {
             id: timeid,
             user: user
         };
- 
+
         return this.http.put<any>(`${environment.apiUrl}/api/reservation/edit`, requestBody, { headers: headers })
             .pipe(
                 catchError(error => {
@@ -143,7 +143,7 @@ export class ReservationService {
             slots: slots,
             time: time
         };
-    
+
         return this.http.post<any>(`${environment.apiUrl}/api/time/newTime`, requestBody, { headers: headers })
             .pipe(
                 catchError(error => {

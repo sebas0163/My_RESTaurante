@@ -63,7 +63,7 @@ import { CommonModule } from '@angular/common';
   ],
 
   providers: [
-  
+
     provideAnimationsAsync(),
     provideNativeDateAdapter()
   ],
