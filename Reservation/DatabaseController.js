@@ -1,60 +1,62 @@
 const {
-	collection,
-	doc,
-	getDoc,
-	getDocs,
-	query,
-	where,
-	addDoc,
-	deleteDoc,
-	updateDoc
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+  addDoc,
+  deleteDoc,
+  updateDoc,
 } = require("firebase/firestore");
 const firebase = require("firebase/app");
 const moment = require("moment");
 const firebaseApp = require("firebase/app");
 const firestore = require("firebase/firestore");
-require('dotenv').config();
+require("dotenv").config();
 class DatabaseController {
-	constructor() {
-		this.firebaseApp_ = firebaseApp.initializeApp({
-			apiKey: process.env.apiKey,
-			authDomain: process.env.authDomain,
-			projectId: process.env.projectId,
-			storageBucket: process.env.storageBucket,
-			messagingSenderId: process.env.messagingSenderId,
-			appId: process.env.appId,
-			measurementId: process.env.measurementId,
-		});
-		this.db = firestore.getFirestore("myrestaurant");
-	}
-	async occupy_slot(timeId) {
-		const entryRef = doc(this.db, "Time", timeId);
-		const docSnap = await getDoc(entryRef);
-		if(docSnap.exists()) {
-			const currentSlots = docSnap.data().slots;
+  constructor() {
+    this.firebaseApp_ = firebaseApp.initializeApp({
+      apiKey: process.env.apiKey,
+      authDomain: process.env.authDomain,
+      projectId: process.env.projectId,
+      storageBucket: process.env.storageBucket,
+      messagingSenderId: process.env.messagingSenderId,
+      appId: process.env.appId,
+      measurementId: process.env.measurementId,
+    });
+    this.db = firestore.getFirestore("myrestaurant");
+  }
+  async occupy_slot(timeId) {
+    const entryRef = doc(this.db, "Time", timeId);
+    const docSnap = await getDoc(entryRef);
+    if (docSnap.exists()) {
+      const currentSlots = docSnap.data().slots;
 
-			if (currentSlots <= 0)
-				throw new RangeError(`Document with id: ${timeId}, has no slots available`);
+      if (currentSlots <= 0)
+        throw new RangeError(
+          `Document with id: ${timeId}, has no slots available`
+        );
 
-			await updateDoc(entryRef, {slots: currentSlots-1})
-			console.log("Decremented slots!");
-		} else {
-			console.log(`Document with id: ${timeId} not found`);
-			throw new ReferenceError(`Document with id: ${timeId} not found`);
-		}
-	}
-	//HERE STARTS RESERVARTION CONTROL
-	/**
-	 * Get a reservation by id
-	 * @param {*} id reservation's id
-	 * @returns json {id, name, people, time}
-	 */
-	async getReservationByID(id) {
-		try {
-			const ref = doc(this.db, "Reservation", id);
-			const ref_doc = await getDoc(ref);
-			// Obtener la referencia del usuario
-			const userRef = ref_doc.data().user;
+      await updateDoc(entryRef, { slots: currentSlots - 1 });
+      console.log("Decremented slots!");
+    } else {
+      console.log(`Document with id: ${timeId} not found`);
+      throw new ReferenceError(`Document with id: ${timeId} not found`);
+    }
+  }
+  //HERE STARTS RESERVARTION CONTROL
+  /**
+   * Get a reservation by id
+   * @param {*} id reservation's id
+   * @returns json {id, name, people, time}
+   */
+  async getReservationByID(id) {
+    try {
+      const ref = doc(this.db, "Reservation", id);
+      const ref_doc = await getDoc(ref);
+      // Obtener la referencia del usuario
+      const userRef = ref_doc.data().user;
 
 			// Obtener los datos del usuario
 			const userDocSnap = await getDoc(userRef);

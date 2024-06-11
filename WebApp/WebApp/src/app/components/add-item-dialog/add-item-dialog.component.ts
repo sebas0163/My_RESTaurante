@@ -1,21 +1,23 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TableData } from '../admin-reservations/admin-reservations.component';
 import { ReservationService } from '../../_services/reservation.service';
 import { AuthenticationService } from '../../_services/authentication.service';
-import { first, pipe } from 'rxjs';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-add-item-dialog',
   templateUrl: './add-item-dialog.component.html',
-  styleUrl: './add-item-dialog.component.scss'
+  styleUrls: ['./add-item-dialog.component.scss']
 })
-export class AddItemDialogComponent {
+export class AddItemDialogComponent implements OnInit {
   editedData: TableData;
   dropdownValues: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  dropdownValuesLocal: string[] = ["alajuela", "cartago", "heredia"];
+  dropdownValuesTime: any[] = [];
+  Times: any[] = [];
 
-  constructor(private authService: AuthenticationService,
+  constructor(
+    private authService: AuthenticationService,
     private reservationService: ReservationService,
     public dialogRef: MatDialogRef<AddItemDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: TableData
@@ -24,33 +26,60 @@ export class AddItemDialogComponent {
     this.editedData = { ...data };
   }
 
+  ngOnInit(): void {
+    this.reservationService.getTimes().pipe(first())
+      .subscribe(
+        (data) => {
+          data.forEach((element: any) => {
+            this.Times.push(element);
+            this.dropdownValuesTime.push(element.datetime);
+          });
+        },
+        (error) => {
+          console.error('Error:', error);
+        }
+      );
+  }
+
   onCancel(): void {
     // Close the dialog without saving changes
     this.dialogRef.close();
   }
 
+  transformDateToHyphenFormat(date: string): string {
+    return date.replace(/\//g, '-');
+  }
 
 
-transformDateToHyphenFormat(date: string): string {
-  return date.replace(/\//g, '-');
+  getMatchingValue(Times: { [x: string]: any; }, time: any) {
+    for (let key in Times) {
+        if (Times[key].datetime === time) {
+            return Times[key];
+        }
+    }
+    return null; // Return null if no match is found
 }
 
   onSubmit(): void {
     // Submit the edited data and close the dialog
     this.dialogRef.close(this.editedData);
     const user = this.authService.userValue;
+    
+    console.log("Timmee: ", this.getMatchingValue(this.Times, this.editedData.time).id);
 
-    this.editedData.date = this.transformDateToHyphenFormat(this.editedData.date);
-
-    this.reservationService.createReservationAdmin(this.editedData.people, user!.id, user!.email, this.editedData.time,
-      this.editedData.date, this.editedData.local
-    )    .pipe(first())
-      .subscribe((data) => {
-        console.log(data);
-      },
-      (error) => {
-        console.error('Error:', error);
-      }
-    );
+    this.reservationService.createReservationAdmin(
+      this.editedData.people,
+      this.editedData.time,
+      user!.id
+    ).pipe(first())
+      .subscribe(
+        (data) => {
+          console.log(data);
+        },
+        (error) => {
+          console.error('Error:', error);
+        }
+      );
   }
+
 }

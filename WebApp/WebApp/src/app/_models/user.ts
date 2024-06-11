@@ -7,4 +7,5 @@ export interface User {
     password: string;
     access_level: Role;
     recovery_pin: string;
+    token: string;
 }

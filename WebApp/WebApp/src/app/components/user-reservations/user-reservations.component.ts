@@ -25,22 +25,19 @@ export interface TableData {
 })
 export class UserReservationsComponent {
 
-  displayedColumns: string[] = ['name', 'time', 'people', 'local', 'actions'];
+  displayedColumns: string[] = ['email', 'time', 'people', 'actions'];
   dataSource: TableData[] = [];
 
   constructor(private reservationService: ReservationService, private dialog: MatDialog, private authService: AuthenticationService,) {}
 
   ngOnInit() {
     const user = this.authService.userValue;
-    this.reservationService.getReservationByID(user!.id)
+    this.reservationService.getReservationByEmail(user!.email)
     .pipe(first())
     .subscribe({
         next: (data) => {
-          console.log(data);
+          console.log("DATA res", data);
           this.dataSource = data;
-          this.dataSource.forEach(element => {
-            element.name = data.name;
-          });
         },
         error: (error) => {
             // Handle error
@@ -51,11 +48,10 @@ export class UserReservationsComponent {
 
 editReservation(row: TableData){
   const user = this.authService.userValue;
-  this.reservationService.editReservationAdmin(row.people, user!.id, user!.email, row.time, row.date, row.local)
+  this.reservationService.editReservationAdmin(row.people, row.time, user!.id)
   .pipe(first())
   .subscribe({
       next: (data) => {
-        console.log(data);
         this.dataSource = data;
       },
       error: (error) => {

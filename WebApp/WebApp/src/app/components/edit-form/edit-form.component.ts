@@ -16,7 +16,8 @@ export class EditFormComponent {
   isDeleteDialogOpen: boolean = false;
   isDeleted: boolean = false;
   dropdownValues: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  dropdownValuesQuota: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  dropdownValuesTime: string[] = [];
+  Times: any[] = [];
   
   reservationID: string | undefined;
 
@@ -29,6 +30,21 @@ export class EditFormComponent {
   ) {
     // Make a copy of the data to avoid modifying the original data until the form is submitted
     this.editedData = { ...data };
+  }
+
+  ngOnInit(): void {
+    this.reservationService.getTimes().pipe(first())
+      .subscribe(
+        (data) => {
+          data.forEach((element: any) => {
+            this.Times.push(element);
+            this.dropdownValuesTime.push(element.datetime);
+          });
+        },
+        (error) => {
+          console.error('Error:', error);
+        }
+      );
   }
 
   onCancel(): void {
@@ -88,10 +104,9 @@ transformDateToHyphenFormat(date: string): string {
     this.dialogRef.close(this.editedData);
     const user = this.authService.userValue;
 
-    console.log("DATA ADD: ", this.editedData);
+    console.log("Edited data: ", this.editedData);
 
-    this.reservationService.editReservationAdmin(this.editedData.people, this.editedData.id, user!.email,
-      this.editedData.time, this.editedData.date, this.editedData.local)
+    this.reservationService.editReservationAdmin(this.editedData.people, this.editedData.time, user!.id)
     .pipe(first())
       .subscribe((data) => {
         console.log(data);

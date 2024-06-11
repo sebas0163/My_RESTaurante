@@ -17,7 +17,7 @@ export class AppComponent {
   title = 'My RESTaurant';
   userLoggedIn: any;
   adminLoggedIn: any;
-  selectedLocation: string = 'alajuela'; // Set default value to 'alajuela'
+  selectedLocation: string = "";
 
 
   constructor(private authenticationService: AuthenticationService) {
@@ -25,8 +25,7 @@ export class AppComponent {
   }
 
   get isAdmin() {
-    console.log("access: ", this.user?.access_level);
-    return this.user?.access_level === Role.Admin1 || Role.Admin2 || Role.Admin3;
+    return this.user?.access_level === (Role.Admin1 || Role.Admin2 || Role.Admin3);
   }
 
   get isUser() {

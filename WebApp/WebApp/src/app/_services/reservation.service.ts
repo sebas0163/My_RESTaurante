@@ -26,36 +26,64 @@ export class ReservationService {
         return this.userSubject.value;
     }
 
+    getTimes() {
+        const headers = new HttpHeaders({
+            'authorization': 'Bearer ' + this.userValue?.token
+          });
+        const local = localStorage.getItem('selectedLocation');
+        return this.http.get<any>(`${environment.apiUrl}/api/time/getByLocal?local=${local}`, { headers: headers })
+            .pipe(map(data => {
+                console.log("getSchedule: ", data);
+                return data;
+            }));
+    }
+
     getByLocal() {
         const location = localStorage.getItem('selectedLocation');
         const headers = new HttpHeaders({
-            'authorization': 'Bearer ' + this.userValue?.id
+            'authorization': 'Bearer ' + this.userValue?.token
           });
         return this.http.get<any>(`${environment.apiUrl}/api/reservation/getByLocal?local=${location}`, { headers: headers })
         .pipe(map(data => {
-        // store user details in local storage to keep user logged in between page refreshes
-        console.log("Auth: ", data);
+        console.log("getByLocal: ", data);
         return data;
         }));
     }
 
     getReservationByID(id: string) {
-        return this.http.get<any>(`${environment.apiUrl}/api/reservation/getById?id=${id}`)
+        const headers = new HttpHeaders({
+            'authorization': 'Bearer ' + this.userValue?.token
+          });
+        return this.http.get<any>(`${environment.apiUrl}/api/reservation/getById?id=${id}`, { headers: headers })
             .pipe(map(data => {
-                // store user details in local storage to keep user logged in between page refreshes
                 console.log("getReservationById: ", data);
                 return data;
             }));
     }
 
-    createReservation(userid: string, timeid: string, people: string) {
+    getReservationByEmail(email: string) {
+        const headers = new HttpHeaders({
+            'authorization': 'Bearer ' + this.userValue?.token
+          });
+        
+        return this.http.get<any>(`${environment.apiUrl}/api/reservation/getByEmail?email=${atob(email)}`, { headers: headers })
+            .pipe(map(data => {
+                console.log("getReservationByEmail: ", data);
+                return data;
+            }));
+    }
+
+    createReservationAdmin(people: string, timeid: string, userid: string) {
+        const headers = new HttpHeaders({
+            'authorization': 'Bearer ' + this.userValue?.token
+          });
         const requestBody = {
-            userid: userid,
+            people: people,
             timeid: timeid,
-            people: people
+            userid: userid
         };
     
-        return this.http.post<any>(`${environment.apiUrl}/api/reservation/new`, requestBody)
+        return this.http.post<any>(`${environment.apiUrl}/api/reservation/new`, requestBody, { headers: headers })
             .pipe(
                 catchError(error => {
                     console.error('Error occurred: ', error);
@@ -70,43 +98,18 @@ export class ReservationService {
             );
     }
 
-    createReservationAdmin(people: string, id: string, user: string, time: string, date: string, local: string) {
+
+    editReservationAdmin(people: string, timeid: string, user: string) {
+        const headers = new HttpHeaders({
+            'authorization': 'Bearer ' + this.userValue?.token
+          });
         const requestBody = {
             people: people,
-            id: id,
-            user: user,
-            time: time,
-            date: date,
-            local: local
+            id: timeid,
+            user: user
         };
-    
-        return this.http.post<any>(`${environment.apiUrl}/api/reservation/newAdmin`, requestBody)
-            .pipe(
-                catchError(error => {
-                    console.error('Error occurred: ', error);
-                    // You can handle the error here, for example:
-                    return throwError('There was a problem creating the reservation.');
-                }),
-                map(user => {
-                    // store user details in local storage to keep user logged in between page refreshes
-                    console.log("Auth: ", user);
-                    return user;
-                })
-            );
-    }
-
-    editReservationAdmin(people: string, id: string, user: string, time: string, date: string, local: string) {
-        const requestBody = {
-            people: people,
-            id: id,
-            user: user,
-            time: time,
-            date: date,
-            local: local
-        };
-
  
-        return this.http.put<any>(`${environment.apiUrl}/api/reservation/edit`, requestBody)
+        return this.http.put<any>(`${environment.apiUrl}/api/reservation/edit`, requestBody, { headers: headers })
             .pipe(
                 catchError(error => {
                     console.error('Error occurred: ', error);
@@ -122,9 +125,35 @@ export class ReservationService {
 
 
     deleteReservation(reservationID: string) {
-        return this.http.delete<any>(`${environment.apiUrl}/api/reservation/delete?id=${reservationID}`)
+        const headers = new HttpHeaders({
+            'authorization': 'Bearer ' + this.userValue?.token
+          });
+        return this.http.delete<any>(`${environment.apiUrl}/api/time/getSchedule?id=${reservationID}`, { headers: headers })
             .pipe(map(data => {
                 return data;
             }));
+    }
+
+    createNewTime(local: string, slots:string, time:string) {
+        const headers = new HttpHeaders({
+            'authorization': 'Bearer ' + this.userValue?.token
+          });
+        const requestBody = {
+            local: local,
+            slots: slots,
+            time: time
+        };
+    
+        return this.http.post<any>(`${environment.apiUrl}/api/time/newTime`, requestBody, { headers: headers })
+            .pipe(
+                catchError(error => {
+                    console.error('Error occurred: ', error);
+                    // You can handle the error here, for example:
+                    return throwError('There was a problem creating the time.');
+                }),
+                map(user => {
+                    return user;
+                })
+            );
     }
 }

@@ -3,14 +3,13 @@ const { DatabaseController } = require("./DatabaseController");
 class ReservationCore {
   constructor() {
     this.databaseController = new DatabaseController();
-    
   }
 
-  async process_message  (json_reserv) {
-    try{
+  async process_message(json_reserv) {
+    try {
       const message_code = json_reserv.message_code;
-      var jsonString = JSON.stringify({'status': 202,
-        'data': ":o"});
+      console.log("message_code: ", message_code);
+      var jsonString = JSON.stringify({ status: 202, data: ":o" });
       if (message_code == 0) {
         const all_reservations = await this.getAllRerservation();
         jsonString = JSON.stringify(all_reservations);
@@ -23,7 +22,7 @@ class ReservationCore {
         const create_response = await this.createReservation(
           json_reserv.userid,
           json_reserv.timeid,
-          json_reserv.people,
+          json_reserv.people
         );
         jsonString = JSON.stringify(create_response);
       }
@@ -34,7 +33,8 @@ class ReservationCore {
       if (message_code == 4) {
         const reserv_ = await this.getReservationByEmail(json_reserv.email);
         jsonString = JSON.stringify(reserv_);
-      }if(message_code == 5){
+      }
+      if (message_code == 5) {
         const reserv_ = await this.getReservationByLocal(json_reserv.local);
         jsonString = JSON.stringify(reserv_);
       }if(message_code == 6){
@@ -100,6 +100,7 @@ class ReservationCore {
     }
   }
   async deleteReservation(id) {
+    console.log("ID:", id);
     const resp = await this.databaseController.deleteReservation(id);
     if (resp != 1) {
       return {
@@ -114,19 +115,22 @@ class ReservationCore {
     }
   }
   async createReservation(userid, timeid, people) {
+    console.log("createReservation");
     try {
       await this.databaseController.occupy_slot(timeid);
     } catch (error) {
       console.log(error);
       let error_result;
-      switch(error.name) {
-        case 'ReferenceError':
+      switch (error.name) {
+        case "ReferenceError":
+          console.log("Case ReferenceError");
           error_result = {
             status: 404,
             data: "No se encontró el timeId especificado",
           };
           break;
-        case 'RangeError':
+        case "RangeError":
+          console.log("Case RangeError");
           error_result = {
             status: 416,
             data: "No hay campo en el horario especificado",
@@ -136,7 +140,7 @@ class ReservationCore {
           console.log("Got an undefined error!");
           error_result = {
             status: 500,
-            data: "Error al actualizar los campos de un ",
+            data: "Error al actualizar los campos de un cupo",
           };
           break;
       }
@@ -148,6 +152,7 @@ class ReservationCore {
       timeid,
       people
     );
+    console.log("resp", resp);
     if (!resp) {
       return {
         status: 401,
@@ -185,7 +190,5 @@ class ReservationCore {
     }
   }
 }
-
-
 
 module.exports = { ReservationCore };
