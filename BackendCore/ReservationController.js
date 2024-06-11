@@ -11,9 +11,9 @@ class ReservationController {
     this.deleteReservation = this.deleteReservation.bind(this);
     this.getAllReservations = this.getAllReservations.bind(this);
     this.getReservationById = this.getReservationById.bind(this);
-    this.getReservationByEmail = this.getReservationByEmail.bind(this);
-    this.getReservationByLocal = this.getReservationByLocal.bind(this);
-    this.editReservation = this.editReservation.bind(this);
+    this.getReservationByEmail= this.getReservationByEmail.bind(this);
+    this.getReservationByLocal= this.getReservationByLocal.bind(this);
+    this.editReservation= this.editReservation.bind(this);
   }
 
   createReservation(req, res) {
@@ -43,43 +43,33 @@ class ReservationController {
   }
 
   getAllReservations(req, res) {
-    const targetServiceUrl = `http://${this.serviceHost}:${this.servicePort}/reserv/reservation/getAll`;
-
-    axios
-      .get(targetServiceUrl)
-      .then((response) => {
-        console.log("Response from target service:", response.status);
-        res.status(response.status).json(response.data);
-      })
-      .catch((error) => {
-        console.error(error);
-        if (error.response) {
-          res.status(error.response.status).json(error.response.data);
-        } else {
-          res.status(500).json({ message: "Internal Server Error" });
-        }
-      });
+    const targetServiceUrl = `http://${this.serviceHost}:${this.servicePort}/reserv/reservation/getAll`; 
+      
+    axios.get(targetServiceUrl)
+    .then(response => {
+      console.log('Response from target service:', response.status);
+      res.status(response.status).json(response.data);
+    })
+    .catch(error => {
+      console.log(error);
+      res.json(error.response);
+    });
   }
 
   deleteReservation(req, res) {
-    const { id } = req.body;
-    console.log(id);
-    const targetServiceUrl = `http://${this.serviceHost}:${this.servicePort}/reserv/reservation/delete`;
-
-    axios
-      .delete(targetServiceUrl, { data: { id } })
-      .then((response) => {
-        console.log("Response from target service:", response.data);
-        res.status(response.status).json(response.data);
-      })
-      .catch((error) => {
-        console.error(error);
-        if (error.response) {
-          res.status(error.response.status).json(error.response.data);
-        } else {
-          res.status(500).json({ message: "Internal Server Error" });
-        }
-      });
+    const res_id = req.query.id;
+    console.log(req.query.id);
+    const targetServiceUrl = `http://${this.serviceHost}:${this.servicePort}/reserv/reservation/delete`; 
+      
+    axios.delete(`${targetServiceUrl}?id=${res_id}` )
+    .then(response => {
+      console.log('Response from target service:', response.data);
+      res.status(response.status).json(response.data);
+    })
+    .catch(error => {
+      res.status(error.response.status).json(error.response.data);
+    });
+    
   }
 
   getReservationById(req, res) {

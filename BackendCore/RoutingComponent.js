@@ -17,7 +17,7 @@ router.get("/reservation/getAll", reservationController.getAllReservations);
 router.get("/reservation/getById:id?", reservationController.getReservationById);
 router.get("/reservation/getByEmail:email?", reservationController.getReservationByEmail);
 router.get("/reservation/getByLocal:local?", reservationController.getReservationByLocal);
-router.delete("/reservation/delete", reservationController.deleteReservation);
+router.delete("/reservation/delete:id?", reservationController.deleteReservation);
 router.post("/reservation/new", reservationController.createReservation);
 router.put("/reservation/edit", reservationController.editReservation);
 
