@@ -225,27 +225,19 @@ class DatabaseController {
 		}
 		return reservations;
 	}
-	async getReservationByLocal_aux(local) {
-		const time_collection = collection(this.db, "Time");
-		const q = query(time_collection, where("local", "==", local));
-		const timeQuerySnapshot = await getDocs(q);
-		if (timeQuerySnapshot.empty) {
-			console.log("No existe ningun tiempo con el local asociado");
-			return 1;
-		}
-		const reservations = [];
-		timeQuerySnapshot.forEach(async (tim)=>{
-			const tim_data = tim.data();
+	async getReservationByLocal_Aux_aux(tim){
+		const tim_data = tim.data();
 			const reservation_coll = collection(this.db, "Reservation");
-			const q_ = query(reservation_coll, where("time", "==", tim_data.id));
+			const q_ = query(reservation_coll, where("time", "==", tim.id));
 			const reservationQuerySnapshot = await getDocs(q_); //posible error async dentro del for
 			const date = new Date(
 				tim_data.time.seconds * 1000 + tim_data.time.nanoseconds / 1e6,
 			);
+			const lista =[];
 			const date_ = date.toLocaleString();
 			reservationQuerySnapshot.forEach((reserv)=>{
 				const reservationData = reserv.data();
-				reservations.push({
+				lista.push({
 					id: reserv.id,
 					people: reservationData.people,
 					time: date_,
@@ -253,45 +245,107 @@ class DatabaseController {
 					user: reservationData.user
 				});
 			})
+			return lista;
+	}
+	async getReservationByLocal_aux(local) {
+		const time_collection = collection(this.db, "Time");
+		const q = query(time_collection, where("local", "==", local));
+	
+		const timeQuerySnapshot = await getDocs(q);
+		if (timeQuerySnapshot.empty) {
+			console.log("No existe ningun tiempo con el local asociado");
+			return 1;
+		}
+		const reservations = [];
+		timeQuerySnapshot.forEach(async (tim)=>{
+			console.log("tim:", await this.getReservationByLocal_Aux_aux(tim))
+			reservations.push(await this.getReservationByLocal_Aux_aux(tim));
+			
 		})
 		return reservations;
 	}
-	async getReservationByLocal(local) {
-		const reserv = await this.getReservationByLocal_aux(local);
-		const reservations = [];
-		const num = reserv.length;
-		for (let i = 0; i < num; i++) {
-			const userRef = reserv[i].user;
-			const userSnap = await getDoc(userRef);
-			const userData = userSnap.data();
-			const json = {
-				id: reserv[i].id,
-				time: reserv[i].time,
-				name: userData.name,
-				people: reserv[i].people,
-				email: userData.email,
-				local: reserv[i].local
-			};
-			reservations.push(json);
+	// async getReservationByLocal(local) {
+	// 	const reserv = await this.getReservationByLocal_aux(local);
+	// 	const reservations = [];
+	// 	const num = reserv.length;
+	// 	for (let i = 0; i < num; i++) {
+	// 		const userRef = reserv[i].user;
+	// 		const userSnap = await getDoc(userRef);
+	// 		const userData = userSnap.data();
+	// 		const json = {
+	// 			id: reserv[i].id,
+	// 			time: reserv[i].time,
+	// 			name: userData.name,
+	// 			people: reserv[i].people,
+	// 			email: userData.email,
+	// 			local: reserv[i].local
+	// 		};
+	// 		reservations.push(json);
+	// 	}
+	// 	return reservations;
+	// }
+	async getReservationByLocal(local){
+		
+		// 1. Obtener los documentos de la colección Time donde local es "Cartago"
+		const timeQuery = query(collection(this.db, "Time"), where("local", "==", local));
+		const timeSnapshot = await getDocs(timeQuery);
+		
+		// Guardar los IDs de los documentos Time
+		const timeIds = timeSnapshot.docs.map(doc => doc.ref);
+		
+		// 2. Consultar la colección Reservation con los IDs obtenidos
+		const reservaciones = [];
+		for (const timeId of timeIds) {
+			const reservationQuery = query(collection(this.db, "Reservation"), where("time", "==", timeId));
+			const reservationSnapshot = await getDocs(reservationQuery);
+		
+			// 3. Obtener el nombre de usuario y compilar los resultados
+			for (const reservationDoc of reservationSnapshot.docs) {
+			const reservationData = reservationDoc.data();
+			const userIdRef = reservationData.user;
+			const userDoc = await getDoc(userIdRef);
+			const userName = userDoc.exists() ? userDoc.data().name : "Usuario no encontrado";
+		
+			const timeDoc = await getDoc(reservationData.time);
+			const timeData = timeDoc.data();
+			const date = new Date(
+				timeData.time.seconds * 1000 + timeData.time.nanoseconds / 1e6,
+			);
+			
+			const date_ = date.toLocaleString();
+			reservaciones.push({
+				reservationId: reservationDoc.id,
+				time: date_, // Asumiendo que time es el campo de timestamp
+				local: timeData.local,
+				name: userName,
+				email: atob(userDoc.data().email)
+			});
+			}
 		}
-		return reservations;
+		
+		return reservaciones;
+		
+		
 	}
 	async editReservation(id, timeid,userid, people){
 		try {
 			const time_ = doc(this.db, "Time", timeid);
 			const user_ = doc(this.db, "User", userid);
 			const ref = doc(this.db, "Reservation", id);
-			const ref_doc = await getDoc(ref);
-			await updateDoc(ref_doc, {
+			
+			await updateDoc(ref, {
                 'time': time_,
 				'user': user_,
 				'people': people
             });
-		} catch (error) {
 			return 1;
+		} catch (error) {
+			
+			return error;
 		}
 
 	}
-}
+ }
+
 
 module.exports = { DatabaseController };

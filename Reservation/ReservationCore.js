@@ -38,12 +38,13 @@ class ReservationCore {
         const reserv_ = await this.getReservationByLocal(json_reserv.local);
         jsonString = JSON.stringify(reserv_);
       }if(message_code == 6){
-        const reserv_ = await this.editReservation(json_reserv.id, json_reserv.time,json_reserv.user,json_reserv.people);
+        const reserv_ = await this.editReservation(json_reserv.id, json_reserv.timeid,json_reserv.userid,json_reserv.people);
         jsonString = JSON.stringify(reserv_);
       }
 
       console.log(" - sending: ",jsonString);
-      return jsonString}
+      return jsonString
+    }
       catch(error){
         return {'status': 500,
           'data': error}
@@ -51,10 +52,10 @@ class ReservationCore {
   }
   async editReservation(id,time,user,people){
     const resp = await this.databaseController.editReservation(id,time,user,people);
-    if (resp == 1) {
+    if (resp != 1) {
       return {
         status: 404,
-        data: "Reservacion no existente",
+        data: resp,
       };
     } else {
       return {
@@ -145,8 +146,7 @@ class ReservationCore {
     const resp = await this.databaseController.createNewRervation(
       userid,
       timeid,
-      people,
-      local
+      people
     );
     if (!resp) {
       return {
