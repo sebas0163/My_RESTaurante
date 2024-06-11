@@ -10,8 +10,10 @@ export interface TableData {
   name: string;
   people: string;
   id: string;
+  reservationId: string;
   user: string;
   time: string;
+  timeid: string;
   date: string;
   local: string;
 }

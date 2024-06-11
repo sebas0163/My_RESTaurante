@@ -216,8 +216,9 @@ class DatabaseController {
       );
       const time_ = date.toLocaleString();
       const json = {
-        id: reserv[i].id,
+        reservationId: reserv[i].id,
         time: time_,
+        timeid: timeRef.id,
         name: reserv[i].name,
         people: reserv[i].people,
         email: reserv[i].email,

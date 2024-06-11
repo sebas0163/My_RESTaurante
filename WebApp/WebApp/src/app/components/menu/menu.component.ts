@@ -47,8 +47,6 @@ export class MenuComponent implements OnInit {
     try {
         this.http.get<any>(this.menuUrl, { headers: headers }).subscribe(
             (response) => {
-                console.log('Response type:', typeof response);
-                console.log('Response content:', response);
 
                 if (Array.isArray(response)) {
                     console.log('Response is an array');

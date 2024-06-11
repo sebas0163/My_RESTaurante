@@ -104,9 +104,7 @@ transformDateToHyphenFormat(date: string): string {
     this.dialogRef.close(this.editedData);
     const user = this.authService.userValue;
 
-    console.log("Edited data: ", this.editedData);
-
-    this.reservationService.editReservationAdmin(this.editedData.people, this.editedData.time, user!.id, user!.id)
+    this.reservationService.editReservationAdmin(this.editedData.people, this.editedData.reservationId, user!.id, this.editedData.timeid)
     .pipe(first())
       .subscribe((data) => {
         console.log(data);
@@ -115,5 +113,10 @@ transformDateToHyphenFormat(date: string): string {
         console.error('Error:', error);
       }
     );
+  }
+
+  test(){
+    console.log("Edited data: ", this.editedData);
+
   }
 }
