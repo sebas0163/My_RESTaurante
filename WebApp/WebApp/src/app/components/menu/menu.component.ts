@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MyServiceService } from '../../my-service.service';
 import { AuthenticationService } from '../../_services/authentication.service';
 import { User } from '../../_models/user';
 import { Role } from '../../_models/role';
+import { async } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-menu',
@@ -36,10 +38,14 @@ export class MenuComponent implements OnInit {
     this.user = <User>this.authenticationService.userValue;
   }
   
-  
+
   getMenu(){
+    console.log("Enters menu");
+    const headers = new HttpHeaders({
+      'authorization': 'Bearer ' + this.user?.token
+    });
     try {
-        this.http.get<any>(this.menuUrl).subscribe(
+        this.http.get<any>(this.menuUrl, { headers: headers }).subscribe(
           (response) => {
             
             response.forEach((item: { type: string; name: any; }) => {
@@ -127,6 +133,7 @@ export class MenuComponent implements OnInit {
   }
 
   async ngOnInit() {
+    console.log("Enters menu");
     this.getMenu();
 
   }

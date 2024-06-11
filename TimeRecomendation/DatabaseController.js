@@ -14,6 +14,7 @@ const moment = require("moment");
 const firebaseApp = require("firebase/app");
 const firestore = require("firebase/firestore");
 require("dotenv").config();
+const Timestamp = firestore.Timestamp;
 class DatabaseController {
   constructor() {
     this.firebaseApp_ = firebaseApp.initializeApp({
@@ -42,7 +43,11 @@ class DatabaseController {
     const times = snapshot.docs.map((doc) => {
       const data = doc.data();
       // Assuming 'timestamp' is stored as a Firestore Timestamp object
-      return { datetime: moment(data.time.toDate()), cupos: data.slots };
+      return {
+        datetime: moment(data.time.toDate()),
+        cupos: data.slots,
+        id: doc.id,
+      };
     });
 
     return times;
@@ -58,14 +63,18 @@ class DatabaseController {
     const times = timeQuerySnapshot.docs.map((doc) => {
       const data = doc.data();
       // Assuming 'timestamp' is stored as a Firestore Timestamp object
-      return { datetime: moment(data.time.toDate()), cupos: data.slots };
+      return {
+        datetime: moment(data.time.toDate()),
+        cupos: data.slots,
+        id: doc.id,
+      };
     });
 
     return times;
   }
   async newTime(time, local, slots) {
     try {
-      const docRef = await addDoc(collection(db, "Time"), {
+      const docRef = await addDoc(collection(this.db, "Time"), {
         local: local,
         slots: slots,
         time: Timestamp.fromDate(new Date(time)),
@@ -73,6 +82,7 @@ class DatabaseController {
       console.log("Documento escrito con ID: ", docRef.id);
     } catch (e) {
       console.error("Error agregando documento: ", e);
+      throw e;
     }
   }
 }

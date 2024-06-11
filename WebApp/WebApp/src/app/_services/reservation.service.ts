@@ -133,4 +133,27 @@ export class ReservationService {
                 return data;
             }));
     }
+
+    createNewTime(local: string, slots:string, time:string) {
+        const headers = new HttpHeaders({
+            'authorization': 'Bearer ' + this.userValue?.token
+          });
+        const requestBody = {
+            local: local,
+            slots: slots,
+            time: time
+        };
+    
+        return this.http.post<any>(`${environment.apiUrl}/api/time/newTime`, requestBody, { headers: headers })
+            .pipe(
+                catchError(error => {
+                    console.error('Error occurred: ', error);
+                    // You can handle the error here, for example:
+                    return throwError('There was a problem creating the time.');
+                }),
+                map(user => {
+                    return user;
+                })
+            );
+    }
 }

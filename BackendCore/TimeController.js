@@ -16,7 +16,7 @@ class TimeController {
     const slots = req.body.slots;
     const local = req.body.local;
 
-    const targetServiceUrl = `http://${this.serviceHost}:${this.servicePort}/time/time/new`;
+    const targetServiceUrl = `http://${this.serviceHost}:${this.servicePort}/time/time/newTime`;
 
     axios
       .post(targetServiceUrl, {

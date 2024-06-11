@@ -13,12 +13,9 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
 import { AdminsComponent } from './components/admins/admins.component';
 
 const routes: Routes = [
-  { path: 'time-recommendation-component', component: TimeRecommendationComponent, canActivate: [AuthGuard],
-    data: { roles: [Role.User] }   },
-  { path: 'feedback-component', component: FeedbackComponent, canActivate: [AuthGuard],
-    data: { roles: [Role.User] }   },
-  { path: 'menu-component', component: MenuComponent, canActivate: [AuthGuard],
-    data: { roles: [Role.User] }   },
+  { path: 'time-recommendation-component', component: TimeRecommendationComponent},
+  { path: 'feedback-component', component: FeedbackComponent},
+  { path: 'menu-component', component: MenuComponent},
   { path: 'user-login-component', component: UserLoginComponent },
   { path: 'user-registration-component', component: UserRegistrationComponent },
   { path: 'admin-reservations-component', component: AdminReservationsComponent, canActivate: [AuthGuard],
