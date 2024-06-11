@@ -42,7 +42,7 @@ export class TimeRecommendationComponent {
   dataSource: TableData[] = [];
   user: User;
   isUser = false;
-  slots = "0";
+  slots = "10";
   
   dropdownValuesTime: any[] = [];
   Times: any[] = [];
@@ -114,19 +114,6 @@ export class TimeRecommendationComponent {
   });
   }
 
-  openErrorPopup(errorMessage: string, messageTitle: string): void {
-    const dialogRef = this.dialog.open(ErrorPopupComponent, {
-      width: '250px',
-      data: { message: errorMessage,
-        title: messageTitle
-      } // Pass error message to the popup component
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-    });
-  }
-
 
   getAdminLocal() {
     const user = localStorage.getItem('user');
@@ -147,9 +134,11 @@ export class TimeRecommendationComponent {
     ).pipe(first())
       .subscribe(
         (data: any) => {
+          this.openErrorPopup("¡Se ha creado la hora y fecha!", "Éxito"); // Open error popup with error message
         },
         (error: any) => {
           console.error('Error:', error);
+          this.openErrorPopup("No se ha podido crear la reservacion, intente de nuevo mas tarde", "Error"); // Open error popup with error message
         }
       );
   }
@@ -172,11 +161,27 @@ export class TimeRecommendationComponent {
       .subscribe(
         (data: any) => {
           console.log("Create res: ", data);
+          this.openErrorPopup("¡Se ha creado la reservacion!", "Éxito"); // Open error popup with error message
         },
         (error: any) => {
           console.error('Error:', error);
+          this.openErrorPopup("No se ha podido crear la reservacion, intente de nuevo mas tarde", "Error"); // Open error popup with error message
         }
       );
   }
       
+  
+  openErrorPopup(errorMessage: string, messageTitle: string): void {
+    const dialogRef = this.dialog.open(ErrorPopupComponent, {
+      width: '250px',
+      data: { message: errorMessage,
+        title: messageTitle
+      } // Pass error message to the popup component
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      window.location.reload();
+    });
+  }
 }

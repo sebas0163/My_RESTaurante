@@ -73,7 +73,7 @@ export class AddItemDialogComponent implements OnInit {
     ).pipe(first())
       .subscribe(
         (data) => {
-          console.log(data);
+          window.location.reload();
         },
         (error) => {
           console.error('Error:', error);

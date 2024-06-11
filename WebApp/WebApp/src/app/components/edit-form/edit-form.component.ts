@@ -73,6 +73,7 @@ transformDateToHyphenFormat(date: string): string {
                 // Handle successful response (user data)
                 this.openErrorPopup("Se ha eliminado la reservación", "Éxito"); // Open error popup with error message
                 this.isDeleted = true;
+                window.location.reload();
             },
             error: (error) => {
                 // Handle error
