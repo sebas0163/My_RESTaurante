@@ -25,7 +25,6 @@
         <ng-container>
           <button class="pill" routerLink="/admins-component" *ngIf="isAdmin">Crear Admin</button>
         </ng-container>
-        <button class="pill" routerLink="/feedback-component" *ngIf="isUser">Quiero dar Feedback</button>
       </div>
       <button class="login-icon" mat-icon-button routerLink="/user-login-component" *ngIf="!isUser && !isAdmin">
         <mat-icon>person</mat-icon>
