@@ -37,12 +37,11 @@ export class ReservationService {
             }));
     }
 
-    getByLocal() {
-        const location = localStorage.getItem('selectedLocation');
+    getByLocal(local: string) {
         const headers = new HttpHeaders({
             'authorization': 'Bearer ' + this.userValue?.token
           });
-        return this.http.get<any>(`${environment.apiUrl}/api/reservation/getByLocal?local=${location}`, { headers: headers })
+        return this.http.get<any>(`${environment.apiUrl}/api/reservation/getByLocal?local=${local}`, { headers: headers })
         .pipe(map(data => {
         return data;
         }));

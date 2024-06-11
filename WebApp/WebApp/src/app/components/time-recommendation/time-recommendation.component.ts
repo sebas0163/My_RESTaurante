@@ -56,7 +56,8 @@ export class TimeRecommendationComponent {
 
 
   getReservations(){
-    this.reservationService.getByLocal()
+      const location = localStorage.getItem('selectedLocation');
+      this.reservationService.getByLocal(location!)
     .pipe(first())
     .subscribe((data) => {
         this.dataSource = data;
