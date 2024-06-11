@@ -17,7 +17,7 @@ export class AppComponent {
   title = 'My RESTaurant';
   userLoggedIn: any;
   adminLoggedIn: any;
-  selectedLocation: string = "";
+  selectedLocation: string = localStorage.getItem('selectedLocation')!;
 
 
   constructor(private authenticationService: AuthenticationService) {
@@ -25,7 +25,11 @@ export class AppComponent {
   }
 
   get isAdmin() {
-    return this.user?.access_level === (Role.Admin1 || Role.Admin2 || Role.Admin3);
+    let  isAdmin = false;
+    if(this.user?.access_level == Role.Admin1 || this.user?.access_level == Role.Admin2 || this.user?.access_level == Role.Admin3){
+      isAdmin = true;
+    }
+    return isAdmin;
   }
 
   get isUser() {
@@ -53,14 +57,10 @@ export class AppComponent {
 
   onLocationChange(value: string){
 
+    localStorage.setItem('selectedLocation', value);
     this.selectedLocation = value;
-    if(this.isUser){
-      localStorage.setItem('selectedLocation', value);
-    } else{
-      const adminLocal = this.getAdminLocal(this.authenticationService.userValue?.access_level!);
-      localStorage.setItem('selectedLocation', adminLocal);
-    }
-    console.log('Selected location:', value);
+    window.location.reload();
+    this.selectedLocation = value;
     // You can perform any action you want here based on the selected location
   }
 }

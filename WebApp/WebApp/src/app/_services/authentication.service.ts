@@ -25,7 +25,6 @@ export class AuthenticationService {
     }
 
     signIn(name: string, email: string, password: string, access_level: string, recovery_pin: string) {
-        console.log("Auth enters ");
         
         const requestBody = {
             name: name,
@@ -44,7 +43,6 @@ export class AuthenticationService {
                 }),
                 map(user => {
                     // store user details in local storage to keep user logged in between page refreshes
-                    console.log("Auth: ", user);
                     return user;
                 })
             );
@@ -68,7 +66,6 @@ export class AuthenticationService {
                     // store user details and jwt token in local storage to keep user logged in between page refreshes
                     localStorage.setItem('user', JSON.stringify(user));
                     this.userSubject.next(user);
-                    console.log("User: ", user);
                     this.router.navigate(['/menu-component']);
                     return user;
                 })

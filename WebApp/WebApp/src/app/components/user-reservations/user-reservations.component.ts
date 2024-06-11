@@ -10,9 +10,10 @@ import { EditFormComponent } from '../edit-form/edit-form.component';
 export interface TableData {
   name: string;
   people: string;
-  id: string;
+  reservationId: string;
   user: string;
   time: string;
+  timeid: string;
   date: string;
   local: string;
 }
@@ -25,7 +26,7 @@ export interface TableData {
 })
 export class UserReservationsComponent {
 
-  displayedColumns: string[] = ['email', 'time', 'people', 'actions'];
+  displayedColumns: string[] = ['email', 'time', 'people', 'local', 'actions'];
   dataSource: TableData[] = [];
 
   constructor(private reservationService: ReservationService, private dialog: MatDialog, private authService: AuthenticationService,) {}
@@ -36,8 +37,8 @@ export class UserReservationsComponent {
     .pipe(first())
     .subscribe({
         next: (data) => {
-          console.log("DATA res", data);
           this.dataSource = data;
+          console.log("print", data);
         },
         error: (error) => {
             // Handle error
@@ -46,20 +47,6 @@ export class UserReservationsComponent {
     });
 }
 
-editReservation(row: TableData){
-  const user = this.authService.userValue;
-  this.reservationService.editReservationAdmin(row.people, row.time, user!.id)
-  .pipe(first())
-  .subscribe({
-      next: (data) => {
-        this.dataSource = data;
-      },
-      error: (error) => {
-          // Handle error
-          console.error("Error occurred: ", error);
-      }
-  });
-}
 
 openEditDialog(row: TableData): void {
   const dialogRef = this.dialog.open(EditFormComponent, {
@@ -73,22 +60,10 @@ openEditDialog(row: TableData): void {
       const index = this.dataSource.findIndex(item => item.user === row.user);
       if (index !== -1) {
         this.dataSource[index] = result;
-        this.editReservation(row);
       }
     }
   });
 }
 
-openAddItemDialog(): void {
-  const dialogRef = this.dialog.open(AddItemDialogComponent, {
-    width: '250px',
-  });
 
-  dialogRef.afterClosed().subscribe(result => {
-    if (result) {
-      // Add the new item to the data source
-      this.dataSource.push(result);
-    }
-  });
-}
 }

@@ -37,21 +37,30 @@ class ReservationCore {
       if (message_code == 5) {
         const reserv_ = await this.getReservationByLocal(json_reserv.local);
         jsonString = JSON.stringify(reserv_);
-      }if(message_code == 6){
-        const reserv_ = await this.editReservation(json_reserv.id, json_reserv.timeid,json_reserv.userid,json_reserv.people);
+      }
+      if (message_code == 6) {
+        const reserv_ = await this.editReservation(
+          json_reserv.id,
+          json_reserv.timeid,
+          json_reserv.userid,
+          json_reserv.people
+        );
         jsonString = JSON.stringify(reserv_);
       }
 
-      console.log(" - sending: ",jsonString);
-      return jsonString
+      console.log(" - sending: ", jsonString);
+      return jsonString;
+    } catch (error) {
+      return { status: 500, data: error };
     }
-      catch(error){
-        return {'status': 500,
-          'data': error}
-      }
   }
-  async editReservation(id,time,user,people){
-    const resp = await this.databaseController.editReservation(id,time,user,people);
+  async editReservation(id, time, user, people) {
+    const resp = await this.databaseController.editReservation(
+      id,
+      time,
+      user,
+      people
+    );
     if (resp != 1) {
       return {
         status: 404,
@@ -100,7 +109,6 @@ class ReservationCore {
     }
   }
   async deleteReservation(id) {
-    console.log("ID:", id);
     const resp = await this.databaseController.deleteReservation(id);
     if (resp != 1) {
       return {

@@ -1,50 +1,75 @@
-.table {
-    margin-top: 5rem;
-    width: 100%;
-    overflow-x: auto;
-  }
-  
-  
-  .mat-cell {
-    height: 100%; /* Set height to 100% to ensure proper vertical alignment */
-    display: flex;
-    align-content: center;
-    text-align: center;
-  }
-  
-  .mat-header-row, .mat-row {
-    display: flex; /* Use flexbox for row layout */
-    align-items: center; /* Align items vertically in the middle */
-    text-align: center;
+.table-container {
+  margin-top: 2rem;
+  width: 100%;
+  overflow-x: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.mat-cell, .mat-header-cell {
+  padding: 1rem;
+  text-align: center;
+}
+
+.mat-header-row, .mat-row {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  margin-top: 2rem;
+  padding: 1rem;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-fields {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+}
+
+.mat-form-field {
+  margin-right: 1rem;
+  width: 100%;
+}
+
+.add-button {
+  background-color: #4caf50;
+  border: none;
+  border-radius: 50%;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.add-button:hover {
+  background-color: #45a049;
+}
+
+.form-title {
+  margin-bottom: 1rem;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+@media (max-width: 600px) {
+  .form-fields {
+    flex-direction: column;
+    align-items: stretch;
   }
 
-  .table-container {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .form-container {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-end; /* Align inputs to the bottom */
-    margin-top: 20px; /* Adjust as needed */
-  }
-  
   .mat-form-field {
-    margin-right: 10px; /* Adjust spacing between inputs */
+    margin-right: 0;
+    margin-bottom: 1rem;
   }
-  
-  .add-button {
-    background-color: #4caf50; /* Green */
-    border: none;
-    border-radius: 50%; /* Make it circular */
-    color: white;
-    font-size: 24px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .add-button:hover {
-    background-color: #45a049; /* Darker green on hover */
-  }
-  
+}

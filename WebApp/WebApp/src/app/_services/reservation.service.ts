@@ -33,19 +33,16 @@ export class ReservationService {
         const local = localStorage.getItem('selectedLocation');
         return this.http.get<any>(`${environment.apiUrl}/api/time/getByLocal?local=${local}`, { headers: headers })
             .pipe(map(data => {
-                console.log("getSchedule: ", data);
                 return data;
             }));
     }
 
-    getByLocal() {
-        const location = localStorage.getItem('selectedLocation');
+    getByLocal(local: string) {
         const headers = new HttpHeaders({
             'authorization': 'Bearer ' + this.userValue?.token
           });
-        return this.http.get<any>(`${environment.apiUrl}/api/reservation/getByLocal?local=${location}`, { headers: headers })
+        return this.http.get<any>(`${environment.apiUrl}/api/reservation/getByLocal?local=${local}`, { headers: headers })
         .pipe(map(data => {
-        console.log("getByLocal: ", data);
         return data;
         }));
     }
@@ -56,7 +53,6 @@ export class ReservationService {
           });
         return this.http.get<any>(`${environment.apiUrl}/api/reservation/getById?id=${id}`, { headers: headers })
             .pipe(map(data => {
-                console.log("getReservationById: ", data);
                 return data;
             }));
     }
@@ -68,7 +64,6 @@ export class ReservationService {
         
         return this.http.get<any>(`${environment.apiUrl}/api/reservation/getByEmail?email=${atob(email)}`, { headers: headers })
             .pipe(map(data => {
-                console.log("getReservationByEmail: ", data);
                 return data;
             }));
     }
@@ -82,7 +77,7 @@ export class ReservationService {
             timeid: timeid,
             userid: userid
         };
-    
+        console.log("REQUEST CEW RES: ", people, " ", timeid, "", userid);
         return this.http.post<any>(`${environment.apiUrl}/api/reservation/new`, requestBody, { headers: headers })
             .pipe(
                 catchError(error => {
@@ -92,22 +87,23 @@ export class ReservationService {
                 }),
                 map(user => {
                     // store user details in local storage to keep user logged in between page refreshes
-                    console.log("Auth: ", user);
                     return user;
                 })
             );
     }
 
 
-    editReservationAdmin(people: string, timeid: string, user: string) {
+    editReservationAdmin(people: string, reservationid: string, user: string, timeid: string) {
         const headers = new HttpHeaders({
             'authorization': 'Bearer ' + this.userValue?.token
           });
         const requestBody = {
             people: people,
-            id: timeid,
-            user: user
+            id: reservationid,
+            userid: user,
+            timeid: timeid,
         };
+
  
         return this.http.put<any>(`${environment.apiUrl}/api/reservation/edit`, requestBody, { headers: headers })
             .pipe(
@@ -128,7 +124,7 @@ export class ReservationService {
         const headers = new HttpHeaders({
             'authorization': 'Bearer ' + this.userValue?.token
           });
-        return this.http.delete<any>(`${environment.apiUrl}/api/time/getSchedule?id=${reservationID}`, { headers: headers })
+        return this.http.delete<any>(`${environment.apiUrl}/api/reservation/delete?id=${reservationID}`, { headers: headers })
             .pipe(map(data => {
                 return data;
             }));

@@ -216,8 +216,9 @@ class DatabaseController {
       );
       const time_ = date.toLocaleString();
       const json = {
-        id: reserv[i].id,
+        reservationId: reserv[i].id,
         time: time_,
+        timeid: timeRef.id,
         name: reserv[i].name,
         people: reserv[i].people,
         email: reserv[i].email,
@@ -267,6 +268,7 @@ class DatabaseController {
         reservaciones.push({
           reservationId: reservationDoc.id,
           time: date_, // Asumiendo que time es el campo de timestamp
+          timeid: timeDoc.id,
           local: timeData.local,
           name: userName,
           people: reservationData.people,

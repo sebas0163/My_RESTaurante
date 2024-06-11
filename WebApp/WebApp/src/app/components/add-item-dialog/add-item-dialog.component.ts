@@ -65,8 +65,6 @@ export class AddItemDialogComponent implements OnInit {
     this.dialogRef.close(this.editedData);
     const user = this.authService.userValue;
     
-    console.log("Timmee: ", user!);
-    console.log("Timmee: ", this.getMatchingValue(this.Times, this.editedData.time).id);
 
     this.reservationService.createReservationAdmin(
       this.editedData.people,
@@ -75,7 +73,7 @@ export class AddItemDialogComponent implements OnInit {
     ).pipe(first())
       .subscribe(
         (data) => {
-          console.log(data);
+          window.location.reload();
         },
         (error) => {
           console.error('Error:', error);
