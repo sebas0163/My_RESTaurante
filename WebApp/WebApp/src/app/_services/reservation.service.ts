@@ -44,14 +44,9 @@ export class ReservationService {
             }));
     }
 
-<<<<<<< HEAD
-    getByLocal() {
+    getByLocal(local: string) {
         const requestBody = {};
         const hash = this.hashService.generateHash(requestBody);
-        const location = localStorage.getItem('selectedLocation');
-=======
-    getByLocal(local: string) {
->>>>>>> origin/Frontend-dev
         const headers = new HttpHeaders({
             'authorization': 'Bearer ' + this.userValue?.token,
             'x-auth-required': 'true',
@@ -98,7 +93,6 @@ export class ReservationService {
             timeid: timeid,
             userid: userid
         };
-<<<<<<< HEAD
         const hash = this.hashService.generateHash(requestBody);
         const headers = new HttpHeaders({
             'authorization': 'Bearer ' + this.userValue?.token,
@@ -106,9 +100,7 @@ export class ReservationService {
             'x-auth-hash': hash
           });
 
-=======
         console.log("REQUEST CEW RES: ", people, " ", timeid, "", userid);
->>>>>>> origin/Frontend-dev
         return this.http.post<any>(`${environment.apiUrl}/api/reservation/new`, requestBody, { headers: headers })
             .pipe(
                 catchError(error => {
@@ -124,21 +116,13 @@ export class ReservationService {
     }
 
 
-<<<<<<< HEAD
-    editReservationAdmin(people: string, timeid: string, user: string) {
-=======
     editReservationAdmin(people: string, reservationid: string, user: string, timeid: string) {
-        const headers = new HttpHeaders({
-            'authorization': 'Bearer ' + this.userValue?.token
-          });
->>>>>>> origin/Frontend-dev
         const requestBody = {
             people: people,
             id: reservationid,
             userid: user,
             timeid: timeid,
         };
-<<<<<<< HEAD
         const hash = this.hashService.generateHash(requestBody);
         const headers = new HttpHeaders({
             'authorization': 'Bearer ' + this.userValue?.token,
@@ -146,10 +130,6 @@ export class ReservationService {
             'x-auth-hash': hash
           });
 
-=======
-
- 
->>>>>>> origin/Frontend-dev
         return this.http.put<any>(`${environment.apiUrl}/api/reservation/edit`, requestBody, { headers: headers })
             .pipe(
                 catchError(error => {
