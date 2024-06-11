@@ -1,36 +1,55 @@
-<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+<div class="table">
 
-<div class="outer-container">
-  <router-outlet>
-    <div class="title-container">
-      <p class="page-subtitle"> Recomendacion de hora </p>
-    </div>
-    <main class="main">
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
-      <div class="content">
-        <mat-form-field class="custom-datepicker">
-          <mat-label>Escoge una fecha</mat-label>
-          <input matInput [matDatepicker]="picker" [(ngModel)]="selectedDate">
-          <mat-hint>MM/DD/YYYY</mat-hint>
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
-        
-      </div>
-    </main>
-    <div class="button-container">
-      <button class="pill" routerLink="/time-recommendation-component" (click)="postDateRecommendation()">Ver Disponibilidad</button>
-    </div>
 
-    <div class="title" *ngIf="this.showRecommendationContent">
-    <h3 class="page-title">Las opciones de hora para la fecha seleccionada son:</h3>
-      <ul>
-        <div *ngFor="let time of times">
-          <p>{{ time }}</p>
-        </div>
-      </ul>
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Nombre </th>
+      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+    </ng-container>
+
+    <!-- Time Column -->
+    <ng-container matColumnDef="time">
+      <th mat-header-cell *matHeaderCellDef> Hora </th>
+      <td mat-cell *matCellDef="let element"> {{element.time}} </td>
+    </ng-container>
+
+    <!-- People Column -->
+    <ng-container matColumnDef="people">
+      <th mat-header-cell *matHeaderCellDef> Personas </th>
+      <td mat-cell *matCellDef="let element"> {{element.people}} </td>
+    </ng-container>
+
+    <!-- Actions Column -->
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef> Reservar </th>
+      <td mat-cell *matCellDef="let element">
+        <button [disabled]="!isUser" (click)="reserve(element)">
+          Reservar
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <div class="form-container" *ngIf="!isUser">
+    <mat-form-field appearance="fill">
+      <mat-label>Hora</mat-label>
+      <input matInput placeholder="Ingrese la hora" [(ngModel)]="time">
+    </mat-form-field>
+    
+    <mat-form-field appearance="fill">
+      <mat-label>Personas</mat-label>
+      <input matInput placeholder="Ingrese el número de personas" [(ngModel)]="people">
+    </mat-form-field>
+    
+    <button mat-icon-button color="primary" class="add-button" [disabled]="isUser || !time || !people" (click)="createNewTime()">
+      <mat-icon>add</mat-icon>
+    </button>
   </div>
 
-  </router-outlet>
-</div>
 
+</div>

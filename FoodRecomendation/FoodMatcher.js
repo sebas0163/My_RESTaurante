@@ -1,5 +1,5 @@
-// Assuming DatabaseController is correctly implemented as shown before
-const { DatabaseController } = require('../common/DatabaseController');
+
+const { DatabaseController } = require('./DatabaseController');
 
 class FoodMatcher {
     constructor() {
@@ -7,12 +7,11 @@ class FoodMatcher {
     }
 
     cleanDishObject(dish) {
-        // Create a new object with only the properties you want to include
+        
         return {
             name: dish.name,
             type: dish.type,
-            // Include other properties as needed but exclude req1 and req2
-            // Or alternatively, transform req1 and req2 to include only the IDs or other minimal info
+            
         };
     }
 
@@ -27,7 +26,7 @@ class FoodMatcher {
                 throw new Error("One or both dishes not found");
             }
             
-            // Assuming there are only 3 types of dishes
+            
             let dishTypes = new Set(['Dessert', 'Drink', 'main plate']);
             dishTypes.delete(dish1.type.trim());
             dishTypes.delete(dish2.type.trim());

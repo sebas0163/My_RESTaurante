@@ -1,32 +1,65 @@
-// Imports the Google Cloud client library
-const {PubSubSender} = require('../common/PubSub');
-const {DatabaseController} = require('../common/DatabaseController');
-const moment = require('moment');
+const { DatabaseController } = require("./DatabaseController");
 
-class TimeCore{
+class TimeCore {
   constructor() {
     this.databaseController = new DatabaseController();
-    this.pubSubHandler = new PubSubSender("time-upstream");
   }
 
-  async process_message() {
-    const days =  await this.databaseController.get_available_schedule();
-
-    const jsonString = JSON.stringify(days);
-
-    console.log("Schedule response for upstream");
-    await this.pubSubHandler.send_message(jsonString);
+  async process_message(json_reserv) {
+    try {
+      const message_code = json_reserv.message_code;
+      var jsonString = JSON.stringify({ status: 202, data: ":o" });
+      if (message_code == 0) {
+        const all_times = await this.getSchedule();
+        jsonString = JSON.stringify(all_times);
+      }
+      if (message_code == 1) {
+        const occupy = await this.getScheduleByLocal(json_reserv.local);
+        jsonString = JSON.stringify(occupy);
+      }
+      if (message_code == 2) {
+        const occupy = await this.newTime(
+          json_reserv.time,
+          json_reserv.slots,
+          json_reserv.local
+        );
+        jsonString = JSON.stringify(occupy);
+      }
+      console.log(" - sending: ", jsonString);
+      return jsonString;
+    } catch (error) {
+      return { status: 500, data: error };
+    }
+  }
+  async newTime(time, slots, local) {
+    console.log("Time, slots, local", time, ", ", slots, ", ", local);
+    const resp = await this.databaseController.newTime(time, slots, local);
+    return {
+      status: 202,
+      data: resp,
+    };
+  }
+  async getSchedule() {
+    const resp = await this.databaseController.get_available_schedule();
+    return {
+      status: 202,
+      data: resp,
+    };
+  }
+  async getScheduleByLocal(local) {
+    const resp = await this.databaseController.getScheduleByLocal(local);
+    if (resp == 1) {
+      return {
+        status: 404,
+        data: "No hay tiempos con ese local ",
+      };
+    } else {
+      return {
+        status: 202,
+        data: resp,
+      };
+    }
   }
 }
 
-entry_function = async (cloud_message) => {
-	const pubsub_message = cloud_message.data.message;
-	// If local, uncomment
-	pubsub_message.ack()
-	const timeCore = new TimeCore();
-	await timeCore.process_message();
-};
-
-
-module.exports = {entry_function};
-
+module.exports = { TimeCore };

@@ -1,0 +1,50 @@
+.table {
+    margin-top: 5rem;
+    width: 100%;
+    overflow-x: auto;
+  }
+  
+  
+  .mat-cell {
+    height: 100%; /* Set height to 100% to ensure proper vertical alignment */
+    display: flex;
+    align-content: center;
+    text-align: center;
+  }
+  
+  .mat-header-row, .mat-row {
+    display: flex; /* Use flexbox for row layout */
+    align-items: center; /* Align items vertically in the middle */
+    text-align: center;
+  }
+
+  .table-container {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end; /* Align inputs to the bottom */
+    margin-top: 20px; /* Adjust as needed */
+  }
+  
+  .mat-form-field {
+    margin-right: 10px; /* Adjust spacing between inputs */
+  }
+  
+  .add-button {
+    background-color: #4caf50; /* Green */
+    border: none;
+    border-radius: 50%; /* Make it circular */
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .add-button:hover {
+    background-color: #45a049; /* Darker green on hover */
+  }
+  
