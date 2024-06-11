@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import {environment} from './environments/environment'
 
 @Injectable({
   providedIn: 'root'
@@ -7,17 +8,16 @@ export class MyServiceService {
   private baseUrl: string;
 
   constructor() {
-    this.baseUrl = 'https://us-central1-silken-tenure-419721.cloudfunctions.net/BackendCore-NewPubSub'
+    this.baseUrl = environment.apiUrl;
+    console.log("BASE URL", this.baseUrl);
   }
-
-  
 
   getFeedbackUrl(): string {
     return this.baseUrl + '/api/Sentiment/';
   }
 
   getTimeUrl(): string {
-    return  'http://localhost:8000/api/recomendation/time';
+    return  this.baseUrl + '/api/recomendation/time';
   }
 
   getMenuUrl(): string {
@@ -26,6 +26,6 @@ export class MyServiceService {
   getMenuRecUrl(): string {
     return this.baseUrl + '/api/food/recomendation';
   }
-  
+
 
 }
