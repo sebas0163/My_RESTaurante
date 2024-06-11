@@ -9,7 +9,6 @@ export class MyServiceService {
 
   constructor() {
     this.baseUrl = environment.apiUrl;
-    console.log("BASE URL", this.baseUrl);
   }
 
   getFeedbackUrl(): string {

@@ -65,7 +65,8 @@ transformDateToHyphenFormat(date: string): string {
 
 
   confirmDelete() {
-    this.reservationService.deleteReservation(this.data.id!)
+    console.log("DEL", this.editedData.reservationId);
+    this.reservationService.deleteReservation(this.editedData.reservationId)
         .pipe(first())
         .subscribe({
             next: (data) => {
@@ -104,9 +105,7 @@ transformDateToHyphenFormat(date: string): string {
     this.dialogRef.close(this.editedData);
     const user = this.authService.userValue;
 
-    console.log("Edited data: ", this.editedData);
-
-    this.reservationService.editReservationAdmin(this.editedData.people, this.editedData.time, user!.id)
+    this.reservationService.editReservationAdmin(this.editedData.people, this.editedData.reservationId, user!.id, this.editedData.timeid)
     .pipe(first())
       .subscribe((data) => {
         console.log(data);
@@ -116,4 +115,5 @@ transformDateToHyphenFormat(date: string): string {
       }
     );
   }
+
 }

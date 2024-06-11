@@ -50,7 +50,6 @@ export class AdminsComponent {
         next: (user) => {
           // Handle successful response (user data)
           this.loading = false;
-          console.log("User: ", user);
           this.openErrorPopup("¡Nuevo admin creado!", "Éxito"); // Open success popup
         },
         error: (error) => {

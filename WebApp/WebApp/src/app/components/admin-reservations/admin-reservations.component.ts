@@ -10,8 +10,10 @@ export interface TableData {
   name: string;
   people: string;
   id: string;
+  reservationId: string;
   user: string;
   time: string;
+  timeid: string;
   date: string;
   local: string;
 }
@@ -28,12 +30,30 @@ export interface TableData {
 
     constructor(private reservationService: ReservationService, private http: HttpClient, private dialog: MatDialog) {}
 
+    getAdminLocal(user: String){
+      let local = "";
+      switch(user) {
+        case 'admin-alajuela':
+          local = "alajuela";
+          break;
+        case 'admin-heredia':
+          local = "heredia";
+          break;
+        case 'admin-cartago':
+          local = "cartago";
+      }
+      return local;
+    }
+    
     ngOnInit() {
-      this.reservationService.getByLocal()
+      const user = localStorage.getItem('user');
+      
+      const userobj = JSON.parse(user!);
+      const location = this.getAdminLocal(userobj.access_level);
+      this.reservationService.getByLocal(location!)
       .pipe(first())
       .subscribe({
           next: (data) => {
-            console.log("DATAAAAAAA", data);
             this.dataSource = data;
           },
           error: (error) => {

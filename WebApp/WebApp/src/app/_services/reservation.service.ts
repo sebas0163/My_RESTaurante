@@ -40,23 +40,25 @@ export class ReservationService {
         const local = localStorage.getItem('selectedLocation');
         return this.http.get<any>(`${environment.apiUrl}/api/time/getByLocal?local=${local}`, { headers: headers })
             .pipe(map(data => {
-                console.log("getSchedule: ", data);
                 return data;
             }));
     }
 
+<<<<<<< HEAD
     getByLocal() {
         const requestBody = {};
         const hash = this.hashService.generateHash(requestBody);
         const location = localStorage.getItem('selectedLocation');
+=======
+    getByLocal(local: string) {
+>>>>>>> origin/Frontend-dev
         const headers = new HttpHeaders({
             'authorization': 'Bearer ' + this.userValue?.token,
             'x-auth-required': 'true',
             'x-auth-hash': hash
           });
-        return this.http.get<any>(`${environment.apiUrl}/api/reservation/getByLocal?local=${location}`, { headers: headers })
+        return this.http.get<any>(`${environment.apiUrl}/api/reservation/getByLocal?local=${local}`, { headers: headers })
         .pipe(map(data => {
-        console.log("getByLocal: ", data);
         return data;
         }));
     }
@@ -71,7 +73,6 @@ export class ReservationService {
           });
         return this.http.get<any>(`${environment.apiUrl}/api/reservation/getById?id=${id}`, { headers: headers })
             .pipe(map(data => {
-                console.log("getReservationById: ", data);
                 return data;
             }));
     }
@@ -87,7 +88,6 @@ export class ReservationService {
 
         return this.http.get<any>(`${environment.apiUrl}/api/reservation/getByEmail?email=${atob(email)}`, { headers: headers })
             .pipe(map(data => {
-                console.log("getReservationByEmail: ", data);
                 return data;
             }));
     }
@@ -98,6 +98,7 @@ export class ReservationService {
             timeid: timeid,
             userid: userid
         };
+<<<<<<< HEAD
         const hash = this.hashService.generateHash(requestBody);
         const headers = new HttpHeaders({
             'authorization': 'Bearer ' + this.userValue?.token,
@@ -105,6 +106,9 @@ export class ReservationService {
             'x-auth-hash': hash
           });
 
+=======
+        console.log("REQUEST CEW RES: ", people, " ", timeid, "", userid);
+>>>>>>> origin/Frontend-dev
         return this.http.post<any>(`${environment.apiUrl}/api/reservation/new`, requestBody, { headers: headers })
             .pipe(
                 catchError(error => {
@@ -114,19 +118,27 @@ export class ReservationService {
                 }),
                 map(user => {
                     // store user details in local storage to keep user logged in between page refreshes
-                    console.log("Auth: ", user);
                     return user;
                 })
             );
     }
 
 
+<<<<<<< HEAD
     editReservationAdmin(people: string, timeid: string, user: string) {
+=======
+    editReservationAdmin(people: string, reservationid: string, user: string, timeid: string) {
+        const headers = new HttpHeaders({
+            'authorization': 'Bearer ' + this.userValue?.token
+          });
+>>>>>>> origin/Frontend-dev
         const requestBody = {
             people: people,
-            id: timeid,
-            user: user
+            id: reservationid,
+            userid: user,
+            timeid: timeid,
         };
+<<<<<<< HEAD
         const hash = this.hashService.generateHash(requestBody);
         const headers = new HttpHeaders({
             'authorization': 'Bearer ' + this.userValue?.token,
@@ -134,6 +146,10 @@ export class ReservationService {
             'x-auth-hash': hash
           });
 
+=======
+
+ 
+>>>>>>> origin/Frontend-dev
         return this.http.put<any>(`${environment.apiUrl}/api/reservation/edit`, requestBody, { headers: headers })
             .pipe(
                 catchError(error => {
@@ -157,7 +173,7 @@ export class ReservationService {
             'x-auth-required': 'true',
             'x-auth-hash': hash
           });
-        return this.http.delete<any>(`${environment.apiUrl}/api/time/getSchedule?id=${reservationID}`, { headers: headers })
+        return this.http.delete<any>(`${environment.apiUrl}/api/reservation/delete?id=${reservationID}`, { headers: headers })
             .pipe(map(data => {
                 return data;
             }));

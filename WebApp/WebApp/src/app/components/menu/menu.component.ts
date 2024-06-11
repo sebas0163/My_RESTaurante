@@ -40,7 +40,6 @@ export class MenuComponent implements OnInit {
   
 
   getMenu() {
-    console.log("Enters menu");
     const headers = new HttpHeaders({
         'authorization': 'Bearer ' + this.user?.token
     });
@@ -48,8 +47,6 @@ export class MenuComponent implements OnInit {
     try {
         this.http.get<any>(this.menuUrl, { headers: headers }).subscribe(
             (response) => {
-                console.log('Response type:', typeof response);
-                console.log('Response content:', response);
 
                 if (Array.isArray(response)) {
                     console.log('Response is an array');
@@ -165,7 +162,6 @@ export class MenuComponent implements OnInit {
   }
 
   async ngOnInit() {
-    console.log("Enters menu");
     this.getMenu();
 
   }

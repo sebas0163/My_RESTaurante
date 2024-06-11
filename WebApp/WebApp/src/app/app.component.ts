@@ -25,7 +25,11 @@ export class AppComponent {
   }
 
   get isAdmin() {
-    return this.user?.access_level === (Role.Admin1 || Role.Admin2 || Role.Admin3);
+    let  isAdmin = false;
+    if(this.user?.access_level == Role.Admin1 || this.user?.access_level == Role.Admin2 || this.user?.access_level == Role.Admin3){
+      isAdmin = true;
+    }
+    return isAdmin;
   }
 
   get isUser() {
@@ -60,7 +64,6 @@ export class AppComponent {
       const adminLocal = this.getAdminLocal(this.authenticationService.userValue?.access_level!);
       localStorage.setItem('selectedLocation', adminLocal);
     }
-    console.log('Selected location:', value);
     // You can perform any action you want here based on the selected location
   }
 }
