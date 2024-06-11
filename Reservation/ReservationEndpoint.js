@@ -15,8 +15,8 @@ class ReservationEndpoint {
   }
   async editReservation(req,res){
     const id = req.body.id;
-    const time = req.body.time;
-    const user = req.body.user;
+    const time = req.body.timeid;
+    const user = req.body.userid;
     const people = req.body.people;
     const reserv_obj = {
       message_code: 6,
@@ -44,13 +44,11 @@ class ReservationEndpoint {
     const people = req.body.people;
     const time = req.body.timeid;
     const user = req.body.userid;
-    const local = req.body.local;
     const reserv_obj = {
       message_code: 2,
       people: people,
       timeid: time,
       userid: user,
-      local: local
     };
     const reserv_string = await this.reservation_manager.process_message(reserv_obj);
     const reserv_res = JSON.parse(reserv_string);
@@ -63,8 +61,8 @@ class ReservationEndpoint {
     res.status(reserv_res.status).json(reserv_res.data);
   }
   async deleteReservation(req, res) {
-    const res_id = req.body.id;
-    console.log(req.body.id);
+    const res_id = req.query.id;
+    console.log(req.query.id);
     const reserv_obj = { message_code: 1, id: res_id };
     const reserv_string = await this.reservation_manager.process_message(reserv_obj);
     const reserv_res = JSON.parse(reserv_string);

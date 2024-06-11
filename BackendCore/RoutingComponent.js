@@ -17,7 +17,7 @@ router.get("/reservation/getAll", reservationController.getAllReservations);
 router.get("/reservation/getById:id?", reservationController.getReservationById);
 router.get("/reservation/getByEmail:email?", reservationController.getReservationByEmail);
 router.get("/reservation/getByLocal:local?", reservationController.getReservationByLocal);
-router.delete("/reservation/delete", reservationController.deleteReservation);
+router.delete("/reservation/delete:id?", reservationController.deleteReservation);
 router.post("/reservation/new", reservationController.createReservation);
 router.put("/reservation/edit", reservationController.editReservation);
 
@@ -30,6 +30,7 @@ router.put('/user/change_access', user_cont.changeAccess);
 router.delete('/user/delete', user_cont.deleteUser);
 
 router.get('/time/getSchedule', time_reco.getSchedule);
+router.post('/time/newTime', time_reco.newTime);
 router.get('/time/getByLocal/:local?', time_reco.getScheduleByLocal);
 
 

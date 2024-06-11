@@ -14,12 +14,12 @@ class ReservationController {
     this.getReservationById = this.getReservationById.bind(this);
     this.getReservationByEmail= this.getReservationByEmail.bind(this);
     this.getReservationByLocal= this.getReservationByLocal.bind(this);
+    this.editReservation= this.editReservation.bind(this);
   }
   createReservation(req, res) {
     const people = req.body.people;
     const time = req.body.timeid;
     const user = req.body.userid;
-    const local = req.body.local;
 
     const targetServiceUrl = `http://${this.serviceHost}:${this.servicePort}/reserv/reservation/new`; 
       
@@ -28,7 +28,6 @@ class ReservationController {
       people: people,
       timeid: time,
       userid: user,
-      local: local
     })
     .then(response => {
       console.log('Response from target service:', response.data);
@@ -47,15 +46,16 @@ class ReservationController {
       res.status(response.status).json(response.data);
     })
     .catch(error => {
-      res.status(error.response.status).json(error.response.data);
+      console.log(error);
+      res.json(error.response);
     });
   }
   deleteReservation(req, res) {
-    const res_id = req.body.id;
-    console.log(req.body.id);
+    const res_id = req.query.id;
+    console.log(req.query.id);
     const targetServiceUrl = `http://${this.serviceHost}:${this.servicePort}/reserv/reservation/delete`; 
       
-    axios.delete(targetServiceUrl, {id: res_id })
+    axios.delete(`${targetServiceUrl}?id=${res_id}` )
     .then(response => {
       console.log('Response from target service:', response.data);
       res.status(response.status).json(response.data);
