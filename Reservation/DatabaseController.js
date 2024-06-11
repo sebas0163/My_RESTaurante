@@ -295,4 +295,7 @@ class DatabaseController {
   }
 }
 
+//const cont = new DatabaseController();
+//cont.editReservation("NkWfXJbrHTi2CENWB6hT","8nbBRayIb6NKsmp5Zze5", "YYgq3OPFWBNTv8cUukP2", 2);
+
 module.exports = { DatabaseController };

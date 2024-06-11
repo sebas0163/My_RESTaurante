@@ -34,7 +34,7 @@ class UserController {
         console.log("Response from target service:", response.data);
 
         const responseData = {
-          ...response.data,
+          "id":response.data,
           token,
         };
 
@@ -133,14 +133,13 @@ class UserController {
   }
 
   deleteUser(req, res) {
-    const { email, password } = req.body;
+    const email = req.query.email
+    const password = req.query.password;
 
     const targetServiceUrl = `http://${this.serviceHost}:${this.servicePort}/usr/user/delete`;
 
     axios
-      .delete(targetServiceUrl, {
-        data: { email, password },
-      })
+      .delete(`${targetServiceUrl}?email=${email}&password=${password}`)
       .then((response) => {
         console.log("Response from target service:", response.data);
         res.status(response.status).json(response.data);

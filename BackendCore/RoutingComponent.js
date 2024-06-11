@@ -27,7 +27,7 @@ router.post('/user/create', user_cont.addNewUser);
 router.get('/user/login/:user?/:password?', user_cont.verifyUserLogin);
 router.put('/user/change_password', user_cont.changePassword);
 router.put('/user/change_access', user_cont.changeAccess);
-router.delete('/user/delete', user_cont.deleteUser);
+router.delete('/user/delete/:user?/:password?', user_cont.deleteUser);
 
 router.get('/time/getSchedule', time_reco.getSchedule);
 router.post('/time/newTime', time_reco.newTime);

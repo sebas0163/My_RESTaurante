@@ -189,7 +189,7 @@ class UserAuthenticator {
             return  {'status': 401,
                     'data':"Error: No se encontro un usuario con esa direccion de correo"};
         }
-        if (db_user.access_level==="admin" ){
+        if (db_user.access_level==="admin-cartago" || db_user.access_level==="admin-sanjose" || db_user.access_level==="admin-heredia"){
             if(db_user.password===encrypted_password){
                 const updated_user = await this.databaseController.updateUserPermit(encrypted_permit_email,access_level)
                 return  {'status': 200,
