@@ -7,19 +7,34 @@ class TimeCore {
   }
 
   async process_message  (json_reserv) {
-    const message_code = json_reserv.message_code;
-    var jsonString = JSON.stringify({'status': 202,
-      'data': ":o"});
-    if (message_code == 0) {
-      const all_times = await this.getSchedule();
-      jsonString = JSON.stringify(all_times);
-    }
-    if (message_code == 1) {
-      const occupy = await this.getScheduleByLocal(json_reserv.local);
-      jsonString = JSON.stringify(occupy);
-    }
-    console.log(" - sending: ",jsonString);
-		return jsonString
+    try{
+      const message_code = json_reserv.message_code;
+      var jsonString = JSON.stringify({'status': 202,
+        'data': ":o"});
+      if (message_code == 0) {
+        const all_times = await this.getSchedule();
+        jsonString = JSON.stringify(all_times);
+      }
+      if (message_code == 1) {
+        const occupy = await this.getScheduleByLocal(json_reserv.local);
+        jsonString = JSON.stringify(occupy);
+      }if (message_code == 2) {
+        const occupy = await this.newTime(json_reserv.time, json_reserv.slots,json_reserv.local);
+        jsonString = JSON.stringify(occupy);
+      }
+      console.log(" - sending: ",jsonString);
+      return jsonString}
+      catch(error){
+        return {'status': 500,
+          'data': error}
+      }
+  }
+  async newTime(time,slots,local){
+    const resp = await this.databaseController.newTime(time,slots,local);
+    return {
+      status: 202,
+      data: resp,
+    };
   }
   async getSchedule(){
     const resp = await this.databaseController.get_available_schedule();

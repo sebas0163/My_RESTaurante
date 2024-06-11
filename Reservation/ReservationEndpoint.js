@@ -44,13 +44,11 @@ class ReservationEndpoint {
     const people = req.body.people;
     const time = req.body.timeid;
     const user = req.body.userid;
-    const local = req.body.local;
     const reserv_obj = {
       message_code: 2,
       people: people,
       timeid: time,
       userid: user,
-      local: local
     };
     const reserv_string = await this.reservation_manager.process_message(reserv_obj);
     const reserv_res = JSON.parse(reserv_string);

@@ -19,7 +19,6 @@ class ReservationController {
     const people = req.body.people;
     const time = req.body.timeid;
     const user = req.body.userid;
-    const local = req.body.local;
 
     const targetServiceUrl = `http://${this.serviceHost}:${this.servicePort}/reserv/reservation/new`; 
       
@@ -28,7 +27,6 @@ class ReservationController {
       people: people,
       timeid: time,
       userid: user,
-      local: local
     })
     .then(response => {
       console.log('Response from target service:', response.data);

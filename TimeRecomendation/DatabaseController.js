@@ -66,6 +66,19 @@ class DatabaseController {
     
         return times;
 	}
+	async newTime(time, local, slots){
+		try {
+			const docRef = await addDoc(collection(db, 'Time'), {
+			  local: local,
+			  slots: slots,
+			  time: Timestamp.fromDate(new Date(time))
+			});
+			console.log('Documento escrito con ID: ', docRef.id);
+		  } catch (e) {
+			console.error('Error agregando documento: ', e);
+		  }
+		
+	}
 }
 
 module.exports = { DatabaseController };
