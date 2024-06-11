@@ -72,7 +72,7 @@ class DatabaseController {
 
     return times;
   }
-  async newTime(time, local, slots) {
+  async newTime(time, slots, local) {
     try {
       const docRef = await addDoc(collection(this.db, "Time"), {
         local: local,

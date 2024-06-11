@@ -28,7 +28,6 @@ export class UserRegistrationComponent {
             next: (user) => {
                 // Handle successful response (user data)
                 this.loading = false;
-                console.log("User: ",user);
                 this.router.navigate(['/user-login-component']);
                 this.openErrorPopup("¡Gracias por registrarse!", "Éxito"); // Open error popup with error message
             },

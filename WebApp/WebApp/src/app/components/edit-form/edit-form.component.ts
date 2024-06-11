@@ -17,6 +17,7 @@ export class EditFormComponent {
   isDeleted: boolean = false;
   dropdownValues: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   dropdownValuesTime: string[] = [];
+  Times: any[] = [];
   
   reservationID: string | undefined;
 
@@ -31,16 +32,19 @@ export class EditFormComponent {
     this.editedData = { ...data };
   }
 
-  onInit(): void{
+  ngOnInit(): void {
     this.reservationService.getTimes().pipe(first())
-      .subscribe((data) => {
-        console.log("Times: ", data);
-        this.dropdownValuesTime = data;
-      },
-      (error) => {
-        console.error('Error:', error);
-      }
-    );
+      .subscribe(
+        (data) => {
+          data.forEach((element: any) => {
+            this.Times.push(element);
+            this.dropdownValuesTime.push(element.datetime);
+          });
+        },
+        (error) => {
+          console.error('Error:', error);
+        }
+      );
   }
 
   onCancel(): void {

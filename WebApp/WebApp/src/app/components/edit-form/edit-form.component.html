@@ -5,7 +5,7 @@
 
     <div class="form-group">
       <mat-form-field appearance="fill">
-        <mat-label>Hora y Fecha</mat-label>
+        <mat-label>Fecha y hora</mat-label>
         <select matNativeControl required [(ngModel)]="editedData.time" name="time">
           <option *ngFor="let value of dropdownValuesTime" [value]="value">{{value}}</option>
         </select>

@@ -85,9 +85,6 @@ export class TimeRecommendationComponent {
 
   createNewTime(): void {
     const adminLocal = this.getAdminLocal();
-    console.log("adminLocal: ", adminLocal);
-    console.log("people: ", this.people);
-    console.log("time: ", this.time);
     this.reservationService.createNewTime(
       adminLocal,
       this.people,
