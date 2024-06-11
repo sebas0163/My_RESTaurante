@@ -39,38 +39,70 @@ export class MenuComponent implements OnInit {
   }
   
 
-  getMenu(){
+  getMenu() {
     console.log("Enters menu");
     const headers = new HttpHeaders({
-      'authorization': 'Bearer ' + this.user?.token
+        'authorization': 'Bearer ' + this.user?.token
     });
+
     try {
         this.http.get<any>(this.menuUrl, { headers: headers }).subscribe(
-          (response) => {
-            
-            response.forEach((item: { type: string; name: any; }) => {
-              if (item.type.trim().toLowerCase() === 'main plate') {
-                this.mainDishMenu.push(item.name);
-              } else if (item.type.trim().toLowerCase() === 'drink') {
-                this.beverageMenu.push(item.name);
-              } else if (item.type.trim().toLowerCase() === 'dessert') {
-                this.dessertMenu.push(item.name);
-              }
+            (response) => {
+                console.log('Response type:', typeof response);
+                console.log('Response content:', response);
 
-            });
-
-          },
-          (error) => {
-            console.error('Error:', error);
-          }
-        )
+                if (Array.isArray(response)) {
+                    console.log('Response is an array');
+                    response.forEach((item: { type: string; name: any; }) => {
+                        const itemType = item.type.trim().toLowerCase();
+                        if (itemType === 'main plate') {
+                            this.mainDishMenu.push(item.name);
+                        } else if (itemType === 'drink') {
+                            this.beverageMenu.push(item.name);
+                        } else if (itemType === 'dessert') {
+                            this.dessertMenu.push(item.name);
+                        } else {
+                            console.warn('Unexpected item type:', item.type);
+                        }
+                    });
+                } else if (typeof response === 'string') {
+                    // If the response is a string, try to parse it as JSON
+                    try {
+                        const parsedResponse = JSON.parse(response);
+                        if (Array.isArray(parsedResponse)) {
+                            console.log('Parsed response is an array');
+                            parsedResponse.forEach((item: { type: string; name: any; }) => {
+                                const itemType = item.type.trim().toLowerCase();
+                                if (itemType === 'main plate') {
+                                    this.mainDishMenu.push(item.name);
+                                } else if (itemType === 'drink') {
+                                    this.beverageMenu.push(item.name);
+                                } else if (itemType === 'dessert') {
+                                    this.dessertMenu.push(item.name);
+                                } else {
+                                    console.warn('Unexpected item type:', item.type);
+                                }
+                            });
+                        } else {
+                            console.error('Parsed response is not an array:', parsedResponse);
+                        }
+                    } catch (parseError) {
+                        console.error('JSON parse error:', parseError);
+                    }
+                } else {
+                    console.error('Response is not an array and not a string:', response);
+                }
+            },
+            (error) => {
+                console.error('Error:', error);
+            }
+        );
     } catch (error) {
-      // Log the error (you can remove this line if not needed)
-      console.error('Fetch error:', error);
-      // Propagate the error by rethrowing it
-      throw error;
+        console.error('Fetch error:', error);
+        throw error;
     }
-  }
+}
+
 
   getOptions(){
     let body = {};
