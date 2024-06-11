@@ -17,7 +17,7 @@ export class AppComponent {
   title = 'My RESTaurant';
   userLoggedIn: any;
   adminLoggedIn: any;
-  selectedLocation: string = 'alajuela'; // Set default value to 'alajuela'
+  selectedLocation: string = "";
 
 
   constructor(private authenticationService: AuthenticationService) {

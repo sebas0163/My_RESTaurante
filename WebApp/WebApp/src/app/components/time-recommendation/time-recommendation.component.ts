@@ -35,9 +35,8 @@ export class TimeRecommendationComponent {
 
   isTimeSelected: boolean = false;
 
-  displayedColumns: string[] = ['date', 'time', 'quota', 'people', 'actions'];
+  displayedColumns: string[] = ['time', 'people', 'actions'];
   dataSource: TableData[] = [];
-  dropdownValues: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   
   user: User;
   isUser = false;

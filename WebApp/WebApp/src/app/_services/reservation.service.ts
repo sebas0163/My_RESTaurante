@@ -28,9 +28,10 @@ export class ReservationService {
 
     getTimes() {
         const headers = new HttpHeaders({
-            'authorization': 'Bearer ' + this.userValue?.id
+            'authorization': 'Bearer ' + this.userValue?.token
           });
-        return this.http.get<any>(`${environment.apiUrl}/api/time/getSchedule`, { headers: headers })
+        const local = localStorage.getItem('selectedLocation');
+        return this.http.get<any>(`${environment.apiUrl}/api/time/getByLocal?local=${local}`, { headers: headers })
             .pipe(map(data => {
                 console.log("getSchedule: ", data);
                 return data;
@@ -40,7 +41,7 @@ export class ReservationService {
     getByLocal() {
         const location = localStorage.getItem('selectedLocation');
         const headers = new HttpHeaders({
-            'authorization': 'Bearer ' + this.userValue?.id
+            'authorization': 'Bearer ' + this.userValue?.token
           });
         return this.http.get<any>(`${environment.apiUrl}/api/reservation/getByLocal?local=${location}`, { headers: headers })
         .pipe(map(data => {
@@ -51,7 +52,7 @@ export class ReservationService {
 
     getReservationByID(id: string) {
         const headers = new HttpHeaders({
-            'authorization': 'Bearer ' + this.userValue?.id
+            'authorization': 'Bearer ' + this.userValue?.token
           });
         return this.http.get<any>(`${environment.apiUrl}/api/reservation/getById?id=${id}`, { headers: headers })
             .pipe(map(data => {
@@ -60,9 +61,21 @@ export class ReservationService {
             }));
     }
 
+    getReservationByEmail(email: string) {
+        const headers = new HttpHeaders({
+            'authorization': 'Bearer ' + this.userValue?.token
+          });
+        
+        return this.http.get<any>(`${environment.apiUrl}/api/reservation/getByEmail?email=${atob(email)}`, { headers: headers })
+            .pipe(map(data => {
+                console.log("getReservationByEmail: ", data);
+                return data;
+            }));
+    }
+
     createReservationAdmin(people: string, timeid: string, userid: string) {
         const headers = new HttpHeaders({
-            'authorization': 'Bearer ' + this.userValue?.id
+            'authorization': 'Bearer ' + this.userValue?.token
           });
         const requestBody = {
             people: people,
@@ -88,7 +101,7 @@ export class ReservationService {
 
     editReservationAdmin(people: string, timeid: string, user: string) {
         const headers = new HttpHeaders({
-            'authorization': 'Bearer ' + this.userValue?.id
+            'authorization': 'Bearer ' + this.userValue?.token
           });
         const requestBody = {
             people: people,
@@ -113,7 +126,7 @@ export class ReservationService {
 
     deleteReservation(reservationID: string) {
         const headers = new HttpHeaders({
-            'authorization': 'Bearer ' + this.userValue?.id
+            'authorization': 'Bearer ' + this.userValue?.token
           });
         return this.http.delete<any>(`${environment.apiUrl}/api/time/getSchedule?id=${reservationID}`, { headers: headers })
             .pipe(map(data => {
