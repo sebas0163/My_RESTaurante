@@ -33,7 +33,6 @@ export interface TableData {
       .pipe(first())
       .subscribe({
           next: (data) => {
-            console.log("DATAAAAAAA", data);
             this.dataSource = data;
           },
           error: (error) => {

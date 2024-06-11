@@ -80,6 +80,7 @@ class DatabaseController {
         time: Timestamp.fromDate(new Date(time)),
       });
       console.log("Documento escrito con ID: ", docRef.id);
+      return { id: docRef.id };
     } catch (e) {
       console.error("Error agregando documento: ", e);
       throw e;

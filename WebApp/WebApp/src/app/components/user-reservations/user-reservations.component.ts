@@ -36,7 +36,6 @@ export class UserReservationsComponent {
     .pipe(first())
     .subscribe({
         next: (data) => {
-          console.log("DATA res", data);
           this.dataSource = data;
         },
         error: (error) => {
@@ -48,7 +47,7 @@ export class UserReservationsComponent {
 
 editReservation(row: TableData){
   const user = this.authService.userValue;
-  this.reservationService.editReservationAdmin(row.people, row.time, user!.id)
+  this.reservationService.editReservationAdmin(row.people, row.time, user!.id, user!.id)
   .pipe(first())
   .subscribe({
       next: (data) => {

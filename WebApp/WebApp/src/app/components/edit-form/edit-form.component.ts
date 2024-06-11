@@ -106,7 +106,7 @@ transformDateToHyphenFormat(date: string): string {
 
     console.log("Edited data: ", this.editedData);
 
-    this.reservationService.editReservationAdmin(this.editedData.people, this.editedData.time, user!.id)
+    this.reservationService.editReservationAdmin(this.editedData.people, this.editedData.time, user!.id, user!.id)
     .pipe(first())
       .subscribe((data) => {
         console.log(data);

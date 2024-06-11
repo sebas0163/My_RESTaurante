@@ -72,7 +72,6 @@ class TimeController {
 
   getScheduleByLocal(req, res) {
     const local = req.query.local;
-    console.log("Local: ", local);
     const targetServiceUrl = `http://${this.serviceHost}:${this.servicePort}/time/time/getByLocal`;
 
     axios

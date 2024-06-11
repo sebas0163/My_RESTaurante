@@ -40,7 +40,6 @@ export class MenuComponent implements OnInit {
   
 
   getMenu() {
-    console.log("Enters menu");
     const headers = new HttpHeaders({
         'authorization': 'Bearer ' + this.user?.token
     });
@@ -165,7 +164,6 @@ export class MenuComponent implements OnInit {
   }
 
   async ngOnInit() {
-    console.log("Enters menu");
     this.getMenu();
 
   }

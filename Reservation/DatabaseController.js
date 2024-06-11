@@ -267,6 +267,7 @@ class DatabaseController {
         reservaciones.push({
           reservationId: reservationDoc.id,
           time: date_, // Asumiendo que time es el campo de timestamp
+          timeid: timeDoc.id,
           local: timeData.local,
           name: userName,
           people: reservationData.people,
