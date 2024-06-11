@@ -9,6 +9,8 @@ import { User } from '../_models/user';
 import { environment } from '../environments/environment';
 import { platformBrowser } from '@angular/platform-browser';
 
+import { HashService } from './hash.service';
+
 @Injectable({ providedIn: 'root' })
 export class ReservationService {
     private userSubject: BehaviorSubject<User | null>;
@@ -16,7 +18,8 @@ export class ReservationService {
 
     constructor(
         private router: Router,
-        private http: HttpClient
+        private http: HttpClient,
+        private hashService: HashService
     ) {
         this.userSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('user')!));
         this.user = this.userSubject.asObservable();
@@ -27,8 +30,12 @@ export class ReservationService {
     }
 
     getTimes() {
+        const requestBody = {};
+        const hash = this.hashService.generateHash(requestBody);
         const headers = new HttpHeaders({
-            'authorization': 'Bearer ' + this.userValue?.token
+            'authorization': 'Bearer ' + this.userValue?.token,
+            'x-auth-required': 'true',
+            'x-auth-hash': hash
           });
         const local = localStorage.getItem('selectedLocation');
         return this.http.get<any>(`${environment.apiUrl}/api/time/getByLocal?local=${local}`, { headers: headers })
@@ -39,9 +46,13 @@ export class ReservationService {
     }
 
     getByLocal() {
+        const requestBody = {};
+        const hash = this.hashService.generateHash(requestBody);
         const location = localStorage.getItem('selectedLocation');
         const headers = new HttpHeaders({
-            'authorization': 'Bearer ' + this.userValue?.token
+            'authorization': 'Bearer ' + this.userValue?.token,
+            'x-auth-required': 'true',
+            'x-auth-hash': hash
           });
         return this.http.get<any>(`${environment.apiUrl}/api/reservation/getByLocal?local=${location}`, { headers: headers })
         .pipe(map(data => {
@@ -51,8 +62,12 @@ export class ReservationService {
     }
 
     getReservationByID(id: string) {
+        const requestBody = {};
+        const hash = this.hashService.generateHash(requestBody);
         const headers = new HttpHeaders({
-            'authorization': 'Bearer ' + this.userValue?.token
+            'authorization': 'Bearer ' + this.userValue?.token,
+            'x-auth-required': 'true',
+            'x-auth-hash': hash
           });
         return this.http.get<any>(`${environment.apiUrl}/api/reservation/getById?id=${id}`, { headers: headers })
             .pipe(map(data => {
@@ -62,8 +77,12 @@ export class ReservationService {
     }
 
     getReservationByEmail(email: string) {
+        const requestBody = {};
+        const hash = this.hashService.generateHash(requestBody);
         const headers = new HttpHeaders({
-            'authorization': 'Bearer ' + this.userValue?.token
+            'authorization': 'Bearer ' + this.userValue?.token,
+            'x-auth-required': 'true',
+            'x-auth-hash': hash
           });
 
         return this.http.get<any>(`${environment.apiUrl}/api/reservation/getByEmail?email=${atob(email)}`, { headers: headers })
@@ -74,14 +93,17 @@ export class ReservationService {
     }
 
     createReservationAdmin(people: string, timeid: string, userid: string) {
-        const headers = new HttpHeaders({
-            'authorization': 'Bearer ' + this.userValue?.token
-          });
         const requestBody = {
             people: people,
             timeid: timeid,
             userid: userid
         };
+        const hash = this.hashService.generateHash(requestBody);
+        const headers = new HttpHeaders({
+            'authorization': 'Bearer ' + this.userValue?.token,
+            'x-auth-required': 'true',
+            'x-auth-hash': hash
+          });
 
         return this.http.post<any>(`${environment.apiUrl}/api/reservation/new`, requestBody, { headers: headers })
             .pipe(
@@ -100,14 +122,17 @@ export class ReservationService {
 
 
     editReservationAdmin(people: string, timeid: string, user: string) {
-        const headers = new HttpHeaders({
-            'authorization': 'Bearer ' + this.userValue?.token
-          });
         const requestBody = {
             people: people,
             id: timeid,
             user: user
         };
+        const hash = this.hashService.generateHash(requestBody);
+        const headers = new HttpHeaders({
+            'authorization': 'Bearer ' + this.userValue?.token,
+            'x-auth-required': 'true',
+            'x-auth-hash': hash
+          });
 
         return this.http.put<any>(`${environment.apiUrl}/api/reservation/edit`, requestBody, { headers: headers })
             .pipe(
@@ -125,8 +150,12 @@ export class ReservationService {
 
 
     deleteReservation(reservationID: string) {
+        const requestBody = {};
+        const hash = this.hashService.generateHash(requestBody);
         const headers = new HttpHeaders({
-            'authorization': 'Bearer ' + this.userValue?.token
+            'authorization': 'Bearer ' + this.userValue?.token,
+            'x-auth-required': 'true',
+            'x-auth-hash': hash
           });
         return this.http.delete<any>(`${environment.apiUrl}/api/time/getSchedule?id=${reservationID}`, { headers: headers })
             .pipe(map(data => {
@@ -135,14 +164,17 @@ export class ReservationService {
     }
 
     createNewTime(local: string, slots:string, time:string) {
-        const headers = new HttpHeaders({
-            'authorization': 'Bearer ' + this.userValue?.token
-          });
         const requestBody = {
             local: local,
             slots: slots,
             time: time
         };
+        const hash = this.hashService.generateHash(requestBody);
+        const headers = new HttpHeaders({
+            'authorization': 'Bearer ' + this.userValue?.token,
+            'x-auth-required': 'true',
+            'x-auth-hash': hash
+          });
 
         return this.http.post<any>(`${environment.apiUrl}/api/time/newTime`, requestBody, { headers: headers })
             .pipe(
