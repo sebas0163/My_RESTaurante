@@ -98,9 +98,6 @@ export class TimeRecommendationComponent {
       this.quotaLimit = true;
     }
 
-    console.log("Row ", row);
-    console.log("Reserve ", row.people, ", ", row.reservationId, ", ", this.user.id, ", ", row.timeid);
-
     this.reservationService.editReservationAdmin(row.people, row.reservationId, this.user.id, row.timeid
     ).pipe(first())
     .subscribe({

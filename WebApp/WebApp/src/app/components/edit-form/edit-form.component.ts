@@ -65,7 +65,8 @@ transformDateToHyphenFormat(date: string): string {
 
 
   confirmDelete() {
-    this.reservationService.deleteReservation(this.data.id!)
+    console.log("DEL", this.editedData.reservationId);
+    this.reservationService.deleteReservation(this.editedData.reservationId)
         .pipe(first())
         .subscribe({
             next: (data) => {
@@ -115,8 +116,4 @@ transformDateToHyphenFormat(date: string): string {
     );
   }
 
-  test(){
-    console.log("Edited data: ", this.editedData);
-
-  }
 }

@@ -125,7 +125,7 @@ export class ReservationService {
         const headers = new HttpHeaders({
             'authorization': 'Bearer ' + this.userValue?.token
           });
-        return this.http.delete<any>(`${environment.apiUrl}/api/time/getSchedule?id=${reservationID}`, { headers: headers })
+        return this.http.delete<any>(`${environment.apiUrl}/api/reservation/delete?id=${reservationID}`, { headers: headers })
             .pipe(map(data => {
                 return data;
             }));
