@@ -128,12 +128,13 @@ class UserEndpoint{
      * set the status code and send data back in the response.
      */
     async deleteUser(req, res){
-      const email = req.body.email;
-      const password = req.body.password;
+      const email = req.query.email;
+      const password = req.query.password;
       const user_obj = {"message_code": 4,
         "email":email,
         "password":password
       }
+      console.log("user delete:", user_obj);
       const user_string = await this.user_manager.askForUserResponse(user_obj);
       const user_res = JSON.parse(user_string);
       res.status(user_res.status).json(user_res.data);

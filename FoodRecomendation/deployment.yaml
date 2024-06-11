@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: usr-deployment
+  name: food-deployment
 spec:
   containers:
-    - name: soa-usr
-      image: soa_usr:latest
+    - name: soa-food
+      image: soa_food:latest
       imagePullPolicy : Never
       resources:
         limits:

@@ -1,19 +1,15 @@
-<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
-
 <div class="outer-container">
   <router-outlet>
-
     <div class="title-container">
       <p class="page-subtitle"> Menu </p>
     </div>
     <main class="main">
-
       <div class="content">
         <div class="left-side">
           <p><strong>Postres:</strong></p>
           <div *ngFor="let name of dessertMenu">
             <label>
-              <input type="radio" name="selectedPostre" [(ngModel)]="selectedPostre" [value]="name" [disabled]="selectedPlatillo!= '' && selectedBebida!=''"> {{ name }}
+              <input type="radio" name="selectedPostre" [(ngModel)]="selectedPostre" [value]="name" [disabled]="selectedPlatillo != '' && selectedBebida != ''"> {{ name }}
             </label>
           </div>
         </div>
@@ -22,7 +18,7 @@
           <p><strong>Platillos Principales:</strong></p>
           <div *ngFor="let platillo of mainDishMenu">
             <label>
-              <input type="radio" name="selectedPlatillo" [(ngModel)]="selectedPlatillo" [value]="platillo" [disabled]="selectedBebida!= '' && selectedPostre!= ''"> {{ platillo }}
+              <input type="radio" name="selectedPlatillo" [(ngModel)]="selectedPlatillo" [value]="platillo" [disabled]="selectedBebida != '' && selectedPostre != ''"> {{ platillo }}
             </label>
           </div>
         </div>
@@ -31,51 +27,37 @@
           <p><strong>Bebidas:</strong></p>
           <div *ngFor="let beverage of beverageMenu">
             <label>
-              <input type="radio" name="selectedBebida" [(ngModel)]="selectedBebida" [value]="beverage" [disabled]="selectedPostre!= '' && selectedPlatillo!= ''"> {{ beverage }}
+              <input type="radio" name="selectedBebida" [(ngModel)]="selectedBebida" [value]="beverage" [disabled]="selectedPostre != '' && selectedPlatillo != ''"> {{ beverage }}
             </label>
           </div>
         </div>
-        
       </div>
       <div *ngIf="!this.is_two_values">
         <p class="error">Por favor seleccione 2 opciones</p>
       </div>
-      
     </main>
-    
-    
-    <div>
     <div class="content">
       <div class="button-container">
         <button class="pill" (click)="clearSelections()">Limpiar</button>
       </div>
       <div class="button-container">
-        <button class="pill" (click)="postMenuRecommendation()">Obtener Reccomendacion</button>
+        <button class="pill" (click)="postMenuRecommendation()">Obtener Recomendación</button>
       </div>
-      
     </div>
-    
-
     <div class="title-container">
-      <p class="page-subtitle"> Recomendacion </p>
+      <p class="page-subtitle"> Recomendación </p>
     </div>
     <main class="main">
-
       <div class="content" *ngIf="this.showRecommendationContent">
         <div class="left-side">
           <p>Gracias por seleccionar tus opciones favoritas. Te recomendamos combinar tu selección con:</p>
           <p>{{dishRec1}}</p>
           <p>{{dishRec2}}</p>
         </div>
-
       </div>
     </main>
     <div class="button-container">
       <button class="pill" routerLink="/time-recommendation-component">Ver Disponibilidad</button>
     </div>
-
-  </div>
-
   </router-outlet>
 </div>
-

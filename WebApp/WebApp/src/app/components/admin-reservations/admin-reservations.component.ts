@@ -22,7 +22,7 @@ export interface TableData {
     styleUrl: './admin-reservations.component.scss'
   })
   export class AdminReservationsComponent {
-    displayedColumns: string[] = ['time', 'local', 'people', 'actions'];
+    displayedColumns: string[] = ['time', 'local', 'name', 'people', 'actions'];
     dataSource: TableData[] = [];
 
 
@@ -33,7 +33,7 @@ export interface TableData {
       .pipe(first())
       .subscribe({
           next: (data) => {
-            console.log(data);
+            console.log("DATAAAAAAA", data);
             this.dataSource = data;
           },
           error: (error) => {

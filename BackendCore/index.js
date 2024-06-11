@@ -1,30 +1,13 @@
-require("dotenv").config();
-const express = require("express");
-const swaggerUi = require("swagger-ui-express");
-const swaggerJSDoc = require("swagger-jsdoc");
-const cors = require("cors");
+const express = require('express');
+const https = require('https');
+const fs = require('fs');
+const bodyParser = require('body-parser');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
+
 const app = express();
-const PORT = process.env.PORT || 8000;
 const crypto = require('crypto');
-
-// Swagger configuration
-const swaggerOptions = {
-  definition: {
-    openapi: "3.0.0",
-    info: {
-      title: "Your API",
-      version: "1.0.0",
-      description: "API Documentation",
-    },
-  },
-  apis: ["./src/*.js"], // Point to your route files
-};
-
-const swaggerSpec = swaggerJSDoc(swaggerOptions);
-
-app.use(express.json()); // Middleware to parse JSON requests
-
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+const port = process.env.PORT || 8000;
 
 const hashAuthMiddleware = (req, res, next) => {
     const authRequiredHeader = req.headers['x-auth-required'];
@@ -55,11 +38,37 @@ const hashAuthMiddleware = (req, res, next) => {
 
 
 app.use(cors());
+app.use(bodyParser.json());
 app.use(hashAuthMiddleware);
-app.use('/api', require('./RoutingComponent'));
 
+// Middleware to check JWT token
+app.use((req, res, next) => {
+    if (req.path === '/api/user/login' || req.path === '/api/user/create') {
+        return next();
+    }
 
+    const authHeader = req.headers['authorization'];
+    if (!authHeader) {
+        return res.status(403).send('Token is required');
+    }
 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+    const token = authHeader.split(' ')[1];
+    if (!token) {
+        return res.status(403).send('Token is required');
+    }
+
+    jwt.verify(token, process.env.secret_key, (err, decoded) => {
+        if (err) {
+            return res.status(401).send('Invalid token');
+        }
+        req.user = decoded;
+        next();
+    });
+});
+
+const routes = require('./RoutingComponent'); // Adjust path if necessary
+app.use('/api', routes);
+
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
 });

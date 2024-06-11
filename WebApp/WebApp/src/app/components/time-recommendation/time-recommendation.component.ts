@@ -9,10 +9,11 @@ import { ReservationService } from '../../_services/reservation.service';
 import { first } from 'rxjs';
 
 export interface TableData {
+  name: string;
   date: string;
   time: string;
   quota: string;
-  selectedPeople: string;
+  people: string;
 }
 
 @Component({
@@ -31,7 +32,7 @@ export class TimeRecommendationComponent {
   dropdownValues: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   people = "0";
   isTimeSelected: boolean = false;
-  displayedColumns: string[] = ['time', 'people', 'actions'];
+  displayedColumns: string[] = ['name', 'time', 'people', 'actions'];
   dataSource: TableData[] = [];
   user: User;
   isUser = false;
@@ -53,7 +54,7 @@ export class TimeRecommendationComponent {
               this.dataSource.splice(i, 1); // Remove the item at index i from dataSource
               i--; // Decrement i to adjust for the removed item
             } else {
-              this.dataSource[i].selectedPeople = "1";
+              this.dataSource[i].people = "1";
             }
           }
         },
